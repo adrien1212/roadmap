@@ -187,19 +187,19 @@ confirm page.
 **Description:** Email subscribed Readers when an Item becomes Shipped.
 
 **Acceptance criteria:**
-- [ ] `ShippedEmails.recipients(...)`: confirmed Readers only, and nobody for an
+- [x] `ShippedEmails.recipients(...)`: confirmed Readers only, and nobody for an
       Internal Item, a Private Roadmap, an Item no longer Shipped, or SMTP not
       Connected.
-- [ ] `EmailContent.shipped`: subject "Shipped: {title}", Brand, title, Category,
+- [x] `EmailContent.shipped`: subject "Shipped: {title}", Brand, title, Category,
       description, "See the Roadmap", footer with unsubscribe link; HTML +
       text; `List-Unsubscribe` + `List-Unsubscribe-Post` headers.
-- [ ] `ItemService` publishes `ItemShipped` on the transition; an after-commit
+- [x] `ItemService` publishes `ItemShipped` on the transition; an after-commit
       async listener sends one email per recipient; a failure drops it and
       sets NOT_WORKING.
 
 **Verification:**
-- [ ] Unit tests first: `./mvnw test -Dtest='ShippedEmailsTest,EmailContentTest'`
-- [ ] Manual (Mailpit): ship a visible Item → one email per subscribed Reader;
+- [x] Unit tests first: `./mvnw test -Dtest='ShippedEmailsTest,EmailContentTest'`
+- [x] Manual (Mailpit): ship a visible Item → one email per subscribed Reader;
       ship an Internal Item / on a Private Roadmap → none.
 
 **Dependencies:** Task 7

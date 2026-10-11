@@ -8,6 +8,7 @@ import fr.adriencaubel.roadmap.owner.CurrentOwner;
 import fr.adriencaubel.roadmap.roadmap.Roadmap;
 import fr.adriencaubel.roadmap.roadmap.RoadmapService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ public class ItemService {
 	private final RoadmapService roadmaps;
 	private final CategoryRepository categories;
 	private final CurrentOwner currentOwner;
+	private final ApplicationEventPublisher events;
 
 	@Transactional(readOnly = true)
 	public List<Item> list(Long roadmapId) {
@@ -45,18 +47,26 @@ public class ItemService {
 		}
 		item.categorize(category(request.categoryId()));
 		item.markInternal(Boolean.TRUE.equals(request.internal()));
-		return items.save(item);
+		Item saved = items.save(item);
+		if (saved.getStatus() == ItemStatus.SHIPPED) {
+			events.publishEvent(new ItemShipped(saved.getId()));
+		}
+		return saved;
 	}
 
 	/** Replaces every field except the position. */
 	public Item replace(Long roadmapId, Long itemId, ItemRequest request) {
 		Item item = get(roadmapId, itemId);
+		ItemStatus before = item.getStatus();
 		item.retitle(request.title());
 		item.describe(request.description());
 		item.schedule(request.startDate(), request.endDate());
 		item.changeStatus(ItemStatus.fromKey(request.status()), Instant.now());
 		item.categorize(category(request.categoryId()));
 		item.markInternal(Boolean.TRUE.equals(request.internal()));
+		if (before != ItemStatus.SHIPPED && item.getStatus() == ItemStatus.SHIPPED) {
+			events.publishEvent(new ItemShipped(item.getId()));
+		}
 		return item;
 	}
 

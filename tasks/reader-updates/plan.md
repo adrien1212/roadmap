@@ -93,7 +93,7 @@ T1 SecretBox + SmtpServerGuard (pure)
       is identical for new and already confirmed emails
 
 ### Phase 3: Emails, unsubscribe, Owner view
-- [ ] Task 8: Shipped emails
+- [x] Task 8: Shipped emails
 - [ ] Task 9: Unsubscribe
 - [ ] Task 10: Subscribed Readers screen
 - [ ] Task 11: Hints, warnings and pending expiry

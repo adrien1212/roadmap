@@ -1,5 +1,7 @@
 package fr.adriencaubel.roadmap.subscription;
 
+import fr.adriencaubel.roadmap.item.ItemRepository;
+import fr.adriencaubel.roadmap.item.ItemShipped;
 import fr.adriencaubel.roadmap.roadmap.Roadmap;
 import fr.adriencaubel.roadmap.smtp.Mailer;
 import fr.adriencaubel.roadmap.smtp.OutgoingEmail;
@@ -15,6 +17,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 
+import java.util.List;
+
 /**
  * Sends emails to Readers in the background, after the change that asked for them is committed.
  * A failure drops the email and marks the Owner's SMTP server as not working (they are warned).
@@ -25,6 +29,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 class SubscriptionEmails {
 
 	private final SubscriptionRepository subscriptions;
+	private final ItemRepository items;
 	private final SmtpSettingsRepository smtpSettings;
 	private final Mailer mailer;
 
@@ -43,17 +48,45 @@ class SubscriptionEmails {
 		});
 	}
 
-	private void send(Roadmap roadmap, OutgoingEmail email) {
+	/** One email per subscribed Reader; on the first failure the rest are dropped and the Owner is warned. */
+	@Async
+	@TransactionalEventListener
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public void onItemShipped(ItemShipped event) {
+		items.findById(event.itemId()).ifPresent(item -> {
+			Roadmap roadmap = item.getRoadmap();
+			SmtpSettings settings = smtpSettings.findByOwnerId(roadmap.getOwner().getId()).orElse(null);
+			List<Subscription> recipients = ShippedEmails.recipients(item, settings == null ? null : settings.getState(),
+					subscriptions.findAllByRoadmapAndState(roadmap, SubscriptionState.CONFIRMED));
+			String brand = roadmap.getOwner().getBrandName();
+			String pageUrl = publicUrl + "/r/" + roadmap.getPublicId();
+			EmailContent.ShippedItem shipped = new EmailContent.ShippedItem(item.getTitle(), item.getDescription(),
+					item.getCategory() == null ? null : item.getCategory().getName());
+			for (Subscription subscription : recipients) {
+				OutgoingEmail email = EmailContent.shipped(subscription.getEmail(), shipped, roadmap.getName(), brand, pageUrl,
+						pageUrl + "/unsubscribe?token=" + subscription.getToken(),
+						publicUrl + "/api/public/subscriptions/unsubscribe?token=" + subscription.getToken());
+				if (!send(roadmap, email)) {
+					return;
+				}
+			}
+		});
+	}
+
+	/** False when sending failed (the email is dropped and the SMTP server marked not working). */
+	private boolean send(Roadmap roadmap, OutgoingEmail email) {
 		SmtpSettings settings = smtpSettings.findByOwnerId(roadmap.getOwner().getId()).orElse(null);
 		if (settings == null || settings.getState() != SmtpState.CONNECTED) {
-			return;
+			return false;
 		}
 		try {
 			mailer.send(settings, email, roadmap.getOwner().getBrandName());
+			return true;
 		} catch (RuntimeException e) {
 			log.warn("Email to a Reader dropped for Roadmap {}: {}", roadmap.getId(), e.getMessage());
 			settings.markNotWorking(e.getMessage());
 			smtpSettings.save(settings);
+			return false;
 		}
 	}
 }

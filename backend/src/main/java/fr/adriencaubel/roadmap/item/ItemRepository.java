@@ -15,6 +15,9 @@ public interface ItemRepository extends Repository<Item, Long> {
 
 	Optional<Item> findByIdAndRoadmap(Long id, Roadmap roadmap);
 
+	/** Background jobs only, with an id from a trusted event; Owner requests use findByIdAndRoadmap. */
+	Optional<Item> findById(Long id);
+
 	/** For the Feed: non-Internal Items with a Shipped date, newest first. */
 	@Query("""
 			select i from Item i
