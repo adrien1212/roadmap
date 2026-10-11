@@ -177,14 +177,14 @@ and list every mismatch with `SPEC.md` (fields, terms, flows, screens).
 ### Task 10: API client and app layout
 
 **Acceptance criteria:**
-- [ ] `#/lib/api` client used by all calls: relative `/api/...` in the
+- [x] `#/lib/api` client used by all calls: relative `/api/...` in the
       browser; absolute Spring URL during SSR; JSON errors surfaced.
-- [ ] Pathless layout route `_app` with the app bar from `roadmap-ui.html`
+- [x] Pathless layout route `_app` with the app bar from `roadmap-ui.html`
       (Roadmaps / Categories nav, Owner initials menu from `/api/me`);
       `/r/*` and `/` outside it.
-- [ ] Design tokens (colours, type, radii) from the UI kit in Tailwind
+- [x] Design tokens (colours, type, radii) from the UI kit in Tailwind
       theme; toast component for confirmations and Undo.
-- [ ] Starter demo content removed.
+- [x] Starter demo content removed.
 
 **Verification:** `npm run build`; Manual: editor shell renders, also on hard
 refresh (SSR path).
