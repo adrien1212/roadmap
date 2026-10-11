@@ -1,0 +1,6 @@
+# Never send local secrets or build output to the image build.
+.env
+target/
+.mvn/wrapper/maven-wrapper.jar
+.idea/
+*.iml
