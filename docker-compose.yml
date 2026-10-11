@@ -1,0 +1,15 @@
+services:
+  mariadb:
+    image: mariadb:11.4
+    container_name: roadmap_mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: roadmap
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+volumes:
+  mariadb-data:
