@@ -36,14 +36,18 @@ public class Mailer {
 		this.requireStartTls = !allowPrivateHosts;
 	}
 
-	/** @throws MailFailure with a message fit to show the Owner */
-	public void send(SmtpSettings settings, OutgoingEmail email) {
+	/**
+	 * @param fallbackSenderName shown as the sender when the settings have no sender name (the Brand)
+	 * @throws MailFailure with a message fit to show the Owner
+	 */
+	public void send(SmtpSettings settings, OutgoingEmail email, String fallbackSenderName) {
 		guard.check(settings.getHost(), settings.getPort());
 		JavaMailSenderImpl sender = sender(settings);
 		try {
 			MimeMessage message = sender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
-			helper.setFrom(new InternetAddress(settings.getFromEmail(), settings.getFromName(), StandardCharsets.UTF_8.name()));
+			String senderName = settings.getFromName() != null ? settings.getFromName() : fallbackSenderName;
+			helper.setFrom(new InternetAddress(settings.getFromEmail(), senderName, StandardCharsets.UTF_8.name()));
 			helper.setTo(email.to());
 			helper.setSubject(email.subject());
 			helper.setText(email.text(), email.html());

@@ -53,7 +53,8 @@ public class SmtpSettingsService {
 		try {
 			mailer.send(saved, new OutgoingEmail(to, "Test email: your SMTP settings work",
 					"Your SMTP settings work. Readers can now subscribe to your Published Roadmaps.",
-					"<p>Your SMTP settings work. Readers can now subscribe to your Published Roadmaps.</p>"));
+					"<p>Your SMTP settings work. Readers can now subscribe to your Published Roadmaps.</p>"),
+					owner.getBrandName());
 			saved.markConnected(Instant.now());
 		} catch (Mailer.MailFailure | ValidationException e) {
 			saved.markNotWorking(e.getMessage());

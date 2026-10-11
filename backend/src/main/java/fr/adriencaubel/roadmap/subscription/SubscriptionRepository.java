@@ -12,6 +12,8 @@ public interface SubscriptionRepository extends Repository<Subscription, Long> {
 
 	Optional<Subscription> findByRoadmapAndEmail(Roadmap roadmap, String email);
 
+	Optional<Subscription> findById(Long id);
+
 	Optional<Subscription> findByToken(String token);
 
 	Optional<Subscription> findByIdAndRoadmap(Long id, Roadmap roadmap);

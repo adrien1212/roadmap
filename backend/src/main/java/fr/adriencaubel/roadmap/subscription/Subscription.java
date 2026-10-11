@@ -90,6 +90,13 @@ public class Subscription {
 				&& (confirmationSentAt == null || !now.isBefore(confirmationSentAt.plus(CONFIRMATION_RESEND_DELAY)));
 	}
 
+	/** An expired pending Subscription asked for again: a fresh start, with a new token. */
+	public void restart(Instant now) {
+		token = newToken();
+		createdAt = now;
+		confirmationSentAt = null;
+	}
+
 	public void confirmationSent(Instant now) {
 		confirmationSentAt = now;
 	}

@@ -132,18 +132,18 @@ and never returned.
 already subscribed.
 
 **Acceptance criteria:**
-- [ ] `POST /api/public/roadmaps/{publicId}/subscriptions`: 400 bad email; 404
+- [x] `POST /api/public/roadmaps/{publicId}/subscriptions`: 400 bad email; 404
       Private / unknown (as the Public page); 409 SMTP not Connected; otherwise
       always 202 with the same body; sends the confirmation email for new or
       pending (throttled).
-- [ ] `EmailContent.confirmation`: subject "Confirm your email for {Roadmap}",
+- [x] `EmailContent.confirmation`: subject "Confirm your email for {Roadmap}",
       HTML-escaped, link to `{public-url}/r/{publicId}/confirm?token=…`.
-- [ ] `POST /api/public/subscriptions/confirm` with `{ token }`: confirms; an
+- [x] `POST /api/public/subscriptions/confirm` with `{ token }`: confirms; an
       unknown or expired token → 404.
 
 **Verification:**
-- [ ] Unit tests first for `EmailContent.confirmation`; `./mvnw test`
-- [ ] Manual (Mailpit): subscribe → email; subscribe again within 10 min → 202,
+- [x] Unit tests first for `EmailContent.confirmation`; `./mvnw test`
+- [x] Manual (Mailpit): subscribe → email; subscribe again within 10 min → 202,
       no second email; confirm → CONFIRMED.
 
 **Dependencies:** Task 5

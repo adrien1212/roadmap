@@ -34,6 +34,10 @@ Tasks live in `tasks/reader-updates/todo.md`. All are _Assignee: Claude_.
   Item and applies `recipients(...)` to its final state (Internal? Published?
   still Shipped? SMTP Connected?), then sends one email per subscribed Reader.
   A failure drops the email and sets the SMTP state to Not working.
+- **Confirmation emails are also sent after commit, in the background**
+  (decided in Task 6): sending inside the request would make a new address
+  answer slower than a known one, revealing who is subscribed by timing.
+  `@EnableAsync` therefore arrives with Task 6 rather than Task 8.
 - **Absolute links in emails come from `app.public-url`** (default
   `http://localhost:3000`), because background sends have no request to read
   the origin from.
@@ -81,7 +85,7 @@ T1 SecretBox + SmtpServerGuard (pure)
 
 ### Phase 2: Readers subscribe
 - [x] Task 5: Subscription domain and schema
-- [ ] Task 6: Subscribe and confirm API
+- [x] Task 6: Subscribe and confirm API
 - [ ] Task 7: Subscribe box and confirm page
 
 ### Checkpoint: Subscribe

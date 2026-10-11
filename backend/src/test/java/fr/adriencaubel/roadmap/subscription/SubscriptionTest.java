@@ -101,4 +101,19 @@ class SubscriptionTest {
 
 		assertThat(subscription.mayResendConfirmation(NOW.plus(Duration.ofDays(1)))).isFalse();
 	}
+
+	@Test
+	void restartsAnExpiredPendingSubscriptionWithANewToken() {
+		Subscription subscription = pending();
+		subscription.confirmationSent(NOW);
+		String oldToken = subscription.getToken();
+		Instant later = NOW.plus(Duration.ofDays(8));
+
+		subscription.restart(later);
+
+		assertThat(subscription.getToken()).isNotEqualTo(oldToken);
+		assertThat(subscription.getCreatedAt()).isEqualTo(later);
+		assertThat(subscription.isExpired(later)).isFalse();
+		assertThat(subscription.mayResendConfirmation(later)).isTrue();
+	}
 }
