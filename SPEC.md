@@ -111,8 +111,7 @@ _Avoid_: customer, viewer, visitor, end user, subscriber, stakeholder
   editor with its name in inline-rename mode. Name: required, ≤ 120
   characters.
 - The Roadmaps screen shows, per Roadmap: name, Item count (and Internal
-  count), Published/Private with "Published N days ago", and a small preview
-  of up to 4 dated Items in the current year.
+  count), and Published/Private with "Published N days ago".
 
 ### Items
 - Owner creates, edits, deletes Items on a Roadmap. Items are edited in a

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -72,20 +71,14 @@ public class RoadmapController {
 		}
 	}
 
-	/** The Roadmaps screen row: counts and a preview of up to 4 dated Items in the current year. */
+	/** The Roadmaps screen row, with Item and Internal Item counts. */
 	public record RoadmapSummaryResponse(Long id, String name, String publicId, Instant publishedAt, long itemCount,
-			long internalItemCount, List<PreviewItem> preview) {
+			long internalItemCount) {
 
 		static RoadmapSummaryResponse of(RoadmapSummary summary) {
 			Roadmap roadmap = summary.roadmap();
 			return new RoadmapSummaryResponse(roadmap.getId(), roadmap.getName(), roadmap.getPublicId(),
-					roadmap.getPublishedAt(), summary.itemCount(), summary.internalItemCount(),
-					summary.preview().stream()
-							.map(item -> new PreviewItem(item.startDate(), item.endDate(), item.status().key()))
-							.toList());
+					roadmap.getPublishedAt(), summary.itemCount(), summary.internalItemCount());
 		}
-	}
-
-	public record PreviewItem(LocalDate startDate, LocalDate endDate, String status) {
 	}
 }

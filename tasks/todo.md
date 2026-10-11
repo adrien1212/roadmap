@@ -100,8 +100,7 @@ All endpoints scope data via `CurrentOwner.get()` (`findByIdAndOwner`,
       Roadmap is Private; `publicId` never changes; name required,
       ≤ 120 chars; `POST` without name → "Untitled Roadmap".
 - [x] `GET /api/roadmaps` returns per Roadmap: `itemCount`,
-      `internalItemCount`, `publishedAt`, and a preview of up to 4 Items with
-      both dates (start, end, status).
+      `internalItemCount`, `publishedAt`.
 - [x] Unit tests for `publicId` generation.
 
 **Verification:** `./mvnw test`; Manual: CRUD via curl.
@@ -209,8 +208,9 @@ refresh (SSR path).
 ### Task 12: Roadmaps UI
 
 **Acceptance criteria:**
-- [ ] Roadmaps screen: cards with name, Item / Internal counts, preview
-      bars, Published N days ago / Private; menu with open, view Public page,
+- [ ] Roadmaps screen: cards with name, Item / Internal counts,
+      Published N days ago / Private (no preview bars, unlike the mockup);
+      menu with open, view Public page,
       delete (confirm); empty state.
 - [ ] "New Roadmap" creates "Untitled Roadmap" and opens the editor with the
       name in inline-rename mode.

@@ -27,14 +27,6 @@ public interface RoadmapRepository extends Repository<Roadmap, Long> {
 			from Item i where i.roadmap.owner = :owner group by i.roadmap.id""")
 	List<ItemCounts> countItems(Owner owner);
 
-	/** Items with both dates across the Owner's Roadmaps, in manual order. */
-	@Query("""
-			select new fr.adriencaubel.roadmap.roadmap.DatedItem(i.roadmap.id, i.startDate, i.endDate, i.status)
-			from Item i
-			where i.roadmap.owner = :owner and i.startDate is not null and i.endDate is not null
-			order by i.position""")
-	List<DatedItem> findDatedItems(Owner owner);
-
 	Roadmap save(Roadmap roadmap);
 
 	void delete(Roadmap roadmap);
