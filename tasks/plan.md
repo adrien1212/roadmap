@@ -95,7 +95,7 @@ Detailed tasks live in `tasks/todo.md`.
 - [x] Task 15: Year timeline component and editor timeline view
 - [x] Task 16: Publish controls in the editor
 - [x] Task 17: Public page
-- [ ] Task 18: Home page
+- [x] Task 18: Home page
 
 ### Checkpoint: App complete without auth
 

@@ -289,10 +289,10 @@ year; unpublish → 404.
 ### Task 18: Home page
 
 **Acceptance criteria:**
-- [ ] `/` (outside `_app`) follows the Landing page layout and style of
+- [x] `/` (outside `_app`) follows the Landing page layout and style of
       `design/ui-design.html`, with a single "Continue with Google" button
       (links to `/oauth2/authorization/google`; inert until Phase 4).
-- [ ] Copy uses the Language terms; the only date mentioned is the published
+- [x] Copy uses the Language terms; the only date mentioned is the published
       date (no "last updated").
 
 **Verification:** `npm run build`; Manual: page matches the mockup.
