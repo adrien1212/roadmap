@@ -151,9 +151,9 @@ Private → 404; republish keeps the URL.
 **Estimated scope:** M
 
 ### Checkpoint: APIs
-- [ ] `./mvnw test` green
-- [ ] Full manual curl pass through port 3000
-- [ ] Review with human
+- [x] `./mvnw test` green
+- [x] Full manual curl pass through port 3000
+- [x] Review with human
 
 ---
 
