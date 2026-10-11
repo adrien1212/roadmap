@@ -25,7 +25,8 @@ final class RssFeed {
 				.toList();
 
 		StringBuilder xml = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rss version=\"2.0\"><channel>");
-		tag(xml, "title", roadmap.getName());
+		String brand = roadmap.getOwner().getBrandName();
+		tag(xml, "title", brand == null ? roadmap.getName() : roadmap.getName() + " · " + brand);
 		tag(xml, "link", pageUrl);
 		tag(xml, "description", "What shipped on " + roadmap.getName());
 		if (!items.isEmpty()) {

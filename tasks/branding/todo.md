@@ -66,14 +66,14 @@ how Readers will see it.
 **Description:** Send Readers the Brand, and nothing else of the Owner.
 
 **Acceptance criteria:**
-- [ ] `PublicPage` gains `brandName` (null when unset); the exact-fields test
+- [x] `PublicPage` gains `brandName` (null when unset); the exact-fields test
       lists it; Internal Items still dropped.
-- [ ] `RssFeed` channel title is "{Roadmap} · {Brand}", or the Roadmap name
+- [x] `RssFeed` channel title is "{Roadmap} · {Brand}", or the Roadmap name
       alone without a Brand.
 
 **Verification:**
-- [ ] Unit tests first, then green: `./mvnw test -Dtest='PublicPageTest,RssFeedTest'`
-- [ ] Manual: the public payload has `brandName` and no Owner name, email or
+- [x] Unit tests first, then green: `./mvnw test -Dtest='PublicPageTest,RssFeedTest'`
+- [x] Manual: the public payload has `brandName` and no Owner name, email or
       provider; the Feed title includes the Brand.
 
 **Dependencies:** Task 1

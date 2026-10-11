@@ -97,8 +97,29 @@ class PublicPageTest {
 	}
 
 	@Test
+	void carriesTheOwnersBrand() {
+		owner.changeBrand("Acme");
+
+		assertThat(PublicPage.of(roadmap, List.of()).brandName()).isEqualTo("Acme");
+	}
+
+	@Test
+	void hasNoBrandWhenTheOwnerSetNone() {
+		assertThat(PublicPage.of(roadmap, List.of()).brandName()).isNull();
+	}
+
+	@Test
+	void neverCarriesTheOwnersGoogleProfile() {
+		owner.changeBrand("Acme");
+
+		String page = PublicPage.of(roadmap, List.of(item("SSO", security, false))).toString();
+
+		assertThat(page).doesNotContain("owner@example.com").doesNotContain("Owner,").doesNotContain("dev");
+	}
+
+	@Test
 	void exposesExactlyTheFieldsOfTheSpec() {
-		assertThat(fields(PublicPage.class)).containsExactly("name", "publishedAt", "categories", "items");
+		assertThat(fields(PublicPage.class)).containsExactly("name", "publishedAt", "brandName", "categories", "items");
 		assertThat(fields(PublicPage.PublicCategory.class)).containsExactly("id", "name", "colour");
 		assertThat(fields(PublicPage.PublicItem.class))
 				.containsExactly("id", "title", "description", "startDate", "endDate", "status", "categoryId", "shippedAt");

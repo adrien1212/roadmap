@@ -62,6 +62,15 @@ class RssFeedTest {
 	}
 
 	@Test
+	void namesTheBrandInTheChannelTitle() throws Exception {
+		roadmap.getOwner().changeBrand("Acme");
+
+		Document doc = parse(RssFeed.of(roadmap, List.of(), PAGE));
+
+		assertThat(texts(doc, "title").getFirst()).isEqualTo("Product roadmap 2026 · Acme");
+	}
+
+	@Test
 	void listsItemsNewestFirst() throws Exception {
 		List<Item> items = List.of(
 				shipped("Older", "2026-03-09T10:00:00Z", false),

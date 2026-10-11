@@ -12,10 +12,11 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * What a Reader receives for a Published Roadmap, and nothing more: no Owner data,
+ * What a Reader receives for a Published Roadmap, and nothing more: no Owner data but its Brand,
  * no internal flag, no Internal Items.
  */
-public record PublicPage(String name, Instant publishedAt, List<PublicCategory> categories, List<PublicItem> items) {
+public record PublicPage(String name, Instant publishedAt, String brandName, List<PublicCategory> categories,
+		List<PublicItem> items) {
 
 	/** Internal Items are dropped here, on the backend; Categories are those of the remaining Items. */
 	static PublicPage of(Roadmap roadmap, List<Item> itemsInManualOrder) {
@@ -27,7 +28,8 @@ public record PublicPage(String name, Instant publishedAt, List<PublicCategory> 
 				.stream()
 				.map(PublicCategory::of)
 				.toList();
-		return new PublicPage(roadmap.getName(), roadmap.getPublishedAt(), categories,
+		// The Brand is the only Owner data a Reader receives.
+		return new PublicPage(roadmap.getName(), roadmap.getPublishedAt(), roadmap.getOwner().getBrandName(), categories,
 				visible.stream().map(PublicItem::of).toList());
 	}
 

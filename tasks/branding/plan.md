@@ -49,7 +49,7 @@ Task 1  Brand on the Owner (schema + rule + /api/brand)
 - [x] Setting, changing and clearing the Brand in Settings persists
 
 ### Phase 2: Readers see the Brand
-- [ ] Task 3: Brand in the public payload and the Feed
+- [x] Task 3: Brand in the public payload and the Feed
 - [ ] Task 4: Brand on the Public page, its title and link preview
 
 ### Checkpoint: Complete (Success Criteria of SPEC-branding.md)
