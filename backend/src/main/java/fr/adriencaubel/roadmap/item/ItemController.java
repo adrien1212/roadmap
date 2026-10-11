@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -61,13 +62,13 @@ public class ItemController {
 	}
 
 	public record ItemResponse(Long id, String title, String description, LocalDate startDate, LocalDate endDate,
-			String status, Long categoryId, boolean internal, int position) {
+			String status, Long categoryId, boolean internal, int position, Instant shippedAt) {
 
 		static ItemResponse of(Item item) {
 			Category category = item.getCategory();
 			return new ItemResponse(item.getId(), item.getTitle(), item.getDescription(), item.getStartDate(),
 					item.getEndDate(), item.getStatus().key(), category == null ? null : category.getId(),
-					item.isInternal(), item.getPosition());
+					item.isInternal(), item.getPosition(), item.getShippedAt());
 		}
 	}
 }

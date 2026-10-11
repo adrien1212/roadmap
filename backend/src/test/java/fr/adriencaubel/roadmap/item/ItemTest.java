@@ -5,6 +5,7 @@ import fr.adriencaubel.roadmap.owner.Owner;
 import fr.adriencaubel.roadmap.roadmap.Roadmap;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,6 +13,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
 class ItemTest {
+
+	private static final Instant MONDAY = Instant.parse("2026-10-12T09:00:00Z");
+	private static final Instant TUESDAY = Instant.parse("2026-10-13T09:00:00Z");
 
 	private final Roadmap roadmap = Roadmap.create(new Owner("dev", "dev", null, null), "Q3");
 
@@ -109,6 +113,60 @@ class ItemTest {
 
 	@Test
 	void requiresAStatus() {
-		assertThatThrownBy(() -> item().changeStatus(null)).isInstanceOf(ValidationException.class);
+		assertThatThrownBy(() -> item().changeStatus(null, MONDAY)).isInstanceOf(ValidationException.class);
+	}
+
+	@Test
+	void hasNoShippedDateUntilItShips() {
+		assertThat(item().getShippedAt()).isNull();
+	}
+
+	@Test
+	void recordsWhenItBecomesShipped() {
+		Item item = item();
+
+		item.changeStatus(ItemStatus.SHIPPED, MONDAY);
+
+		assertThat(item.getShippedAt()).isEqualTo(MONDAY);
+	}
+
+	@Test
+	void keepsItsShippedDateWhenSavedAgainAsShipped() {
+		Item item = item();
+		item.changeStatus(ItemStatus.SHIPPED, MONDAY);
+
+		item.changeStatus(ItemStatus.SHIPPED, TUESDAY);
+
+		assertThat(item.getShippedAt()).isEqualTo(MONDAY);
+	}
+
+	@Test
+	void clearsItsShippedDateWhenItStopsBeingShipped() {
+		Item item = item();
+		item.changeStatus(ItemStatus.SHIPPED, MONDAY);
+
+		item.changeStatus(ItemStatus.IN_PROGRESS, TUESDAY);
+
+		assertThat(item.getShippedAt()).isNull();
+	}
+
+	@Test
+	void getsANewShippedDateWhenItShipsAgain() {
+		Item item = item();
+		item.changeStatus(ItemStatus.SHIPPED, MONDAY);
+		item.changeStatus(ItemStatus.PLANNED, MONDAY);
+
+		item.changeStatus(ItemStatus.SHIPPED, TUESDAY);
+
+		assertThat(item.getShippedAt()).isEqualTo(TUESDAY);
+	}
+
+	@Test
+	void keepsItsShippedDateWhenTheStatusIsRejected() {
+		Item item = item();
+		item.changeStatus(ItemStatus.SHIPPED, MONDAY);
+
+		assertThatThrownBy(() -> item.changeStatus(null, TUESDAY)).isInstanceOf(ValidationException.class);
+		assertThat(item.getShippedAt()).isEqualTo(MONDAY);
 	}
 }

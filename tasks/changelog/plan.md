@@ -47,7 +47,7 @@ Task 1  Shipped date (schema + rule + editor API)
 ## Task List
 
 ### Phase 1: Shipped date
-- [ ] Task 1: Shipped date on Items (backend)
+- [x] Task 1: Shipped date on Items (backend)
 - [ ] Task 2: Shipped date in the Item dialog
 
 ### Checkpoint: Shipped date

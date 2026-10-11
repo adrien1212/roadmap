@@ -16,6 +16,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 /** One row of a Roadmap. Dates are optional and independent; position is the manual order. */
@@ -57,6 +58,9 @@ public class Item {
 	@Column(nullable = false)
 	private int position;
 
+	/** When the Status last became Shipped; set and cleared by changeStatus, never inferred from dates. */
+	private Instant shippedAt;
+
 	/** A new Planned, uncategorised, non-Internal Item placed after lastPosition (null when the Roadmap is empty). */
 	public static Item append(Roadmap roadmap, String title, Integer lastPosition) {
 		Item item = new Item();
@@ -95,9 +99,16 @@ public class Item {
 		this.endDate = endDate;
 	}
 
-	public void changeStatus(ItemStatus status) {
+	/** Becoming Shipped records `now` as the Shipped date; staying Shipped keeps it; leaving Shipped clears it. */
+	public void changeStatus(ItemStatus status, Instant now) {
 		if (status == null) {
 			throw new ValidationException("Status is required");
+		}
+		if (status == ItemStatus.SHIPPED && this.status != ItemStatus.SHIPPED) {
+			shippedAt = now;
+		}
+		if (status != ItemStatus.SHIPPED) {
+			shippedAt = null;
 		}
 		this.status = status;
 	}

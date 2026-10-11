@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -40,7 +41,7 @@ public class ItemService {
 		item.describe(request.description());
 		item.schedule(request.startDate(), request.endDate());
 		if (request.status() != null) {
-			item.changeStatus(ItemStatus.fromKey(request.status()));
+			item.changeStatus(ItemStatus.fromKey(request.status()), Instant.now());
 		}
 		item.categorize(category(request.categoryId()));
 		item.markInternal(Boolean.TRUE.equals(request.internal()));
@@ -53,7 +54,7 @@ public class ItemService {
 		item.retitle(request.title());
 		item.describe(request.description());
 		item.schedule(request.startDate(), request.endDate());
-		item.changeStatus(ItemStatus.fromKey(request.status()));
+		item.changeStatus(ItemStatus.fromKey(request.status()), Instant.now());
 		item.categorize(category(request.categoryId()));
 		item.markInternal(Boolean.TRUE.equals(request.internal()));
 		return item;

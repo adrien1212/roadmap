@@ -12,17 +12,17 @@ Spring context).
 in the entity, and expose `shippedAt` in the editor's Item API.
 
 **Acceptance criteria:**
-- [ ] Changeset `005-item-shipped-at.sql` adds nullable `item.shipped_at
+- [x] Changeset `005-item-shipped-at.sql` adds nullable `item.shipped_at
       DATETIME(6)`; no backfill.
-- [ ] `Item.changeStatus(status, now)`: becoming Shipped sets `shippedAt = now`;
+- [x] `Item.changeStatus(status, now)`: becoming Shipped sets `shippedAt = now`;
       staying Shipped keeps it; leaving Shipped clears it. `ItemService` passes
       `Instant.now()` on create and replace.
-- [ ] `ItemResponse` includes `shippedAt` (ISO instant or null).
+- [x] `ItemResponse` includes `shippedAt` (ISO instant or null).
 
 **Verification:**
-- [ ] Unit tests first, then green: `./mvnw test -Dtest=ItemTest`
-- [ ] `./mvnw test`
-- [ ] Manual: `PUT` an Item to `shipped` → `shippedAt` set; `PUT` it again as
+- [x] Unit tests first, then green: `./mvnw test -Dtest=ItemTest`
+- [x] `./mvnw test`
+- [x] Manual: `PUT` an Item to `shipped` → `shippedAt` set; `PUT` it again as
       `shipped` → unchanged; `PUT` to `planned` → null.
 
 **Dependencies:** None

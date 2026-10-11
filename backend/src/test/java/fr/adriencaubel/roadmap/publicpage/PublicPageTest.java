@@ -65,7 +65,7 @@ class PublicPageTest {
 		Item item = item("SSO", null, false);
 		item.describe("Line 1\nLine 2");
 		item.schedule(LocalDate.of(2026, 3, 1), LocalDate.of(2026, 5, 31));
-		item.changeStatus(ItemStatus.IN_PROGRESS);
+		item.changeStatus(ItemStatus.IN_PROGRESS, Instant.parse("2026-10-11T10:00:00Z"));
 
 		PublicPage.PublicItem publicItem = PublicPage.of(roadmap, List.of(item)).items().getFirst();
 
