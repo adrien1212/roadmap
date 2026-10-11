@@ -80,7 +80,7 @@ T1 SecretBox + SmtpServerGuard (pure)
       in Mailpit, and the state reads Connected; `127.0.0.1:22` is refused
 
 ### Phase 2: Readers subscribe
-- [ ] Task 5: Subscription domain and schema
+- [x] Task 5: Subscription domain and schema
 - [ ] Task 6: Subscribe and confirm API
 - [ ] Task 7: Subscribe box and confirm page
 

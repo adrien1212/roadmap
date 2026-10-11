@@ -110,16 +110,16 @@ and never returned.
 **Description:** Store Subscriptions with their lifecycle rules.
 
 **Acceptance criteria:**
-- [ ] Changeset `008-subscription.sql`: `subscription` table (unique roadmap +
+- [x] Changeset `008-subscription.sql`: `subscription` table (unique roadmap +
       email, token ascii_bin unique, cascade on Roadmap delete) and
       `roadmap.unsubscribed_count`.
-- [ ] `Subscription`: email trimmed, lower-cased and checked (≤ 254 chars,
+- [x] `Subscription`: email trimmed, lower-cased and checked (≤ 254 chars,
       plausible format); random 128-bit URL-safe token; pending → confirmed;
       `isExpired(now)` after 7 days pending; `mayResendConfirmation(now)` once
       per 10 minutes.
 
 **Verification:**
-- [ ] Unit tests first, then green: `./mvnw test -Dtest=SubscriptionTest`
+- [x] Unit tests first, then green: `./mvnw test -Dtest=SubscriptionTest`
 
 **Dependencies:** Task 3
 **Files likely touched:** `008-subscription.sql`, `db.changelog-master.yaml`,

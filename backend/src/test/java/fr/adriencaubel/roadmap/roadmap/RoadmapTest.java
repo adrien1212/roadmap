@@ -107,4 +107,15 @@ class RoadmapTest {
 
 		assertThat(roadmap.getPublishedAt()).isEqualTo(Instant.parse("2026-10-01T10:00:00Z"));
 	}
+
+	@Test
+	void countsUnsubscribedReaders() {
+		Roadmap roadmap = Roadmap.create(owner, "Q3");
+		assertThat(roadmap.getUnsubscribedCount()).isZero();
+
+		roadmap.countUnsubscribe();
+		roadmap.countUnsubscribe();
+
+		assertThat(roadmap.getUnsubscribedCount()).isEqualTo(2);
+	}
 }
