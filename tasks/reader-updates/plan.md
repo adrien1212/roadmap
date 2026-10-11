@@ -72,11 +72,11 @@ T1 SecretBox + SmtpServerGuard (pure)
 - [x] Task 1: Encryption and SMTP server guard
 - [x] Task 2: SMTP settings API
 - [x] Task 3: Send test email
-- [ ] Task 4: Settings: Email to Readers
+- [x] Task 4: Settings: Email to Readers
 
 ### Checkpoint: SMTP
-- [ ] `./mvnw test` green, `npm run build` clean
-- [ ] An Owner saves SMTP settings for Mailpit, sends a test email that arrives
+- [x] `./mvnw test` green, `npm run build` clean
+- [x] An Owner saves SMTP settings for Mailpit, sends a test email that arrives
       in Mailpit, and the state reads Connected; `127.0.0.1:22` is refused
 
 ### Phase 2: Readers subscribe

@@ -5,16 +5,22 @@ import { toast } from 'sonner'
 
 import { BrandMark } from '#/components/brand-mark'
 import { FieldError } from '#/components/field-error'
+import { SmtpSettingsForm } from '#/components/smtp-settings-form'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { BRAND_MAX_LENGTH, brandQuery, pageTitle, previewDescription, saveBrand } from '#/lib/brand'
 import { formatInstant } from '#/lib/format'
 import { roadmapsQuery } from '#/lib/roadmaps'
+import { smtpSettingsQuery } from '#/lib/smtp'
 
 export const Route = createFileRoute('/_app/settings')({
   loader: ({ context: { queryClient } }) =>
-    Promise.all([queryClient.ensureQueryData(brandQuery), queryClient.ensureQueryData(roadmapsQuery)]),
+    Promise.all([
+      queryClient.ensureQueryData(brandQuery),
+      queryClient.ensureQueryData(roadmapsQuery),
+      queryClient.ensureQueryData(smtpSettingsQuery),
+    ]),
   component: SettingsPage,
 })
 
@@ -24,6 +30,7 @@ const panel = 'flex flex-col gap-5 rounded-lg border border-border p-6'
 function SettingsPage() {
   const { data: brand } = useSuspenseQuery(brandQuery)
   const { data: roadmaps } = useSuspenseQuery(roadmapsQuery)
+  const { data: smtp } = useSuspenseQuery(smtpSettingsQuery)
   const queryClient = useQueryClient()
   const [name, setName] = useState(brand.name ?? '')
   const [error, setError] = useState<string | null>(null)
@@ -49,7 +56,7 @@ function SettingsPage() {
     <main className="mx-auto max-w-[1000px] px-4 pb-30 sm:px-8">
       <div className="mt-12 mb-6">
         <h1 className="font-display text-[28px] leading-tight font-semibold tracking-[-0.5px]">Settings</h1>
-        <p className="mt-1.5 text-body">Your product, as Readers see it on every Public page.</p>
+        <p className="mt-1.5 text-body">Your product, as Readers see it on every Public page and in emails.</p>
       </div>
 
       <div className="grid grid-cols-1 items-start gap-8 min-[640px]:grid-cols-2">
@@ -108,6 +115,8 @@ function SettingsPage() {
             <span className="text-[13px] text-muted-foreground">{previewDescription(previewName)}</span>
           </div>
         </section>
+
+        <SmtpSettingsForm settings={smtp} brandName={brand.name} />
       </div>
     </main>
   )

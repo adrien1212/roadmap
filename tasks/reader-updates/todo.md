@@ -82,15 +82,15 @@ and never returned.
 **Description:** The SMTP section of the Settings screen, as in the mockup.
 
 **Acceptance criteria:**
-- [ ] Fields host, port, security (switches 587 ↔ 465), username, password
+- [x] Fields host, port, security (switches 587 ↔ 465), username, password
       (write-only: "Saved, encrypted · Replace"), sender name (Brand as
       placeholder), sender email; Save; Send test email.
-- [ ] State line: Not set up / Saved, send a test email / Connected, test email
+- [x] State line: Not set up / Saved, send a test email / Connected, test email
       sent {date} / Not working + error.
 
 **Verification:**
-- [ ] `npx tsc --noEmit`, `npm run build`; curl the SSR HTML of `/settings`
-- [ ] Manual: save, test against Mailpit, see Connected.
+- [x] `npx tsc --noEmit`, `npm run build`; curl the SSR HTML of `/settings`
+- [x] Manual: save, test against Mailpit, see Connected.
 
 **Dependencies:** Task 3
 **Files likely touched:** `frontend/src/lib/smtp.ts`,
@@ -99,8 +99,8 @@ and never returned.
 **Estimated scope:** M
 
 ### Checkpoint: SMTP
-- [ ] `./mvnw test` green, `npm run build` clean
-- [ ] Mailpit receives the test email; the state reads Connected; `127.0.0.1:22`
+- [x] `./mvnw test` green, `npm run build` clean
+- [x] Mailpit receives the test email; the state reads Connected; `127.0.0.1:22`
       is refused
 
 ## Phase 2: Readers subscribe
