@@ -35,19 +35,19 @@ change it.
 how Readers will see it.
 
 **Acceptance criteria:**
-- [ ] `/settings` under the editor layout, with "Settings" in the app bar nav
+- [x] `/settings` under the editor layout, with "Settings" in the app bar nav
       after Categories.
-- [ ] "Product name" field (≤ 60 characters) with the spec's hint; Save shows
+- [x] "Product name" field (≤ 60 characters) with the spec's hint; Save shows
       "Settings saved"; an API error shows inline.
-- [ ] Preview: the Public page header (letter mark, Brand, Roadmap name,
+- [x] Preview: the Public page header (letter mark, Brand, Roadmap name,
       published date) and the link preview (title, origin, description), using
       the first Published Roadmap, or the first Roadmap; "Made with Product
       name" note.
 
 **Verification:**
-- [ ] `npx tsc --noEmit`, `npm run build`
-- [ ] curl the SSR HTML of `/settings` for the field value and the nav entry
-- [ ] Manual: change and clear the Brand; reload; it persists.
+- [x] `npx tsc --noEmit`, `npm run build`
+- [x] curl the SSR HTML of `/settings` for the field value and the nav entry
+- [x] Manual: change and clear the Brand; reload; it persists.
 
 **Dependencies:** Task 1
 **Files likely touched:** `frontend/src/lib/brand.ts`,
@@ -56,8 +56,8 @@ how Readers will see it.
 **Estimated scope:** M
 
 ### Checkpoint: Owner side
-- [ ] `./mvnw test` green, `npm run build` clean
-- [ ] Setting, changing and clearing the Brand in Settings persists
+- [x] `./mvnw test` green, `npm run build` clean
+- [x] Setting, changing and clearing the Brand in Settings persists
 
 ## Phase 2: Readers see the Brand
 

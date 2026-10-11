@@ -31,6 +31,9 @@ export function AppBar() {
             <Link to="/categories" className={navLink}>
               Categories
             </Link>
+            <Link to="/settings" className={navLink}>
+              Settings
+            </Link>
           </nav>
         </div>
         <DropdownMenu>

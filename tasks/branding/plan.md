@@ -42,11 +42,11 @@ Task 1  Brand on the Owner (schema + rule + /api/brand)
 
 ### Phase 1: The Owner sets a Brand
 - [x] Task 1: Brand on the Owner (backend)
-- [ ] Task 2: Settings screen
+- [x] Task 2: Settings screen
 
 ### Checkpoint: Owner side
-- [ ] `./mvnw test` green, `npm run build` clean
-- [ ] Setting, changing and clearing the Brand in Settings persists
+- [x] `./mvnw test` green, `npm run build` clean
+- [x] Setting, changing and clearing the Brand in Settings persists
 
 ### Phase 2: Readers see the Brand
 - [ ] Task 3: Brand in the public payload and the Feed
