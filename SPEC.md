@@ -81,6 +81,23 @@ Anyone who opens a Public page. Never authenticated, never identified, and
 cannot write anything.
 _Avoid_: customer, viewer, visitor, end user, subscriber, stakeholder
 
+**Shipped date** (`shippedAt`):
+The instant an Item's Status last became Shipped. Set by the app when the Owner
+changes the Status to Shipped, cleared when it leaves Shipped. A record of the
+Owner's assertion, never inferred from the Item's dates; the Owner does not
+edit it directly. (`SPEC-changelog.md`)
+_Avoid_: release date, delivery date, done date
+
+**Recently shipped**:
+The last 3 non-Internal Items of a Published Roadmap that have a Shipped date,
+newest first, shown on its Public page.
+_Avoid_: changelog (in the UI), release notes, what's new
+
+**Feed**:
+The RSS 2.0 document of a Published Roadmap's recently Shipped Items, for feed
+readers. Anonymous, like the Public page.
+_Avoid_: newsletter, stream
+
 ## Functional requirements
 
 ### Owner
@@ -151,8 +168,15 @@ _Avoid_: customer, viewer, visitor, end user, subscriber, stakeholder
 - Public API payload (`GET /api/public/roadmaps/{publicId}`): Roadmap name,
   `publishedAt`, the Categories used by its non-Internal Items (id, name,
   colour), and its non-Internal Items in manual order (id, title,
-  description, start date, end date, status, category id). Nothing else — no
-  Owner data, no `internal` flag, no Internal Items.
+  description, start date, end date, status, category id, Shipped date).
+  Nothing else — no Owner data, no `internal` flag, no Internal Items.
+- Recently shipped section between the header and the filters (up to 3 Items
+  with their Shipped date; hidden when none; ignores the filters), next to a
+  "Follow what ships" RSS link.
+- Feed: `GET /api/public/roadmaps/{publicId}/feed.xml`, RSS 2.0, up to 20
+  non-Internal Items with a Shipped date, newest first; Private or unknown →
+  the same 404 as the Public page; linked from the Public page head.
+  Details in `SPEC-changelog.md`.
 - Timeline view spans one calendar year, by months, opening on the current
   year; the Reader can navigate to previous and next years. Items with both
   dates are drawn as bars (clipped to the year shown); Items with a single
