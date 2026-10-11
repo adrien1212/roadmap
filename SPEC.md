@@ -98,6 +98,15 @@ The RSS 2.0 document of a Published Roadmap's recently Shipped Items, for feed
 readers. Anonymous, like the Public page.
 _Avoid_: newsletter, stream
 
+**Brand**:
+The Owner's product name as Readers see it: on every Public page, in its page
+title and link preview, and in the Feed. Set once per Owner in Settings;
+optional, never filled from the Owner's Google profile. Shown with a letter
+mark (its first letter on an ink tile). Unrelated to the app's own placeholder
+name "Product name". (`SPEC-branding.md`)
+_Avoid_: company, organisation, workspace, account, theme, logo (until uploads
+exist)
+
 ## Functional requirements
 
 ### Owner
@@ -149,6 +158,12 @@ _Avoid_: newsletter, stream
 - The editor timeline lists undated Items in a separate "No dates" section
   and shows a "Today" line in the current year.
 
+### Settings
+- `/settings` (editor layout, "Settings" in the app bar nav): the Owner sets
+  their Brand ("Product name", trimmed, ≤ 60 characters, empty clears it) and
+  sees a preview of the Public page header and link preview. No file upload.
+  API: `GET` / `PUT /api/brand`.
+
 ### Publishing
 - Publish sets `publishedAt = now`; Unpublish sets it to null.
 - `/r/{publicId}` on a Private Roadmap returns 404, indistinguishable from an
@@ -164,12 +179,17 @@ _Avoid_: newsletter, stream
 - A signed-in Owner opening `/` goes to their Roadmaps.
 
 ### Public page
-- Shows the Roadmap name, its published date, and its non-Internal Items.
+- Shows the Roadmap name, its published date, and its non-Internal Items;
+  with a Brand, its letter mark and name above the Roadmap name.
+- Page title "{Roadmap name} · {Brand}" (Roadmap name alone without a Brand),
+  and link preview tags `og:title`, `og:description`, `og:type`,
+  `twitter:card` (summary, no image).
 - Public API payload (`GET /api/public/roadmaps/{publicId}`): Roadmap name,
-  `publishedAt`, the Categories used by its non-Internal Items (id, name,
+  `publishedAt`, the Owner's Brand name (`brandName`, or null), the Categories used by its non-Internal Items (id, name,
   colour), and its non-Internal Items in manual order (id, title,
   description, start date, end date, status, category id, Shipped date).
-  Nothing else — no Owner data, no `internal` flag, no Internal Items.
+  Nothing else — no Owner data other than its Brand, no `internal` flag, no
+  Internal Items.
 - Recently shipped section between the header and the filters (up to 3 Items
   with their Shipped date; hidden when none; ignores the filters), next to a
   "Follow what ships" RSS link.
