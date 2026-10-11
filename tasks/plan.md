@@ -77,7 +77,7 @@ Detailed tasks live in `tasks/todo.md`.
 - [x] Task 4: Categories API
 - [x] Task 5: Roadmaps API
 - [x] Task 6: Items API
-- [ ] Task 7: Items reorder API
+- [x] Task 7: Items reorder API
 - [ ] Task 8: Publish / unpublish and public API
 
 ### Checkpoint: APIs

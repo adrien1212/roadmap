@@ -110,4 +110,8 @@ public class Item {
 	public void markInternal(boolean internal) {
 		this.internal = internal;
 	}
+
+	void moveTo(int position) {
+		this.position = position;
+	}
 }

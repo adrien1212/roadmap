@@ -59,6 +59,15 @@ public class ItemService {
 		return item;
 	}
 
+	/** Rewrites the manual order; orderedIds must list every Item of the Roadmap exactly once. */
+	public List<Item> reorder(Long roadmapId, List<Long> orderedIds) {
+		List<Item> ordered = ItemOrder.arrange(list(roadmapId), Item::getId, orderedIds);
+		for (int i = 0; i < ordered.size(); i++) {
+			ordered.get(i).moveTo(i);
+		}
+		return ordered;
+	}
+
 	public void delete(Long roadmapId, Long itemId) {
 		items.delete(get(roadmapId, itemId));
 	}

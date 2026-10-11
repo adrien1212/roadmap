@@ -127,9 +127,9 @@ Items; deleting a Roadmap removes its Items.
 ### Task 7: Items reorder API
 
 **Acceptance criteria:**
-- [ ] `PUT /api/roadmaps/{id}/items/order` with the full ordered id list;
+- [x] `PUT /api/roadmaps/{id}/items/order` with the full ordered id list;
       missing/foreign ids → 400.
-- [ ] Unit test for the reorder logic.
+- [x] Unit test for the reorder logic.
 
 **Verification:** `./mvnw test`; Manual via curl.
 **Dependencies:** Task 6

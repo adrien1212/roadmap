@@ -45,10 +45,19 @@ public class ItemController {
 		return ItemResponse.of(service.replace(roadmapId, itemId, request));
 	}
 
+	/** The body lists every Item id of the Roadmap in the new order. */
+	@PutMapping("/order")
+	public List<ItemResponse> reorder(@PathVariable Long roadmapId, @RequestBody OrderRequest request) {
+		return service.reorder(roadmapId, request.itemIds()).stream().map(ItemResponse::of).toList();
+	}
+
 	@DeleteMapping("/{itemId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable Long roadmapId, @PathVariable Long itemId) {
 		service.delete(roadmapId, itemId);
+	}
+
+	public record OrderRequest(List<Long> itemIds) {
 	}
 
 	public record ItemResponse(Long id, String title, String description, LocalDate startDate, LocalDate endDate,
