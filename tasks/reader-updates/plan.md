@@ -69,7 +69,7 @@ T1 SecretBox + SmtpServerGuard (pure)
 ## Task List
 
 ### Phase 1: The Owner's SMTP server
-- [ ] Task 1: Encryption and SMTP server guard
+- [x] Task 1: Encryption and SMTP server guard
 - [ ] Task 2: SMTP settings API
 - [ ] Task 3: Send test email
 - [ ] Task 4: Settings: Email to Readers

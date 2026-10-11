@@ -12,15 +12,15 @@ Spring context). Manual email checks use Mailpit (`http://localhost:8025`).
 SMTP password, and refuse SMTP servers that are not public mail servers.
 
 **Acceptance criteria:**
-- [ ] `SecretBox`: AES-256-GCM with a random nonce per value; key from
+- [x] `SecretBox`: AES-256-GCM with a random nonce per value; key from
       `SMTP_SECRET_KEY` (base64, 32 bytes); round trip works; a tampered value
       or a wrong key is rejected; a missing key gives a clear error.
-- [ ] `SmtpServerGuard`: ports 25, 465, 587, 2525 only; a host resolving to any
+- [x] `SmtpServerGuard`: ports 25, 465, 587, 2525 only; a host resolving to any
       loopback, private, link-local, unique-local, CGNAT, multicast or wildcard
       address is refused, unless private hosts are allowed (dev).
 
 **Verification:**
-- [ ] Unit tests first, then green: `./mvnw test -Dtest='SecretBoxTest,SmtpServerGuardTest'`
+- [x] Unit tests first, then green: `./mvnw test -Dtest='SecretBoxTest,SmtpServerGuardTest'`
 
 **Dependencies:** None
 **Files likely touched:** `smtp/SecretBox.java`, `smtp/SmtpServerGuard.java`,
@@ -59,7 +59,7 @@ and never returned.
 
 **Acceptance criteria:**
 - [ ] `spring-boot-starter-mail` added; `mailpit` service in
-      `docker-compose.yml` (SMTP 1025, inbox 8025); `app.smtp.allow-private-hosts`
+      `docker-compose.yml` (SMTP exposed on 2525, an allowed port; inbox 8025); `app.smtp.allow-private-hosts`
       and `app.public-url` properties.
 - [ ] `Mailer` builds a sender from the settings (security, timeouts 10 s),
       checks the guard first, and sends one message.
