@@ -22,8 +22,8 @@ public class CategoryController {
 	private final CategoryService service;
 
 	@GetMapping
-	public List<CategoryResponse> list() {
-		return service.list().stream().map(CategoryResponse::of).toList();
+	public List<CategoryUsageResponse> list() {
+		return service.list().stream().map(CategoryUsageResponse::of).toList();
 	}
 
 	@PostMapping
@@ -50,6 +50,16 @@ public class CategoryController {
 
 		static CategoryResponse of(Category category) {
 			return new CategoryResponse(category.getId(), category.getName(), category.getColour().key());
+		}
+	}
+
+	/** The Categories screen row: itemCount counts Items across all the Owner's Roadmaps. */
+	public record CategoryUsageResponse(Long id, String name, String colour, long itemCount) {
+
+		static CategoryUsageResponse of(CategoryUsage usage) {
+			Category category = usage.category();
+			return new CategoryUsageResponse(category.getId(), category.getName(), category.getColour().key(),
+					usage.itemCount());
 		}
 	}
 }

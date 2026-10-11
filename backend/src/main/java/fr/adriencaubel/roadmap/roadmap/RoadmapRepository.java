@@ -1,6 +1,7 @@
 package fr.adriencaubel.roadmap.roadmap;
 
 import fr.adriencaubel.roadmap.owner.Owner;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
 import java.util.List;
@@ -12,6 +13,21 @@ public interface RoadmapRepository extends Repository<Roadmap, Long> {
 	List<Roadmap> findAllByOwnerOrderByIdAsc(Owner owner);
 
 	Optional<Roadmap> findByIdAndOwner(Long id, Owner owner);
+
+	/** Item and Internal Item counts per Roadmap; Roadmaps without Items are absent. */
+	@Query("""
+			select new fr.adriencaubel.roadmap.roadmap.ItemCounts(
+			    i.roadmap.id, count(i), sum(case when i.internal = true then 1 else 0 end))
+			from Item i where i.roadmap.owner = :owner group by i.roadmap.id""")
+	List<ItemCounts> countItems(Owner owner);
+
+	/** Items with both dates across the Owner's Roadmaps, in manual order. */
+	@Query("""
+			select new fr.adriencaubel.roadmap.roadmap.DatedItem(i.roadmap.id, i.startDate, i.endDate, i.status)
+			from Item i
+			where i.roadmap.owner = :owner and i.startDate is not null and i.endDate is not null
+			order by i.position""")
+	List<DatedItem> findDatedItems(Owner owner);
 
 	Roadmap save(Roadmap roadmap);
 

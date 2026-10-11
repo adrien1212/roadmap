@@ -74,9 +74,9 @@ Detailed tasks live in `tasks/todo.md`.
 ### Checkpoint: Foundation
 
 ### Phase 2: Backend APIs — Claude
-- [ ] Task 4: Categories API
-- [ ] Task 5: Roadmaps API
-- [ ] Task 6: Items API
+- [x] Task 4: Categories API
+- [x] Task 5: Roadmaps API
+- [x] Task 6: Items API
 - [ ] Task 7: Items reorder API
 - [ ] Task 8: Publish / unpublish and public API
 

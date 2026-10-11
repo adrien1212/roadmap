@@ -79,13 +79,13 @@ All endpoints scope data via `CurrentOwner.get()` (`findByIdAndOwner`,
 ### Task 4: Categories API
 
 **Acceptance criteria:**
-- [ ] Changeset `category` (owner FK, name, colour; unique owner + name,
+- [x] Changeset `category` (owner FK, name, colour; unique owner + name,
       case-insensitive via the default collation).
-- [ ] `GET/POST /api/categories`, `PATCH/DELETE /api/categories/{id}`;
+- [x] `GET/POST /api/categories`, `PATCH/DELETE /api/categories/{id}`;
       colour must be a palette key (else 400); name trimmed, required;
       duplicate name in any case → 409. `GET` includes `itemCount` (all
       Roadmaps).
-- [ ] Unit tests for name trimming and colour validation.
+- [x] Unit tests for name trimming and colour validation.
 
 **Verification:** `./mvnw test`; Manual: CRUD via curl.
 **Dependencies:** Task 3
@@ -94,15 +94,15 @@ All endpoints scope data via `CurrentOwner.get()` (`findByIdAndOwner`,
 ### Task 5: Roadmaps API
 
 **Acceptance criteria:**
-- [ ] Changeset `roadmap` (owner FK, name, `public_id` unique random
+- [x] Changeset `roadmap` (owner FK, name, `public_id` unique random
       ≥ 128-bit URL-safe, `published_at` null).
-- [ ] `GET/POST /api/roadmaps`, `GET/PATCH/DELETE /api/roadmaps/{id}`; new
+- [x] `GET/POST /api/roadmaps`, `GET/PATCH/DELETE /api/roadmaps/{id}`; new
       Roadmap is Private; `publicId` never changes; name required,
       ≤ 120 chars; `POST` without name → "Untitled Roadmap".
-- [ ] `GET /api/roadmaps` returns per Roadmap: `itemCount`,
+- [x] `GET /api/roadmaps` returns per Roadmap: `itemCount`,
       `internalItemCount`, `publishedAt`, and a preview of up to 4 Items with
       both dates (start, end, status).
-- [ ] Unit tests for `publicId` generation.
+- [x] Unit tests for `publicId` generation.
 
 **Verification:** `./mvnw test`; Manual: CRUD via curl.
 **Dependencies:** Task 3
@@ -111,13 +111,13 @@ All endpoints scope data via `CurrentOwner.get()` (`findByIdAndOwner`,
 ### Task 6: Items API
 
 **Acceptance criteria:**
-- [ ] Changeset `item` (roadmap FK cascade, category FK `ON DELETE SET NULL`,
+- [x] Changeset `item` (roadmap FK cascade, category FK `ON DELETE SET NULL`,
       title, description, start_date, end_date, status, internal, position).
-- [ ] CRUD under `/api/roadmaps/{id}/items`; title required, ≤ 140 chars;
+- [x] CRUD under `/api/roadmaps/{id}/items`; title required, ≤ 140 chars;
       end ≥ start when
       both set (else 400); defaults `planned`, no Category, not Internal,
       appended last; Category must belong to the same Owner.
-- [ ] Unit tests: date rule, defaults, position append.
+- [x] Unit tests: date rule, defaults, position append.
 
 **Verification:** `./mvnw test`; Manual: deleting a Category clears it on
 Items; deleting a Roadmap removes its Items.

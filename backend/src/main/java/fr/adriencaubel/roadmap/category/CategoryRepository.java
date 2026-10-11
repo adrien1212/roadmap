@@ -1,6 +1,7 @@
 package fr.adriencaubel.roadmap.category;
 
 import fr.adriencaubel.roadmap.owner.Owner;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
 import java.util.List;
@@ -17,6 +18,12 @@ public interface CategoryRepository extends Repository<Category, Long> {
 	boolean existsByOwnerAndName(Owner owner, String name);
 
 	boolean existsByOwnerAndNameAndIdNot(Owner owner, String name, Long id);
+
+	/** Item counts per Category across all the Owner's Roadmaps; unused Categories are absent. */
+	@Query("""
+			select new fr.adriencaubel.roadmap.category.CategoryItemCount(i.category.id, count(i))
+			from Item i where i.category.owner = :owner group by i.category.id""")
+	List<CategoryItemCount> countItems(Owner owner);
 
 	Category save(Category category);
 

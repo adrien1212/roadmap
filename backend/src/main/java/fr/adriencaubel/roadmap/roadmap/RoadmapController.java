@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -23,8 +24,8 @@ public class RoadmapController {
 	private final RoadmapService service;
 
 	@GetMapping
-	public List<RoadmapResponse> list() {
-		return service.list().stream().map(RoadmapResponse::of).toList();
+	public List<RoadmapSummaryResponse> list() {
+		return service.list().stream().map(RoadmapSummaryResponse::of).toList();
 	}
 
 	/** The body is optional: no name gives "Untitled Roadmap". */
@@ -59,5 +60,22 @@ public class RoadmapController {
 			return new RoadmapResponse(roadmap.getId(), roadmap.getName(), roadmap.getPublicId(),
 					roadmap.getPublishedAt());
 		}
+	}
+
+	/** The Roadmaps screen row: counts and a preview of up to 4 dated Items in the current year. */
+	public record RoadmapSummaryResponse(Long id, String name, String publicId, Instant publishedAt, long itemCount,
+			long internalItemCount, List<PreviewItem> preview) {
+
+		static RoadmapSummaryResponse of(RoadmapSummary summary) {
+			Roadmap roadmap = summary.roadmap();
+			return new RoadmapSummaryResponse(roadmap.getId(), roadmap.getName(), roadmap.getPublicId(),
+					roadmap.getPublishedAt(), summary.itemCount(), summary.internalItemCount(),
+					summary.preview().stream()
+							.map(item -> new PreviewItem(item.startDate(), item.endDate(), item.status().key()))
+							.toList());
+		}
+	}
+
+	public record PreviewItem(LocalDate startDate, LocalDate endDate, String status) {
 	}
 }

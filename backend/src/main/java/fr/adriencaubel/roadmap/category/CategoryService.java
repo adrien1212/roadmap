@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,9 +20,15 @@ public class CategoryService {
 	private final CategoryRepository categories;
 	private final CurrentOwner currentOwner;
 
+	/** Each Category with the number of Items using it across all Roadmaps. */
 	@Transactional(readOnly = true)
-	public List<Category> list() {
-		return categories.findAllByOwnerOrderByIdAsc(currentOwner.get());
+	public List<CategoryUsage> list() {
+		Owner owner = currentOwner.get();
+		Map<Long, Long> counts = categories.countItems(owner).stream()
+				.collect(Collectors.toMap(CategoryItemCount::categoryId, CategoryItemCount::itemCount));
+		return categories.findAllByOwnerOrderByIdAsc(owner).stream()
+				.map(category -> new CategoryUsage(category, counts.getOrDefault(category.getId(), 0L)))
+				.toList();
 	}
 
 	public Category create(String name, String colourKey) {
