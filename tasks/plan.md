@@ -93,7 +93,7 @@ Detailed tasks live in `tasks/todo.md`.
 - [x] Task 13: Editor list view with Item form
 - [x] Task 14: Drag-and-drop reorder
 - [x] Task 15: Year timeline component and editor timeline view
-- [ ] Task 16: Publish controls in the editor
+- [x] Task 16: Publish controls in the editor
 - [ ] Task 17: Public page
 - [ ] Task 18: Home page
 

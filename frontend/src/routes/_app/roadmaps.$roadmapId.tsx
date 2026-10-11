@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, createFileRoute, notFound, useNavigate } from '@tanstack/react-router'
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { ArrowLeft, Lock, Plus, Rows2 } from 'lucide-react'
+import { ArrowLeft, ExternalLink, Globe, Lock, Plus, Rows2 } from 'lucide-react'
 
 import { StateBadge } from '#/components/chips'
 import { ConfirmDialog } from '#/components/confirm-dialog'
@@ -9,6 +9,7 @@ import { CategoryLegend } from '#/components/editor/category-legend'
 import { ItemDrawer } from '#/components/editor/item-drawer'
 import { ItemList } from '#/components/editor/item-list'
 import { ItemTimeline } from '#/components/editor/item-timeline'
+import { PublishDialog } from '#/components/editor/publish-dialog'
 import { useDelayedDelete } from '#/components/editor/use-delayed-delete'
 import { useReorder } from '#/components/editor/use-reorder'
 import { NotFound } from '#/components/not-found'
@@ -20,7 +21,7 @@ import { ApiError } from '#/lib/api'
 import { categoriesQuery } from '#/lib/categories'
 import { daysAgo, plural } from '#/lib/format'
 import { itemsQuery, type Item } from '#/lib/items'
-import { roadmapQuery } from '#/lib/roadmaps'
+import { publicPath, roadmapQuery } from '#/lib/roadmaps'
 
 export const Route = createFileRoute('/_app/roadmaps/$roadmapId')({
   params: {
@@ -62,6 +63,7 @@ function EditorPage() {
   const [lanes, setLanes] = useState(false)
   const [drawer, setDrawer] = useState<DrawerState>(null)
   const [confirmingDelete, setConfirmingDelete] = useState<Item | null>(null)
+  const [publishing, setPublishing] = useState(false)
   const { hidden, remove } = useDelayedDelete(roadmapId)
   const reorder = useReorder(roadmapId)
 
@@ -100,6 +102,24 @@ function EditorPage() {
               Private
             </span>
           )}
+          {roadmap.publishedAt && (
+            <Button variant="secondary" asChild>
+              <a href={publicPath(roadmap)} target="_blank" rel="noreferrer">
+                <ExternalLink aria-hidden />
+                View Public page
+              </a>
+            </Button>
+          )}
+          <Button variant={roadmap.publishedAt ? 'secondary' : 'default'} onClick={() => setPublishing(true)}>
+            {roadmap.publishedAt ? (
+              <>
+                <Globe aria-hidden />
+                Share
+              </>
+            ) : (
+              'Publish'
+            )}
+          </Button>
         </div>
       </div>
       <p className="text-sm text-muted-foreground tabular-nums">
@@ -167,6 +187,8 @@ function EditorPage() {
         onOpenChange={(open) => !open && setDrawer(null)}
         onDelete={setConfirmingDelete}
       />
+
+      <PublishDialog roadmap={roadmap} internalCount={internalCount} open={publishing} onOpenChange={setPublishing} />
 
       <ConfirmDialog
         open={confirmingDelete !== null}

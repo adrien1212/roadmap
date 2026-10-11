@@ -264,7 +264,7 @@ years.
 ### Task 16: Publish controls in the editor
 
 **Acceptance criteria:**
-- [ ] Publish dialog (URL, facts about Internal Items / no draft), Share
+- [x] Publish dialog (URL, facts about Internal Items / no draft), Share
       dialog when Published (copy link, Publish again, View Public page,
       Unpublish with confirm), as in the mockup.
 
