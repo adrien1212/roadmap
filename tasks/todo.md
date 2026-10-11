@@ -250,10 +250,10 @@ end-only / both dates.
 ### Task 15: Year timeline component and editor timeline view
 
 **Acceptance criteria:**
-- [ ] Reusable `YearTimeline`: 12 months, bars (clipped to the year, with
+- [x] Reusable `YearTimeline`: 12 months, bars (clipped to the year, with
       cut markers), points for single-date Items, undated omitted,
       "Today" line in the current year; previous/next year.
-- [ ] Editor list/timeline toggle; optional swimlanes; "No dates" section
+- [x] Editor list/timeline toggle; optional swimlanes; "No dates" section
       below the timeline.
 
 **Verification:** `npm run build`; Manual: cross-year Item clipped on both

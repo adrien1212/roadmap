@@ -8,11 +8,14 @@ import { ConfirmDialog } from '#/components/confirm-dialog'
 import { CategoryLegend } from '#/components/editor/category-legend'
 import { ItemDrawer } from '#/components/editor/item-drawer'
 import { ItemList } from '#/components/editor/item-list'
+import { ItemTimeline } from '#/components/editor/item-timeline'
 import { useDelayedDelete } from '#/components/editor/use-delayed-delete'
 import { useReorder } from '#/components/editor/use-reorder'
 import { NotFound } from '#/components/not-found'
 import { RoadmapTitle } from '#/components/roadmap-title'
 import { Button } from '#/components/ui/button'
+import { ViewToggle, type View } from '#/components/view-toggle'
+import { YearNav } from '#/components/year-timeline'
 import { ApiError } from '#/lib/api'
 import { categoriesQuery } from '#/lib/categories'
 import { daysAgo, plural } from '#/lib/format'
@@ -54,6 +57,8 @@ function EditorPage() {
   const { data: categories } = useSuspenseQuery(categoriesQuery)
 
   const [renaming, setRenaming] = useState(rename === true)
+  const [view, setView] = useState<View>('timeline')
+  const [year, setYear] = useState(() => new Date().getFullYear())
   const [lanes, setLanes] = useState(false)
   const [drawer, setDrawer] = useState<DrawerState>(null)
   const [confirmingDelete, setConfirmingDelete] = useState<Item | null>(null)
@@ -105,6 +110,7 @@ function EditorPage() {
       <CategoryLegend categories={categories} items={items} />
 
       <div className="sticky top-0 z-10 flex flex-wrap items-center gap-3 border-b border-hairline-soft bg-background/95 py-3.5">
+        <ViewToggle view={view} onChange={setView} />
         <button
           aria-pressed={lanes}
           onClick={() => setLanes(!lanes)}
@@ -114,6 +120,7 @@ function EditorPage() {
           Swimlanes by Category
         </button>
         <span className="flex-1" />
+        {view === 'timeline' && <YearNav year={year} onChange={setYear} />}
         <Button onClick={newItem}>
           <Plus aria-hidden />
           Item
@@ -121,14 +128,24 @@ function EditorPage() {
       </div>
 
       {items.length ? (
-        <ItemList
-          items={items}
-          categories={categories}
-          lanes={lanes}
-          onEdit={(item) => setDrawer({ item })}
-          onDelete={setConfirmingDelete}
-          onMove={(activeId, overId) => reorder(allItems, activeId, overId)}
-        />
+        view === 'timeline' ? (
+          <ItemTimeline
+            items={items}
+            categories={categories}
+            lanes={lanes}
+            year={year}
+            onEdit={(item) => setDrawer({ item })}
+          />
+        ) : (
+          <ItemList
+            items={items}
+            categories={categories}
+            lanes={lanes}
+            onEdit={(item) => setDrawer({ item })}
+            onDelete={setConfirmingDelete}
+            onMove={(activeId, overId) => reorder(allItems, activeId, overId)}
+          />
+        )
       ) : (
         <div className="mt-6 flex flex-col items-center gap-3 rounded-lg border border-dashed border-[#d1d5db] px-6 py-14 text-center">
           <h2 className="font-display text-[22px] font-semibold tracking-[-0.3px]">This Roadmap has no Items yet</h2>
