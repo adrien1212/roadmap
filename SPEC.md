@@ -210,7 +210,8 @@ exist)
   and link preview tags `og:title`, `og:description`, `og:type`,
   `twitter:card` (summary, no image).
 - Public API payload (`GET /api/public/roadmaps/{publicId}`): Roadmap name,
-  `publishedAt`, the Owner's Brand name (`brandName`, or null), the Categories used by its non-Internal Items (id, name,
+  `publishedAt`, the Owner's Brand name (`brandName`, or null), whether Readers
+  can subscribe by email (`subscriptionsOpen`), the Categories used by its non-Internal Items (id, name,
   colour), and its non-Internal Items in manual order (id, title,
   description, start date, end date, status, category id, Shipped date).
   Nothing else — no Owner data other than its Brand, no `internal` flag, no

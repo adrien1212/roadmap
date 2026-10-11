@@ -1,10 +1,14 @@
-import { Rss } from 'lucide-react'
+import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import { Mail, Rss } from 'lucide-react'
 
 import { CategoryChip, StatusChip } from '#/components/chips'
+import { FieldError } from '#/components/field-error'
 import { Button } from '#/components/ui/button'
+import { Input } from '#/components/ui/input'
 import type { Category } from '#/lib/categories'
 import { formatInstant } from '#/lib/format'
-import { feedPath, type PublicItem } from '#/lib/public-page'
+import { feedPath, subscribe, type PublicItem } from '#/lib/public-page'
 
 const RECENTLY_SHIPPED = 3
 
@@ -51,23 +55,97 @@ export function RecentlyShipped({ items, categories }: { items: PublicItem[]; ca
   )
 }
 
-/** "Follow what ships": the Feed, for Readers who use a feed reader. Shown on every Public page. */
-export function FollowFeed({ publicId }: { publicId: string }) {
+/**
+ * Beside Recently shipped: subscribe by email when the Owner's SMTP server works,
+ * otherwise "Follow what ships" with the Feed only. The RSS link shows in both.
+ */
+export function ReaderUpdates({
+  publicId,
+  brandName,
+  subscriptionsOpen,
+}: {
+  publicId: string
+  brandName: string | null
+  subscriptionsOpen: boolean
+}) {
   return (
-    <aside aria-labelledby="follow-feed" className="flex flex-col gap-3 rounded-lg bg-surface-soft p-5">
-      <h2 id="follow-feed" className="flex items-center gap-2 text-base font-semibold">
-        <Rss className="size-4" aria-hidden />
-        Follow what ships
-      </h2>
-      <p className="m-0 text-[13px] text-muted-foreground">Add this Roadmap's feed to your RSS reader.</p>
+    <aside aria-labelledby="reader-updates" className="flex flex-col gap-3 rounded-lg bg-surface-soft p-5">
+      {subscriptionsOpen ? (
+        <SubscribeForm publicId={publicId} brandName={brandName} />
+      ) : (
+        <>
+          <h2 id="reader-updates" className="flex items-center gap-2 text-base font-semibold">
+            <Rss className="size-4" aria-hidden />
+            Follow what ships
+          </h2>
+          <p className="m-0 text-[13px] text-muted-foreground">Add this Roadmap's feed to your RSS reader.</p>
+        </>
+      )}
       <div>
-        <Button variant="secondary" size="sm" asChild>
+        <Button variant={subscriptionsOpen ? 'link' : 'secondary'} size="sm" asChild className={subscriptionsOpen ? 'h-auto px-0 text-[13px] font-medium text-muted-foreground' : undefined}>
           <a href={feedPath(publicId)}>
             <Rss aria-hidden />
-            RSS feed
+            {subscriptionsOpen ? 'Or follow with RSS' : 'RSS feed'}
           </a>
         </Button>
       </div>
     </aside>
+  )
+}
+
+function SubscribeForm({ publicId, brandName }: { publicId: string; brandName: string | null }) {
+  const [email, setEmail] = useState('')
+  const [error, setError] = useState<string | null>(null)
+  const send = useMutation({
+    mutationFn: () => subscribe(publicId, email),
+    onSuccess: () => setError(null),
+    onError: (e) => setError(e.message),
+  })
+
+  return (
+    <>
+      <h2 id="reader-updates" className="flex items-center gap-2 text-base font-semibold">
+        <Mail className="size-4" aria-hidden />
+        Get an email when something ships
+      </h2>
+      {send.isSuccess ? (
+        <p role="status" className="m-0 text-sm text-body">
+          Check your inbox. Confirm your email to start getting updates.
+        </p>
+      ) : (
+        <>
+          <form
+            noValidate
+            className="flex flex-col gap-2 min-[480px]:flex-row"
+            onSubmit={(e) => {
+              e.preventDefault()
+              send.mutate()
+            }}
+          >
+            <label htmlFor="sub-email" className="sr-only">
+              Email
+            </label>
+            <Input
+              id="sub-email"
+              type="email"
+              autoComplete="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              aria-invalid={error ? true : undefined}
+              aria-describedby={error ? 'sub-err' : 'sub-hint'}
+            />
+            <Button type="submit" disabled={send.isPending}>
+              Subscribe
+            </Button>
+          </form>
+          {error && <FieldError id="sub-err">{error}</FieldError>}
+          <p id="sub-hint" className="m-0 text-[13px] text-muted-foreground">
+            One email per shipped Item. {brandName ?? 'The owner of this Roadmap'} receives your email address.
+            Unsubscribe in one click.
+          </p>
+        </>
+      )}
+    </>
   )
 }

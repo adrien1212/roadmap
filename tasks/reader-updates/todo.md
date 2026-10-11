@@ -158,17 +158,17 @@ already subscribed.
 confirm page.
 
 **Acceptance criteria:**
-- [ ] Public payload gains `subscriptionsOpen` (Published and SMTP Connected);
+- [x] Public payload gains `subscriptionsOpen` (Published and SMTP Connected);
       exact-fields guard updated; SPEC payload line updated.
-- [ ] Public page: subscribe box (email, Subscribe, the hint naming the sender
+- [x] Public page: subscribe box (email, Subscribe, the hint naming the sender
       and that {Brand} receives the address, "Check your inbox" after) when
       open; "Follow what ships" (RSS) otherwise; RSS link in both.
-- [ ] `/r/$publicId/confirm?token=` confirms and shows "You're subscribed", or
+- [x] `/r/$publicId/confirm?token=` confirms and shows "You're subscribed", or
       "This link has expired".
 
 **Verification:**
-- [ ] `./mvnw test`; `npm run build`; curl the SSR HTML in both states
-- [ ] Manual: subscribe from the page, confirm from Mailpit.
+- [x] `./mvnw test`; `npm run build`; curl the SSR HTML in both states
+- [x] Manual: subscribe from the page, confirm from Mailpit.
 
 **Dependencies:** Task 6
 **Files likely touched:** `PublicPage.java` (+ test), `frontend/src/lib/public-page.ts`,
@@ -177,7 +177,7 @@ confirm page.
 **Estimated scope:** M
 
 ### Checkpoint: Subscribe
-- [ ] A Reader subscribes and confirms via Mailpit; identical answers for new
+- [x] A Reader subscribes and confirms via Mailpit; identical answers for new
       and confirmed emails
 
 ## Phase 3: Emails, unsubscribe, Owner view

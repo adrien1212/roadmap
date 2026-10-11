@@ -86,10 +86,10 @@ T1 SecretBox + SmtpServerGuard (pure)
 ### Phase 2: Readers subscribe
 - [x] Task 5: Subscription domain and schema
 - [x] Task 6: Subscribe and confirm API
-- [ ] Task 7: Subscribe box and confirm page
+- [x] Task 7: Subscribe box and confirm page
 
 ### Checkpoint: Subscribe
-- [ ] A Reader subscribes on a Public page, confirms from Mailpit; the answer
+- [x] A Reader subscribes on a Public page, confirms from Mailpit; the answer
       is identical for new and already confirmed emails
 
 ### Phase 3: Emails, unsubscribe, Owner view
@@ -117,6 +117,4 @@ T1 SecretBox + SmtpServerGuard (pure)
 
 ## Open Questions
 
-- The plan adds `subscriptionsOpen` to the public payload so the Public page
-  knows whether to show the subscribe box. OK? (SPEC's payload line is updated
-  with Task 7.)
+None. `subscriptionsOpen` was approved with the plan and added in Task 7.

@@ -15,11 +15,19 @@ import java.util.stream.Collectors;
  * What a Reader receives for a Published Roadmap, and nothing more: no Owner data but its Brand,
  * no internal flag, no Internal Items.
  */
-public record PublicPage(String name, Instant publishedAt, String brandName, List<PublicCategory> categories,
-		List<PublicItem> items) {
+public record PublicPage(String name, Instant publishedAt, String brandName, boolean subscriptionsOpen,
+		List<PublicCategory> categories, List<PublicItem> items) {
 
-	/** Internal Items are dropped here, on the backend; Categories are those of the remaining Items. */
+	/** For a Roadmap whose Readers can't subscribe (no working SMTP server). */
 	static PublicPage of(Roadmap roadmap, List<Item> itemsInManualOrder) {
+		return of(roadmap, itemsInManualOrder, false);
+	}
+
+	/**
+	 * Internal Items are dropped here, on the backend; Categories are those of the remaining Items.
+	 * subscriptionsOpen only says whether to offer the subscribe box, nothing else about the Owner's mail setup.
+	 */
+	static PublicPage of(Roadmap roadmap, List<Item> itemsInManualOrder, boolean subscriptionsOpen) {
 		List<Item> visible = itemsInManualOrder.stream().filter(item -> !item.isInternal()).toList();
 		List<PublicCategory> categories = visible.stream()
 				.map(Item::getCategory)
@@ -29,7 +37,8 @@ public record PublicPage(String name, Instant publishedAt, String brandName, Lis
 				.map(PublicCategory::of)
 				.toList();
 		// The Brand is the only Owner data a Reader receives.
-		return new PublicPage(roadmap.getName(), roadmap.getPublishedAt(), roadmap.getOwner().getBrandName(), categories,
+		return new PublicPage(roadmap.getName(), roadmap.getPublishedAt(), roadmap.getOwner().getBrandName(),
+				subscriptionsOpen, categories,
 				visible.stream().map(PublicItem::of).toList());
 	}
 

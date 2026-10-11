@@ -16,6 +16,7 @@ import { Route as AppSettingsRouteImport } from './routes/_app/settings'
 import { Route as RPublicIdRouteImport } from './routes/r.$publicId'
 import { Route as AppRoadmapsIndexRouteImport } from './routes/_app/roadmaps.index'
 import { Route as AppRoadmapsRoadmapIdRouteImport } from './routes/_app/roadmaps.$roadmapId'
+import { Route as RPublicIdConfirmRouteImport } from './routes/r.$publicId_.confirm'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -51,6 +52,11 @@ const AppRoadmapsRoadmapIdRoute = AppRoadmapsRoadmapIdRouteImport.update({
   path: '/roadmaps/$roadmapId',
   getParentRoute: () => AppRoute,
 } as any)
+const RPublicIdConfirmRoute = RPublicIdConfirmRouteImport.update({
+  id: '/r/$publicId_/confirm',
+  path: '/r/$publicId/confirm',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AppSettingsRoute
   '/r/$publicId': typeof RPublicIdRoute
   '/roadmaps/$roadmapId': typeof AppRoadmapsRoadmapIdRoute
+  '/r/$publicId/confirm': typeof RPublicIdConfirmRoute
   '/roadmaps/': typeof AppRoadmapsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AppSettingsRoute
   '/r/$publicId': typeof RPublicIdRoute
   '/roadmaps/$roadmapId': typeof AppRoadmapsRoadmapIdRoute
+  '/r/$publicId/confirm': typeof RPublicIdConfirmRoute
   '/roadmaps': typeof AppRoadmapsIndexRoute
 }
 export interface FileRoutesById {
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/_app/settings': typeof AppSettingsRoute
   '/r/$publicId': typeof RPublicIdRoute
   '/_app/roadmaps/$roadmapId': typeof AppRoadmapsRoadmapIdRoute
+  '/r/$publicId_/confirm': typeof RPublicIdConfirmRoute
   '/_app/roadmaps/': typeof AppRoadmapsIndexRoute
 }
 export interface FileRouteTypes {
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/r/$publicId'
     | '/roadmaps/$roadmapId'
+    | '/r/$publicId/confirm'
     | '/roadmaps/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -94,6 +104,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/r/$publicId'
     | '/roadmaps/$roadmapId'
+    | '/r/$publicId/confirm'
     | '/roadmaps'
   id:
     | '__root__'
@@ -103,6 +114,7 @@ export interface FileRouteTypes {
     | '/_app/settings'
     | '/r/$publicId'
     | '/_app/roadmaps/$roadmapId'
+    | '/r/$publicId_/confirm'
     | '/_app/roadmaps/'
   fileRoutesById: FileRoutesById
 }
@@ -110,6 +122,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   RPublicIdRoute: typeof RPublicIdRoute
+  RPublicIdConfirmRoute: typeof RPublicIdConfirmRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -163,6 +176,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRoadmapsRoadmapIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/r/$publicId_/confirm': {
+      id: '/r/$publicId_/confirm'
+      path: '/r/$publicId/confirm'
+      fullPath: '/r/$publicId/confirm'
+      preLoaderRoute: typeof RPublicIdConfirmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -186,6 +206,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   RPublicIdRoute: RPublicIdRoute,
+  RPublicIdConfirmRoute: RPublicIdConfirmRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

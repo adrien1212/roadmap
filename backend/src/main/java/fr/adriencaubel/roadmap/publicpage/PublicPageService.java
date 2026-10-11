@@ -4,6 +4,7 @@ import fr.adriencaubel.roadmap.common.NotFoundException;
 import fr.adriencaubel.roadmap.item.ItemRepository;
 import fr.adriencaubel.roadmap.roadmap.Roadmap;
 import fr.adriencaubel.roadmap.roadmap.RoadmapRepository;
+import fr.adriencaubel.roadmap.subscription.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Limit;
@@ -22,12 +23,13 @@ public class PublicPageService {
 
 	private final RoadmapRepository roadmaps;
 	private final ItemRepository items;
+	private final SubscriptionService subscriptions;
 
 	/** Private and unknown publicIds give the same 404. */
 	public PublicPage get(String publicId) {
 		Roadmap roadmap = roadmaps.findByPublicIdAndPublishedAtIsNotNull(publicId)
 				.orElseThrow(() -> new NotFoundException("Roadmap not found"));
-		return PublicPage.of(roadmap, items.findAllByRoadmapOrderByPositionAsc(roadmap));
+		return PublicPage.of(roadmap, items.findAllByRoadmapOrderByPositionAsc(roadmap), subscriptions.emailsOpen(roadmap));
 	}
 
 	/** The Feed of a Published Roadmap, with an ETag of its content. Private and unknown publicIds give the same 404. */

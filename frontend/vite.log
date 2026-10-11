@@ -5,3 +5,10 @@
   ➜  Local:   http://localhost:3001/
   ➜  Network: use --host to expose
 2:14:26 PM [vite] (ssr) connected.
+2:18:54 PM [vite] (ssr) page reload src/lib/public-page.ts
+2:18:54 PM [vite] (ssr) program reload
+File /Users/adriencaubel/Developer/roadmap-v2/frontend/src/routeTree.gen.ts was modified by another process during processing.
+2:18:54 PM [vite] (ssr) page reload src/routes/r.$publicId.tsx
+2:18:54 PM [vite] (ssr) page reload src/routeTree.gen.ts
+2:18:54 PM [vite] (ssr) page reload src/routeTree.gen.ts
+2:18:54 PM [vite] (ssr) page reload src/routeTree.gen.ts

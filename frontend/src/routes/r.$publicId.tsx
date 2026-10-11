@@ -6,7 +6,7 @@ import { ChevronRight } from 'lucide-react'
 import { BrandMark } from '#/components/brand-mark'
 import { CategoryChip, CategoryDot, StatusChip } from '#/components/chips'
 import { NotFound } from '#/components/not-found'
-import { FollowFeed, RecentlyShipped } from '#/components/recently-shipped'
+import { ReaderUpdates, RecentlyShipped } from '#/components/recently-shipped'
 import { Button } from '#/components/ui/button'
 import { ViewToggle, type View } from '#/components/view-toggle'
 import { StatusKey, YearNav, YearTimeline } from '#/components/year-timeline'
@@ -97,7 +97,7 @@ function PublicPageView() {
         <div>
           <RecentlyShipped items={page.items} categories={page.categories} />
         </div>
-        <FollowFeed publicId={publicId} />
+        <ReaderUpdates publicId={publicId} brandName={page.brandName} subscriptionsOpen={page.subscriptionsOpen} />
       </div>
 
       <div className="mb-7 flex flex-col gap-3 border-y border-hairline-soft py-5">

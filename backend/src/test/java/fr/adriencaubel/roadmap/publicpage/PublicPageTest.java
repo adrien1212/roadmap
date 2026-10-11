@@ -118,8 +118,15 @@ class PublicPageTest {
 	}
 
 	@Test
+	void saysWhetherReadersCanSubscribe() {
+		assertThat(PublicPage.of(roadmap, List.of(), true).subscriptionsOpen()).isTrue();
+		assertThat(PublicPage.of(roadmap, List.of(), false).subscriptionsOpen()).isFalse();
+	}
+
+	@Test
 	void exposesExactlyTheFieldsOfTheSpec() {
-		assertThat(fields(PublicPage.class)).containsExactly("name", "publishedAt", "brandName", "categories", "items");
+		assertThat(fields(PublicPage.class))
+				.containsExactly("name", "publishedAt", "brandName", "subscriptionsOpen", "categories", "items");
 		assertThat(fields(PublicPage.PublicCategory.class)).containsExactly("id", "name", "colour");
 		assertThat(fields(PublicPage.PublicItem.class))
 				.containsExactly("id", "title", "description", "startDate", "endDate", "status", "categoryId", "shippedAt");

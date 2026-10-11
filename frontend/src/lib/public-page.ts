@@ -10,6 +10,8 @@ export interface PublicPage {
   publishedAt: string
   /** The Owner's Brand, the only Owner data a Reader receives; null when unset. */
   brandName: string | null
+  /** Whether Readers can subscribe by email (Published, and the Owner's SMTP server works). */
+  subscriptionsOpen: boolean
   /** Only the Categories used by the Items below. */
   categories: Category[]
   /** Non-Internal Items, in manual order. */
@@ -30,6 +32,12 @@ export interface PublicItem {
 
 /** The Feed (RSS 2.0) of a Published Roadmap. */
 export const feedPath = (publicId: string) => `/api/public/roadmaps/${encodeURIComponent(publicId)}/feed.xml`
+
+/** Always answers the same, whether the address is new or already subscribed. */
+export const subscribe = (publicId: string, email: string) =>
+  api.post<{ detail: string }>(`/api/public/roadmaps/${encodeURIComponent(publicId)}/subscriptions`, { email })
+
+export const confirmSubscription = (token: string) => api.post<void>('/api/public/subscriptions/confirm', { token })
 
 export const publicPageQuery = (publicId: string) =>
   queryOptions({
