@@ -213,15 +213,15 @@ confirm page.
 **Description:** One click from any email ends the Subscription.
 
 **Acceptance criteria:**
-- [ ] `POST /api/public/subscriptions/unsubscribe` (token in body or query, for
+- [x] `POST /api/public/subscriptions/unsubscribe` (token in body or query, for
       the one-click header) deletes the Subscription and increments the
       Roadmap's unsubscribed count; unknown token → 404.
-- [ ] `/r/$publicId/unsubscribe?token=` posts on load and shows "You're
+- [x] `/r/$publicId/unsubscribe?token=` posts on load and shows "You're
       unsubscribed" with "See the Roadmap".
 
 **Verification:**
-- [ ] `./mvnw test`; `npm run build`
-- [ ] Manual: click Unsubscribe in a Mailpit email → page; ship again → no
+- [x] `./mvnw test`; `npm run build`
+- [x] Manual: click Unsubscribe in a Mailpit email → page; ship again → no
       email for that Reader; `curl -X POST` one-click works.
 
 **Dependencies:** Task 8

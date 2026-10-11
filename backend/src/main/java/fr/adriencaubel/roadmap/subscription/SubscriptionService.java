@@ -57,6 +57,14 @@ public class SubscriptionService {
 		subscription.confirm(now);
 	}
 
+	/** Ends the Subscription: the address is deleted, only the Roadmap's unsubscribed count remains. */
+	public void unsubscribe(String token) {
+		Subscription subscription = subscriptions.findByToken(token == null ? "" : token)
+				.orElseThrow(() -> new NotFoundException("This link has expired"));
+		subscription.getRoadmap().countUnsubscribe();
+		subscriptions.delete(subscription);
+	}
+
 	/** Readers can subscribe when the Roadmap is Published and its Owner's SMTP server is connected. */
 	@Transactional(readOnly = true)
 	public boolean emailsOpen(Roadmap roadmap) {

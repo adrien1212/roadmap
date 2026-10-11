@@ -39,6 +39,9 @@ export const subscribe = (publicId: string, email: string) =>
 
 export const confirmSubscription = (token: string) => api.post<void>('/api/public/subscriptions/confirm', { token })
 
+export const unsubscribe = (token: string) =>
+  api.post<void>(`/api/public/subscriptions/unsubscribe?token=${encodeURIComponent(token)}`)
+
 export const publicPageQuery = (publicId: string) =>
   queryOptions({
     queryKey: ['public', publicId],
