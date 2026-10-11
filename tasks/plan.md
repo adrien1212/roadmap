@@ -85,7 +85,7 @@ Detailed tasks live in `tasks/todo.md`.
 ### Phase 3: Frontend — Claude
 - [x] Task 9: Compare `design/` mockups with SPEC
 - [x] Task 10: API client and app layout
-- [ ] Task 11: Categories UI
+- [x] Task 11: Categories UI
 - [ ] Task 12: Roadmaps UI
 
 ### Checkpoint: Roadmaps & Categories UI

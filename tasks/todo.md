@@ -196,10 +196,10 @@ refresh (SSR path).
 ### Task 11: Categories UI
 
 **Acceptance criteria:**
-- [ ] Categories screen: list with Item counts, create (name + palette
+- [x] Categories screen: list with Item counts, create (name + palette
       swatch, next colour preselected), rename inline, recolour via swatch
       popover, delete with confirm stating how many Items it is cleared from.
-- [ ] Duplicate name error inline.
+- [x] Duplicate name error inline.
 
 **Verification:** `npm run build`; Manual: changes persist.
 **Dependencies:** Task 10
