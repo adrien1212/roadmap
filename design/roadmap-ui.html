@@ -156,9 +156,7 @@ input[type=date].input{padding-right:8px}
 .rm-card .open:focus-visible{outline:2px solid var(--c-ink);outline-offset:2px}
 .rm-card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
 .rm-card .more{position:relative;z-index:2}
-.rm-card .mini{display:flex;flex-direction:column;gap:6px;margin-top:auto}
-.rm-card .mini span{display:block;height:6px;border-radius:99px}
-.rm-card .foot{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.rm-card .foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:auto}
 .new-card{border:1px dashed #d1d5db;background:transparent;border-radius:var(--radius-lg);min-height:168px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--c-body);font-weight:600;font-size:14px;transition:border-color 120ms ease, background-color 120ms ease}
 .new-card:hover{border-color:var(--c-ink);color:var(--c-ink);background:var(--c-surface-soft)}
 
@@ -243,8 +241,9 @@ input[type=date].input{padding-right:8px}
 /* drawer + dialogs */
 .scrim{position:fixed;inset:0;background:rgba(17,17,17,.4);z-index:40;animation:fade 160ms ease}
 @keyframes fade{from{opacity:0}}
-.drawer{position:fixed;top:0;right:0;bottom:0;width:440px;max-width:100vw;background:var(--c-canvas);box-shadow:var(--shadow-overlay);z-index:41;display:flex;flex-direction:column;animation:slide 260ms var(--ease-out)}
-@keyframes slide{from{transform:translateX(24px);opacity:0}}
+.drawer-wrap{position:fixed;inset:0;z-index:41;display:flex;align-items:center;justify-content:center;padding:16px;pointer-events:none}
+/* Item form: a dialog centred on the screen (was a side drawer); fields scroll when the screen is short */
+.drawer{pointer-events:auto;width:560px;max-width:100%;max-height:calc(100dvh - 32px);background:var(--c-canvas);border-radius:var(--radius-xl);box-shadow:var(--shadow-overlay);display:flex;flex-direction:column;animation:pop 200ms var(--ease-out)}
 .drawer header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 16px;border-bottom:1px solid var(--c-hairline-soft)}
 .drawer .body{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:20px}
 .drawer footer{padding:16px 24px;border-top:1px solid var(--c-hairline-soft);display:flex;gap:12px;align-items:center}
@@ -314,6 +313,34 @@ input[type=date].input{padding-right:8px}
 .desc-pop{grid-column:1/-1;margin:0 0 12px var(--label);padding:12px 16px;background:var(--c-surface-soft);border-radius:var(--radius-md);font-size:14px;color:var(--c-body);max-width:640px;white-space:pre-line;animation:fade 160ms ease}
 .desc-pop .meta{display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
 
+/* branding (Owner settings) */
+.brand{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:15px;color:var(--c-ink)}
+.logo{width:28px;height:28px;border-radius:var(--radius-sm);background:var(--c-ink);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:15px;flex-shrink:0}
+.logo.lg{width:56px;height:56px;border-radius:var(--radius-md);font-size:26px}
+.settings-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:start}
+.panel{border:1px solid var(--c-hairline);border-radius:var(--radius-lg);padding:24px;display:flex;flex-direction:column;gap:20px}
+.logo-row{display:flex;align-items:center;gap:16px}
+.og{border:1px solid var(--c-hairline);border-radius:var(--radius-lg);overflow:hidden}
+.og .img{aspect-ratio:1.91/1;background:var(--c-surface-card);display:flex;flex-direction:column;justify-content:space-between;padding:24px}
+.og .img .t{font-family:var(--font-display);font-size:26px;font-weight:600;letter-spacing:-.5px;line-height:1.15}
+.og .meta{padding:12px 14px;border-top:1px solid var(--c-hairline);display:flex;flex-direction:column;gap:2px}
+
+/* public page: recently shipped + subscribe */
+.pub-top{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:24px;margin-bottom:28px;align-items:start}
+.shipped-list{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column}
+.shipped-list li{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--c-hairline-soft)}
+.shipped-list li:last-child{border-bottom:0}
+.shipped-list .when{margin-left:auto;white-space:nowrap}
+.subscribe{background:var(--c-surface-soft);border-radius:var(--radius-lg);padding:20px;display:flex;flex-direction:column;gap:12px}
+.subscribe form{display:flex;gap:8px}
+.subscribe .input{background:var(--c-canvas)}
+
+/* email to a subscribed Reader */
+.mail-bg{min-height:100vh;background:var(--c-surface-card);padding:48px 16px 120px}
+.mail-meta{max-width:600px;margin:0 auto 12px;font-size:var(--fs-caption);color:var(--c-muted);display:flex;flex-direction:column;gap:2px}
+.mail{max-width:600px;margin:0 auto;background:var(--c-canvas);border-radius:var(--radius-lg);padding:36px;display:flex;flex-direction:column;gap:16px;box-shadow:var(--shadow-soft)}
+.mail hr{border:0;border-top:1px solid var(--c-hairline-soft);margin:8px 0 0;width:100%}
+
 /* 404 */
 .nf{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:32px;text-align:center}
 .nf .code{font-family:var(--font-display);font-size:96px;line-height:1;letter-spacing:-3px;color:var(--c-surface-strong)}
@@ -350,6 +377,9 @@ input[type=date].input{padding-right:8px}
   .pub{padding:40px 16px 96px}
   .pub-filters .grp>.label{width:100%}
   .plist li{grid-template-columns:1fr;gap:10px}
+  .pub-top{grid-template-columns:1fr}
+  .settings-grid{grid-template-columns:1fr}
+  .subscribe form{flex-direction:column}
   .tl{--label:0px}
   .tl-head{grid-template-columns:1fr;top:0}
   .tl-months span{padding-left:3px;font-size:11px}
@@ -359,7 +389,6 @@ input[type=date].input{padding-right:8px}
   .bar{top:6px}.pt{top:9px}.off{top:8px}
   .desc-pop{margin-left:0}
   .kit section{grid-template-columns:1fr}
-  .drawer{width:100vw}
 }
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
@@ -377,7 +406,8 @@ const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov
 
 const S = {
   screen: 'editor',
-  owner: { initials:'MR', provider:'GitHub' },
+  owner: { initials:'MR', provider:'Google' },
+  brand: { name:'Acme', logo:'A' },   // Owner settings: shown on every Public page and in emails
   categories: [
     { id:'c1', name:'Security', colour:'violet' },
     { id:'c2', name:'Integrations', colour:'emerald' },
@@ -385,10 +415,10 @@ const S = {
     { id:'c4', name:'Reporting', colour:'pink' },
   ],
   roadmaps: [
-    { id:'r1', name:'Product roadmap 2026', publicId:'k7Q2xW9pLm3aZ8fR', publishedAt:new Date(2026,9,4,14,20), items:[
-      { id:'i1', title:'SSO & SCIM provisioning', description:'Sign in with your identity provider over SAML, and provision people automatically with SCIM.', start:'2026-01-12', end:'2026-03-06', status:'shipped', categoryId:'c1', internal:false },
-      { id:'i2', title:'Two-factor authentication', description:'Authenticator apps and security keys for every account.', start:'', end:'2026-06-18', status:'shipped', categoryId:'c1', internal:false },
-      { id:'i3', title:'Slack notifications', description:'Post a message to a Slack channel when something you follow changes.', start:'2026-02-02', end:'2026-04-10', status:'shipped', categoryId:'c2', internal:false },
+    { id:'r1', name:'Product roadmap 2026', publicId:'k7Q2xW9pLm3aZ8fR', publishedAt:new Date(2026,9,4,14,20), subscribed:12, items:[
+      { id:'i1', title:'SSO & SCIM provisioning', description:'Sign in with your identity provider over SAML, and provision people automatically with SCIM.', start:'2026-01-12', end:'2026-03-06', status:'shipped', shippedAt:'2026-03-09', categoryId:'c1', internal:false },
+      { id:'i2', title:'Two-factor authentication', description:'Authenticator apps and security keys for every account.', start:'', end:'2026-06-18', status:'shipped', shippedAt:'2026-10-02', categoryId:'c1', internal:false },
+      { id:'i3', title:'Slack notifications', description:'Post a message to a Slack channel when something you follow changes.', start:'2026-02-02', end:'2026-04-10', status:'shipped', shippedAt:'2026-04-14', categoryId:'c2', internal:false },
       { id:'i4', title:'Mobile app for iOS and Android', description:'Review and approve on your phone.\nOffline reading comes first; editing follows.', start:'2026-04-01', end:'2026-11-30', status:'in_progress', categoryId:'c3', internal:false },
       { id:'i5', title:'Usage reports', description:'Monthly reports on adoption across your organisation, exportable as CSV.', start:'2026-07-01', end:'2026-10-31', status:'in_progress', categoryId:'c4', internal:false },
       { id:'i6', title:'Billing migration', description:'Move invoicing to the new tax provider. No visible change for anyone outside the team.', start:'2026-09-01', end:'2026-12-15', status:'in_progress', categoryId:'', internal:true },
@@ -397,7 +427,7 @@ const S = {
       { id:'i9', title:'Dark theme', description:'', start:'', end:'2026-12-15', status:'planned', categoryId:'c3', internal:false },
       { id:'i10', title:'Zapier integration', description:'Connect to thousands of apps without code. Timing depends on partner review.', start:'', end:'', status:'planned', categoryId:'c2', internal:false },
     ]},
-    { id:'r2', name:'Platform team, H1 2027', publicId:'Vb4nT1qE8sYw2Kc6', publishedAt:null, items:[
+    { id:'r2', name:'Platform team, H1 2027', publicId:'Vb4nT1qE8sYw2Kc6', publishedAt:null, subscribed:0, items:[
       { id:'i11', title:'Design system v2', description:'', start:'2026-10-01', end:'2027-01-29', status:'in_progress', categoryId:'c3', internal:false },
       { id:'i12', title:'Faster search', description:'', start:'2027-01-11', end:'2027-03-31', status:'planned', categoryId:'c3', internal:false },
       { id:'i13', title:'Data residency in the EU', description:'', start:'2027-02-01', end:'2027-05-28', status:'planned', categoryId:'c1', internal:true },
@@ -413,7 +443,7 @@ const S = {
   catEdit: null,         // { id, name, error }  (Categories screen)
   catColourPop: null,
   toast: null,
-  pub: { view:'timeline', cat:'', status:'', year:TODAY.getFullYear(), open:'' },
+  pub: { view:'timeline', cat:'', status:'', year:TODAY.getFullYear(), open:'', email:'', subscribed:false, error:'' },
   focus: null,
 };
 
@@ -440,6 +470,10 @@ function ago(dt){
   return days<=0 ? 'today' : days===1 ? 'yesterday' : `${days} days ago`;
 }
 const publicUrl = r => `${ORIGIN}/r/${r.publicId}`;
+const logo = (cls='') => `<span class="logo ${cls}" aria-hidden="true">${esc(S.brand.logo)}</span>`;
+const brandMark = () => `<span class="brand">${logo()}${esc(S.brand.name)}</span>`;
+// Recently shipped: the last Shipped non-Internal Items, newest first (changelog)
+const recentlyShipped = (r, n=3) => r.items.filter(i=>i.status==='shipped' && !i.internal && i.shippedAt).sort((a,b)=>b.shippedAt.localeCompare(a.shippedAt)).slice(0,n);
 
 const IC = {
   plus:'<path d="M12 5v14M5 12h14"/>', x:'<path d="M18 6 6 18M6 6l12 12"/>',
@@ -456,11 +490,10 @@ const IC = {
   list:'<path d="M3 6h.01M3 12h.01M3 18h.01M8 6h13M8 12h13M8 18h13"/>',
   gantt:'<path d="M8 6h10M5 12h9M11 18h8"/>', lanes:'<rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/>',
   check:'<path d="M20 6 9 17l-5-5"/>', alert:'<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>',
-  clock:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>', logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>',
+  clock:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>', mail:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/>', rss:'<path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/>', image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>', logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>',
 };
 const ic = (n, cls='') => `<svg class="icon ${cls}" viewBox="0 0 24 24" aria-hidden="true">${IC[n]}</svg>`;
 const GOOGLE = '<svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2A11.9 11.9 0 0 1 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3a12 12 0 0 1-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>';
-const GITHUB = '<svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>';
 
 const wordmark = (act='') => `<button class="wordmark" ${act ? `data-a="${act}"` : 'tabindex="-1"'} aria-label="Product name (placeholder)"><i></i><span class="wm-text">Product name</span></button>`;
 const statusChip = s => `<span class="chip status-${s}">${STATUS[s]}</span>`;
@@ -506,7 +539,7 @@ const statusKey = () => `<div class="key"><span><i style="background:var(--c-ink
 function appbar(active){
   return `<div class="wrap"><header class="appbar">
     <div style="display:flex;align-items:center">${wordmark('go-roadmaps')}
-      <nav aria-label="Main"><button data-a="go-roadmaps" ${active==='roadmaps'?'aria-current="page"':''}>Roadmaps</button><button data-a="go-categories" ${active==='categories'?'aria-current="page"':''}>Categories</button></nav>
+      <nav aria-label="Main"><button data-a="go-roadmaps" ${active==='roadmaps'?'aria-current="page"':''}>Roadmaps</button><button data-a="go-categories" ${active==='categories'?'aria-current="page"':''}>Categories</button><button data-a="go-settings" ${active==='settings'?'aria-current="page"':''}>Settings</button></nav>
     </div>
     <div class="owner">
       <button class="avatar" data-a="menu" data-id="owner" aria-haspopup="menu" aria-expanded="${S.menu==='owner'}" aria-label="Your account">${S.owner.initials}</button>
@@ -526,7 +559,6 @@ function landing(){
         <p>Keep a dated Roadmap, press Publish, share one link. Edits show up for Readers right away, and Internal Items never leave your editor.</p>
         <div class="oauth">
           <button class="btn btn-primary" data-a="go-roadmaps">${GOOGLE}<span>Continue with Google</span></button>
-          <button class="btn btn-secondary" data-a="go-roadmaps">${GITHUB}<span>Continue with GitHub</span></button>
         </div>
       </div>
       <div class="mock" aria-hidden="true">
@@ -540,8 +572,8 @@ function landing(){
       <article><div class="demo"><span class="chip chip-neutral">${ic('eyeoff')}Internal</span></div><h2 class="t-md">Internal Items stay out</h2><p>Mark an Item Internal and it's left out of the Public page before anything reaches the browser.</p></article>
       <article><div class="demo">${statusChip('planned')}${statusChip('in_progress')}${statusChip('shipped')}</div><h2 class="t-md">Status is yours to set</h2><p>Dates describe the plan. Status is what you say is true, and it never changes on its own when a date passes.</p></article>
     </section>
-    <section class="cta"><h2 class="display d-sm">Publish your first Roadmap</h2><p class="text-body" style="margin:0">Sign in with Google or GitHub. Your first sign-in sets everything up.</p>
-      <div class="oauth" style="justify-content:center"><button class="btn btn-primary" data-a="go-roadmaps">${GOOGLE}<span>Continue with Google</span></button><button class="btn btn-secondary" data-a="go-roadmaps">${GITHUB}<span>Continue with GitHub</span></button></div></section>
+    <section class="cta"><h2 class="display d-sm">Publish your first Roadmap</h2><p class="text-body" style="margin:0">Sign in with Google. Your first sign-in sets everything up.</p>
+      <div class="oauth" style="justify-content:center"><button class="btn btn-primary" data-a="go-roadmaps">${GOOGLE}<span>Continue with Google</span></button></div></section>
   </div>
   <footer class="l-foot"><div class="wrap">${wordmark()}<span>Roadmaps you can publish.</span></div></footer>`;
 }
@@ -549,17 +581,12 @@ function landing(){
 function roadmaps(){
   const cards = S.roadmaps.map(r => {
     const vis = r.items.filter(i=>!i.internal).length, n = r.items.length;
-    const fill = st => st==='shipped'?'var(--c-ink)':st==='in_progress'?'var(--c-brand-accent)':'var(--c-surface-strong)';
-    const preview = r.items.map(i=>({i,g:span(i,TODAY.getFullYear())})).filter(x=>x.g.kind==='bar').slice(0,4)
-      .map(({i,g}) => `<span style="margin-left:${g.l}%;width:${Math.max(4,g.r-g.l)}%;background:${fill(i.status)}"></span>`).join('')
-      || '<span style="width:40%;background:var(--c-surface-strong)"></span>';
     return `<li class="rm-card">
       <button class="open" data-a="open" data-id="${r.id}" aria-label="Open ${esc(r.name)}"></button>
       <div class="top"><h2 class="t-lg">${esc(r.name)}</h2>
         <div class="more"><button class="btn btn-ghost btn-sm btn-icon" data-a="menu" data-id="${r.id}" aria-label="More for ${esc(r.name)}" aria-haspopup="menu" aria-expanded="${S.menu===r.id}">${ic('more')}</button>
         ${S.menu===r.id?`<div class="menu" role="menu"><button role="menuitem" data-a="open" data-id="${r.id}">${ic('pencil')}Open editor</button>${r.publishedAt?`<button role="menuitem" data-a="go-public-of" data-id="${r.id}">${ic('ext')}View Public page</button>`:''}<button role="menuitem" class="danger" data-a="ask-delete-roadmap" data-id="${r.id}">${ic('trash')}Delete Roadmap</button></div>`:''}</div>
       </div>
-      <div class="mini" aria-hidden="true">${preview}</div>
       <div class="foot"><span class="body-sm muted num">${n} Item${n===1?'':'s'}${n!==vis?` · ${n-vis} Internal`:''}</span>
         ${r.publishedAt ? `<span class="state state-published"><span class="dot"></span>Published ${ago(r.publishedAt)}</span>` : stateBadge(r)}</div>
     </li>`;
@@ -679,13 +706,16 @@ function edList(r){
 function drawer(){
   if (!S.drawer) return '';
   const { id, draft:x, error } = S.drawer;
+  const r = rm(), was = id && r.items.find(i=>i.id===id);
+  // Becoming Shipped on a Published Roadmap emails the subscribed Readers (never for Internal Items)
+  const notify = r.publishedAt && r.subscribed && x.status==='shipped' && !x.internal && (!was || was.status!=='shipped');
   return `<div class="scrim" data-a="close-drawer"></div>
-  <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="dr-title">
+  <div class="drawer-wrap"><aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="dr-title">
     <header><h2 class="t-lg" id="dr-title">${id?'Edit Item':'New Item'}</h2><button class="btn btn-ghost btn-icon" data-a="close-drawer" aria-label="Close">${ic('x')}</button></header>
     <form class="body" data-form="item" novalidate id="item-form" data-key="${S.drawer.key}">
       <div class="field"><label class="label" for="f-title">Title</label><input class="input" id="f-title" data-f="title" value="${esc(x.title)}" maxlength="140" ${error?.field==='title'?'aria-invalid="true" aria-describedby="e-title"':''}>${error?.field==='title'?`<p class="error" id="e-title">${ic('alert')}${error.msg}</p>`:''}</div>
       <div class="field"><label class="label" for="f-desc">Description</label><textarea class="textarea" id="f-desc" data-f="description" placeholder="What is it, in plain words?">${esc(x.description)}</textarea><p class="hint">Plain text. Line breaks are kept.</p></div>
-      <div class="field"><span class="label" id="l-status">Status</span><div class="seg full" role="radiogroup" aria-labelledby="l-status">${Object.entries(STATUS).map(([k,v])=>`<button type="button" role="radio" aria-checked="${x.status===k}" data-a="draft-status" data-v="${k}">${v}</button>`).join('')}</div><p class="hint">Set by hand. It never changes when a date passes.</p></div>
+      <div class="field"><span class="label" id="l-status">Status</span><div class="seg full" role="radiogroup" aria-labelledby="l-status">${Object.entries(STATUS).map(([k,v])=>`<button type="button" role="radio" aria-checked="${x.status===k}" data-a="draft-status" data-v="${k}">${v}</button>`).join('')}</div>${notify ? `<p class="hint" style="color:var(--c-body);display:flex;gap:6px;align-items:center">${ic('mail')}${r.subscribed} subscribed Readers get an email about this Item when you save.</p>` : '<p class="hint">Set by hand. It never changes when a date passes.</p>'}</div>
       <div class="row2">
         ${['start','end'].map(k=>`<div class="field"><label class="label" for="f-${k}">${k==='start'?'Start date':'End date'} <span class="muted" style="font-weight:400">(optional)</span></label><input type="date" class="input num" id="f-${k}" data-f="${k}" value="${x[k]}" ${error?.field==='end'&&k==='end'?'aria-invalid="true" aria-describedby="e-end"':''}></div>`).join('')}
       </div>
@@ -694,7 +724,7 @@ function drawer(){
       <button type="button" class="switch" role="switch" aria-checked="${x.internal}" data-a="draft-internal"><span class="track"></span><span><span class="t-sm" style="display:block;font-size:14px">Internal</span><span class="hint">Shown here in the editor, left off the Public page.</span></span></button>
     </form>
     <footer>${id?`<button class="btn btn-danger btn-icon" data-a="ask-delete-item" data-id="${id}" aria-label="Delete Item">${ic('trash')}</button>`:''}<span style="flex:1"></span><button class="btn btn-secondary" data-a="close-drawer">Cancel</button><button class="btn btn-primary" type="submit" form="item-form">${id?'Save':'Add Item'}</button></footer>
-  </aside>`;
+  </aside></div>`;
 }
 
 function dialog(){
@@ -705,12 +735,13 @@ function dialog(){
     inner = `<h2 class="t-lg" id="dlg-t">Publish ${esc(r.name)}?</h2>
       <p class="text-body body-sm" style="margin:0">Anyone with this link will be able to open the Roadmap, without signing in.</p>
       <div class="url"><code>${publicUrl(r)}</code></div>
-      <ul class="facts"><li>${ic('eyeoff')}<span>${r.items.filter(i=>i.internal).length ? `${r.items.filter(i=>i.internal).length} Internal Item${r.items.filter(i=>i.internal).length===1?' is':'s are'} left out.` : 'Internal Items are left out.'}</span></li><li>${ic('clock')}<span>Your edits show up right away after this. There's no draft.</span></li><li>${ic('lock')}<span>You can unpublish at any time. The link stays the same.</span></li></ul>
+      <ul class="facts"><li>${ic('eyeoff')}<span>${r.items.filter(i=>i.internal).length ? `${r.items.filter(i=>i.internal).length} Internal Item${r.items.filter(i=>i.internal).length===1?' is':'s are'} left out.` : 'Internal Items are left out.'}</span></li><li>${ic('clock')}<span>Your edits show up right away after this. There's no draft.</span></li><li>${ic('mail')}<span>Readers can subscribe and get an email when an Item becomes Shipped.</span></li><li>${ic('lock')}<span>You can unpublish at any time. The link stays the same.</span></li></ul>
       <div style="display:flex;gap:12px;justify-content:flex-end"><button class="btn btn-secondary" data-a="close-dialog">Cancel</button><button class="btn btn-primary" data-a="publish">${ic('globe')}Publish</button></div>`;
   } else if (D.kind === 'publish'){
     inner = `<h2 class="t-lg" id="dlg-t">${esc(r.name)} is published</h2>
       <div class="url"><code>${publicUrl(r)}</code><button class="btn btn-secondary" data-a="copy">${D.copied?`${ic('check')}Copied`:`${ic('copy')}Copy link`}</button></div>
       <p class="body-sm text-body" style="margin:0">Published <span class="num">${fmt(r.publishedAt)}</span> (${ago(r.publishedAt)}). Edits already show to Readers. Publishing again only moves this date to today.</p>
+      <p class="body-sm text-body" style="margin:0;display:flex;gap:8px;align-items:center">${ic('mail')}<span><span class="num">${r.subscribed}</span> Reader${r.subscribed===1?' is':'s are'} subscribed and get an email when an Item becomes Shipped.</span></p>
       <div style="display:flex;gap:12px;flex-wrap:wrap"><button class="btn btn-secondary" style="flex:1" data-a="publish">Publish again</button><button class="btn btn-primary" style="flex:1" data-a="go-public">${ic('ext')}View Public page</button></div>
       <button class="btn btn-ghost" style="align-self:center;color:var(--c-error-text)" data-a="ask-unpublish">Unpublish</button>`;
   } else if (D.kind === 'unpublish'){
@@ -749,14 +780,75 @@ function publicPage(){
       <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:16px;align-items:center">${statusKey()}</div>
       ${undated||outside ? `<div class="tl-note">${undated?`<span>${undated} Item${undated===1?' has':'s have'} no dates.</span>`:''}${outside?`<span>${outside} fall${outside===1?'s':''} outside ${P.year}.</span>`:''}<button class="btn btn-ghost btn-sm" data-a="pf-view" data-v="list">See all in List ${ic('right')}</button></div>` : ''}`;
   }
+  const shipped = recentlyShipped(r);
+  const subscribe = `<aside class="subscribe" aria-labelledby="sub-t">
+      <h2 class="t-sm" id="sub-t" style="display:flex;gap:8px;align-items:center">${ic('mail')}Get an email when something ships</h2>
+      ${P.subscribed
+        ? `<p class="body-sm text-body" style="margin:0" role="status">Check your inbox. Confirm your email to start getting updates.</p>`
+        : `<form data-form="subscribe" novalidate><label class="sr" for="sub-email">Email</label><input class="input" id="sub-email" type="email" placeholder="you@example.com" value="${esc(P.email)}" ${P.error?'aria-invalid="true" aria-describedby="sub-err"':''}><button class="btn btn-primary" type="submit">Subscribe</button></form>
+           ${P.error?`<p class="error" id="sub-err">${ic('alert')}${P.error}</p>`:''}
+           <p class="hint">One email per shipped Item, from ${esc(S.brand.name)}. Unsubscribe in one click.</p>`}
+      <a class="caption muted" href="#" data-a="noop" style="display:inline-flex;gap:6px;align-items:center">${ic('rss')}Or follow with RSS</a>
+    </aside>`;
+  const top = `<div class="pub-top">
+      ${shipped.length ? `<section aria-labelledby="rs-t"><h2 class="t-md" id="rs-t">Recently shipped</h2><ul class="shipped-list">${shipped.map(it=>`<li><span class="chip status-shipped">Shipped</span><span style="font-weight:500">${esc(it.title)}</span>${catChip(cat(it.categoryId))}<span class="when caption muted num">${fmt(d(it.shippedAt))}</span></li>`).join('')}</ul></section>` : '<div></div>'}
+      ${subscribe}
+    </div>`;
   return `<main class="pub">
+    <div style="margin-bottom:20px">${brandMark()}</div>
     <header class="pub-head"><div><h1 class="display d-lg">${esc(r.name)}</h1><p class="body-sm muted num" style="margin:8px 0 0">Published ${fmt(r.publishedAt)}</p></div>
       <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">${P.view==='timeline'?`<div class="yearnav"><button class="btn btn-ghost btn-sm btn-icon" data-a="pf-year" data-v="-1" aria-label="Previous year">${ic('left')}</button><strong class="num" aria-live="polite">${P.year}</strong><button class="btn btn-ghost btn-sm btn-icon" data-a="pf-year" data-v="1" aria-label="Next year">${ic('right')}</button></div>`:''}
         <div class="seg" role="group" aria-label="View"><button data-a="pf-view" data-v="timeline" aria-pressed="${P.view==='timeline'}">${ic('gantt')}Timeline</button><button data-a="pf-view" data-v="list" aria-pressed="${P.view==='list'}">${ic('list')}List</button></div></div>
     </header>
-    ${filters}${body}
+    ${top}${filters}${body}
     <footer class="pub-foot">Made with Product name</footer>
   </main>`;
+}
+
+function settingsScreen(){
+  const B = S.brand, r = S.roadmaps.find(x=>x.publishedAt) || rm();
+  return `${appbar('settings')}<main class="wrap" style="padding-bottom:120px;max-width:1000px">
+    <div class="page-head"><div><h1 class="display d-sm">Settings</h1><p class="text-body" style="margin:6px 0 0">Your product, as Readers see it on every Public page and in emails.</p></div></div>
+    <div class="settings-grid">
+      <form class="panel" data-form="brand" novalidate>
+        <div class="field"><label class="label" for="b-name">Product name</label><input class="input" id="b-name" value="${esc(B.name)}" maxlength="60"><p class="hint">Shown above every Roadmap name, and as the sender of emails.</p></div>
+        <div class="field"><span class="label">Logo</span>
+          <div class="logo-row">${logo('lg')}<button type="button" class="btn btn-secondary btn-sm" data-a="noop">${ic('image')}Upload</button><button type="button" class="btn btn-ghost btn-sm" data-a="noop">Remove</button></div>
+          <p class="hint">Square PNG or SVG, up to 1 MB. Without one, the first letter of the name is used.</p></div>
+        <p class="hint" style="margin:0">Public pages always end with "Made with Product name".</p>
+        <div><button class="btn btn-primary" type="submit">Save</button></div>
+      </form>
+      <section style="display:flex;flex-direction:column;gap:16px" aria-label="Preview">
+        <span class="label">Public page</span>
+        <div class="panel" style="gap:10px">${brandMark()}<span class="t-lg">${esc(r.name)}</span><span class="caption muted">Published ${fmt(r.publishedAt || TODAY)}</span></div>
+        <span class="label">Link preview when the Public page is shared</span>
+        <div class="og"><div class="img">${brandMark()}<span class="t">${esc(r.name)}</span></div>
+          <div class="meta"><span class="caption muted">${ORIGIN}</span><span class="t-sm">${esc(r.name)} · ${esc(B.name)}</span><span class="caption muted">The Roadmap of ${esc(B.name)}: what's shipped, in progress and planned.</span></div></div>
+      </section>
+    </div>
+  </main>`;
+}
+
+function emailScreen(){
+  const r = S.roadmaps[0], it = recentlyShipped(r, 1)[0] || r.items[0], c = cat(it.categoryId);
+  return `<main class="mail-bg">
+    <div class="mail-meta"><span><strong style="color:var(--c-ink)">From:</strong> ${esc(S.brand.name)} &lt;updates@${ORIGIN}&gt;</span><span><strong style="color:var(--c-ink)">Subject:</strong> Shipped: ${esc(it.title)}</span></div>
+    <article class="mail">
+      ${brandMark()}
+      <h1 class="t-lg">${esc(it.title)} is shipped</h1>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">${statusChip('shipped')}${catChip(c)}</div>
+      ${it.description ? `<p class="text-body" style="margin:0;white-space:pre-line">${esc(it.description)}</p>` : ''}
+      <div><button class="btn btn-primary" data-a="go-public">${ic('ext')}See the Roadmap</button></div>
+      <hr>
+      <p class="caption muted" style="margin:0">You get this email because you subscribed to ${esc(r.name)} by ${esc(S.brand.name)}. <a href="#" data-a="go-unsub">Unsubscribe</a> in one click.</p>
+      <p class="caption muted" style="margin:0">Made with Product name</p>
+    </article>
+  </main>`;
+}
+
+function unsubScreen(){
+  const r = S.roadmaps[0];
+  return `<main class="nf">${logo('lg')}<h1 class="display d-sm">You're unsubscribed</h1><p class="text-body" style="margin:0;max-width:400px">You won't get emails about ${esc(r.name)} anymore.</p><button class="btn btn-secondary" data-a="go-public">See the Roadmap</button></main>`;
 }
 
 function notFound(){
@@ -778,13 +870,14 @@ function kit(){
 }
 
 /* ===================== render ===================== */
-const SCREENS = [['landing','Sign in'],['roadmaps','Roadmaps'],['categories','Categories'],['editor','Editor'],['public','Public page'],['notfound','404'],['kit','UI kit']];
+const SCREENS = [['landing','Sign in'],['roadmaps','Roadmaps'],['categories','Categories'],['editor','Editor'],['settings','Settings'],['public','Public page'],['email','Email'],['unsub','Unsubscribed'],['notfound','404'],['kit','UI kit']];
 function render(){
   // keep unsaved typing when something else (a toast, a menu) re-renders
   readDrawerFields();
   if (S.catForm && $('#cat-name')) S.catForm.name = $('#cat-name').value;
   if (S.catEdit && $('#cat-edit')) S.catEdit.name = $('#cat-edit').value;
-  const view = { landing, roadmaps, categories:categoriesScreen, editor, public:publicPage, notfound:notFound, kit }[S.screen]();
+  if ($('#sub-email')) S.pub.email = $('#sub-email').value;
+  const view = { landing, roadmaps, categories:categoriesScreen, editor, settings:settingsScreen, public:publicPage, email:emailScreen, unsub:unsubScreen, notfound:notFound, kit }[S.screen]();
   const overlays = (S.screen==='editor' ? drawer() : '') + dialog();
   $('#app').innerHTML = view + overlays
     + (S.toast ? `<div class="toast" role="status">${esc(S.toast.msg)}${S.toast.undo?'<button data-a="undo">Undo</button>':''}</div>` : '')
@@ -807,10 +900,15 @@ function saveDraft(){
   if (!x.title.trim()){ S.drawer.error = { field:'title', msg:'Give the Item a title.' }; S.focus='#f-title'; return render(); }
   if (x.start && x.end && x.end < x.start){ S.drawer.error = { field:'end', msg:'The end date is before the start date. Move one of them.' }; S.focus='#f-end'; return render(); }
   const r = rm(); x.title = x.title.trim();
+  const was = S.drawer.id && r.items.find(i=>i.id===S.drawer.id);
+  // changelog: shippedAt is set when an Item becomes Shipped, cleared when it stops being Shipped
+  if (x.status==='shipped' && (!was || was.status!=='shipped')) x.shippedAt = TODAY.toISOString().slice(0,10);
+  if (x.status!=='shipped') x.shippedAt = '';
+  const emails = r.publishedAt && r.subscribed && x.status==='shipped' && !x.internal && (!was || was.status!=='shipped');
   if (S.drawer.id) r.items = r.items.map(i => i.id===S.drawer.id ? {...x} : i);
   else r.items.push({ ...x, id:uid('i') }); // appended at the end of the manual order
   const isNew = !S.drawer.id;
-  S.drawer = null; toast(isNew ? `Added "${x.title}"` : 'Saved');
+  S.drawer = null; toast(emails ? `Saved. ${r.subscribed} subscribed Readers get an email.` : isNew ? `Added "${x.title}"` : 'Saved');
 }
 function readDrawerFields(){
   const x = S.drawer?.draft; if (!x || $('#item-form')?.dataset.key !== S.drawer.key) return;
@@ -827,6 +925,7 @@ function addCategory(){
 const A = {
   screen: v => { S.drawer=null; S.dialog=null; S.menu=null; set({ screen:v }); },
   'go-landing': () => A.screen('landing'), 'go-roadmaps': () => A.screen('roadmaps'), 'go-categories': () => A.screen('categories'),
+  'go-settings': () => A.screen('settings'), 'go-unsub': () => A.screen('unsub'), noop: () => {},
   'go-public': () => { S.pub = { ...S.pub, year:TODAY.getFullYear(), open:'' }; A.screen('public'); },
   'go-public-of': id => { S.sel=id; A['go-public'](); },
   open: id => { S.sel=id; S.renaming=false; S.year=TODAY.getFullYear(); A.screen('editor'); },
@@ -882,6 +981,12 @@ document.addEventListener('submit', e => {
   e.preventDefault();
   if (e.target.dataset.form==='item') saveDraft();
   if (e.target.dataset.form==='cat') addCategory();
+  if (e.target.dataset.form==='brand'){ const n = $('#b-name').value.trim(); if (n){ S.brand.name = n; S.brand.logo = n[0].toUpperCase(); } toast('Settings saved'); }
+  if (e.target.dataset.form==='subscribe'){
+    const v = $('#sub-email').value.trim(); S.pub.email = v;
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){ S.pub.error = 'Enter an email address, like you@example.com.'; S.focus = '#sub-email'; return render(); }
+    S.pub.error = ''; S.pub.subscribed = true; render(); // double opt-in: a confirmation email is sent first
+  }
 });
 document.addEventListener('keydown', e => {
   if (e.key==='Escape'){ if (S.dialog) return set({ dialog:null }); if (S.drawer) return set({ drawer:null }); if (S.menu||S.catColourPop) return set({ menu:null, catColourPop:null }); if (S.renaming) return set({ renaming:false }); if (S.catForm) return set({ catForm:null }); if (S.catEdit) return set({ catEdit:null }); }

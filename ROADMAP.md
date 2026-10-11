@@ -34,7 +34,7 @@ Items and Owner data stay off the Public page, as before.
 | `reader-updates` | A Reader subscribes by email to a Roadmap and is emailed when Items ship; one-click unsubscribe | `changelog`, `branding` |
 | `fuzzy-dates` | Plan by month or quarter, or Now / Next / Later, instead of exact days | — |
 | `reader-feedback` | A Reader votes "I want this" on an Item, optionally with their email; the Owner sees demand per Item | `reader-updates` |
-| `analytics` | Public page views, most-opened Items and the number of subscribers, without identifying Readers | `reader-updates` |
+| `analytics` | Public page views, most-opened Items and how many Readers are subscribed, without identifying Readers | `reader-updates` |
 | `embed` | The Public page inside the Owner's own site or app | `branding` |
 | `import` | CSV import first; Linear, Jira or GitHub later | — |
 | `custom-domain` | `roadmap.theirproduct.com` | `branding` |
@@ -72,13 +72,23 @@ Once approved, this roadmap is also entered as a Roadmap in the app (one Item
 per module, Status Planned, Now modules first) and published, so our own Public
 page shows it.
 
+## Decided (2026-10-11)
+
+- `branding` is set **once, in Owner settings** (a Settings screen): product
+  name and logo, used on every Public page and in emails.
+- `reader-updates` sends **one email per Item that becomes Shipped** (never for
+  an Internal Item), with double opt-in and one-click unsubscribe.
+- The "Made with Product name" footer **always shows**; removing it may become
+  a paid option with `teams-billing`.
+- Copy says "subscribed Readers", never "subscribers" (SPEC's _Avoid_ list for
+  Reader).
+
+Mockups: `design/roadmap-ui.html` shows Settings, Recently shipped and
+subscribe on the Public page, the email, and the unsubscribed page.
+
 ## Open questions (answered in each module's spec)
 
-- `changelog`: what counts as "recently": the last N Shipped Items, or the last
-  N days? Should Status changes be timestamped (a new `shippedAt`)?
-- `reader-updates`: which email provider (SMTP, Postmark, Resend…)? Double
-  opt-in (recommended for GDPR)? One email per shipped Item, or a digest?
-- `branding`: does the Owner set the product name and logo once (Owner
-  settings) or per Roadmap?
-- Does the "Made with Product name" footer stay on every Public page (word of
-  mouth) or can the Owner remove it?
+- `changelog`: "Recently shipped" shows the last 3 Shipped Items in the
+  mockup; is that the rule, or the last N days? It needs a new `shippedAt`,
+  set when an Item becomes Shipped.
+- `reader-updates`: which email provider (SMTP, Postmark, Resend…)?
