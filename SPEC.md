@@ -170,6 +170,10 @@ _Avoid_: customer, viewer, visitor, end user, subscriber, stakeholder
 
 - Frontend: TanStack Start (React 19, SSR), TanStack Router (file-based),
   TanStack Query, Tailwind v4, shadcn/ui. npm.
+  - UI components come from shadcn/ui only (no other component library
+    such as PrimeReact or MUI), restyled to the tokens of
+    `design/ui-design.html`. Outside shadcn: `@dnd-kit` for drag and drop
+    and a custom year timeline component.
 - Backend: Spring Boot 4 (Web MVC, Data JPA), Java 27, MariaDB, Lombok.
   Spring Security OAuth2 client for Google (to be added) — Spring owns
   the whole login flow and the session; the frontend holds no tokens.

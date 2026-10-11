@@ -33,3 +33,4 @@ Backend (run in `backend/`):
 - Routes live in `src/routes/`; layout/HTML shell is `src/routes/__root.tsx`.
 - `src/router.tsx` builds the router with a shared `QueryClient` in router context (`src/integrations/tanstack-query/root-provider.tsx`) and wires SSR query dehydration — use route `loader`s with `queryClient.ensureQueryData` for data fetching.
 - Import alias `#/*` → `src/*` (package.json `imports`); shadcn components go to `#/components/ui`, `cn()` helper in `#/lib/utils`.
+- UI components: shadcn/ui only — add them with the shadcn CLI and restyle to the `design/` tokens; don't bring in another component library (PrimeReact, MUI, …).
