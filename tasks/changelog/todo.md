@@ -133,4 +133,4 @@ Feed of a Published Roadmap.
 - [x] 4. No Internal Item in the payload or the Feed; a Private or unknown
       Roadmap's Feed returns the same 404 as its Public page.
 - [x] 5. `./mvnw test` green; `npm run build` clean.
-- [ ] Review with human
+- [x] Review with human

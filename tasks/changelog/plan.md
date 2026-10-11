@@ -61,7 +61,7 @@ Task 1  Shipped date (schema + rule + editor API)
 
 ### Checkpoint: Complete (Success Criteria of SPEC-changelog.md)
 - [x] Criteria 1–5 verified (manual curl / browser)
-- [ ] Review with human
+- [x] Review with human
 
 ## Risks and Mitigations
 
