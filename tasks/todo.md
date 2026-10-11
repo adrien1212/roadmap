@@ -208,11 +208,11 @@ refresh (SSR path).
 ### Task 12: Roadmaps UI
 
 **Acceptance criteria:**
-- [ ] Roadmaps screen: cards with name, Item / Internal counts,
+- [x] Roadmaps screen: cards with name, Item / Internal counts,
       Published N days ago / Private (no preview bars, unlike the mockup);
       menu with open, view Public page,
       delete (confirm); empty state.
-- [ ] "New Roadmap" creates "Untitled Roadmap" and opens the editor with the
+- [x] "New Roadmap" creates "Untitled Roadmap" and opens the editor with the
       name in inline-rename mode.
 
 **Verification:** `npm run build`; Manual: changes persist.

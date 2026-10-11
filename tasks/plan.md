@@ -86,7 +86,7 @@ Detailed tasks live in `tasks/todo.md`.
 - [x] Task 9: Compare `design/` mockups with SPEC
 - [x] Task 10: API client and app layout
 - [x] Task 11: Categories UI
-- [ ] Task 12: Roadmaps UI
+- [x] Task 12: Roadmaps UI
 
 ### Checkpoint: Roadmaps & Categories UI
 

@@ -36,3 +36,18 @@ export function CategoryDot({ colour }: { colour: Colour | null }) {
     />
   )
 }
+
+/** Published (green dot, optionally "Published N days ago") or Private (grey dot). */
+export function StateBadge({ published, label }: { published: boolean; label?: string }) {
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center gap-1.5 text-[13px] font-medium whitespace-nowrap',
+        published ? 'text-success-text' : 'text-muted-foreground',
+      )}
+    >
+      <span aria-hidden className={cn('size-1.5 rounded-full', published ? 'bg-success' : 'bg-muted-soft')} />
+      {label ?? (published ? 'Published' : 'Private')}
+    </span>
+  )
+}
