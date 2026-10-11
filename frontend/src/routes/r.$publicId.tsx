@@ -3,6 +3,7 @@ import { createFileRoute, notFound } from '@tanstack/react-router'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { ChevronRight } from 'lucide-react'
 
+import { BrandMark } from '#/components/brand-mark'
 import { CategoryChip, CategoryDot, StatusChip } from '#/components/chips'
 import { NotFound } from '#/components/not-found'
 import { FollowFeed, RecentlyShipped } from '#/components/recently-shipped'
@@ -10,6 +11,7 @@ import { Button } from '#/components/ui/button'
 import { ViewToggle, type View } from '#/components/view-toggle'
 import { StatusKey, YearNav, YearTimeline } from '#/components/year-timeline'
 import { ApiError } from '#/lib/api'
+import { pageTitle, previewDescription } from '#/lib/brand'
 import { colourVar, type Category } from '#/lib/categories'
 import { formatDates, formatInstant } from '#/lib/format'
 import { STATUSES, STATUS_LABEL, type ItemStatus } from '#/lib/items'
@@ -27,8 +29,18 @@ export const Route = createFileRoute('/r/$publicId')({
       throw error
     }
   },
+  // Rendered on the server: link previews (Slack, X, LinkedIn…) do not run JavaScript.
   head: ({ loaderData, params }) => ({
-    meta: [{ title: loaderData?.name ?? 'Page not found' }],
+    meta: loaderData
+      ? [
+          { title: pageTitle(loaderData.name, loaderData.brandName) },
+          { name: 'description', content: previewDescription(loaderData.brandName) },
+          { property: 'og:title', content: pageTitle(loaderData.name, loaderData.brandName) },
+          { property: 'og:description', content: previewDescription(loaderData.brandName) },
+          { property: 'og:type', content: 'website' },
+          { name: 'twitter:card', content: 'summary' },
+        ]
+      : [{ title: 'Page not found' }],
     // Lets feed readers find the Feed from the Public page URL.
     links: loaderData
       ? [{ rel: 'alternate', type: 'application/rss+xml', title: loaderData.name, href: feedPath(params.publicId) }]
@@ -57,6 +69,7 @@ function PublicPageView() {
 
   return (
     <main className="mx-auto max-w-[1120px] px-4 pt-10 pb-24 sm:px-8 sm:pt-18 sm:pb-12">
+      {page.brandName && <BrandMark name={page.brandName} className="mb-5" />}
       <header className="mb-9 flex flex-wrap items-end justify-between gap-6">
         <div>
           <h1 className="font-display text-4xl leading-[1.1] font-semibold tracking-[-1px] sm:text-5xl sm:tracking-[-1.5px]">

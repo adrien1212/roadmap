@@ -50,10 +50,10 @@ Task 1  Brand on the Owner (schema + rule + /api/brand)
 
 ### Phase 2: Readers see the Brand
 - [x] Task 3: Brand in the public payload and the Feed
-- [ ] Task 4: Brand on the Public page, its title and link preview
+- [x] Task 4: Brand on the Public page, its title and link preview
 
 ### Checkpoint: Complete (Success Criteria of SPEC-branding.md)
-- [ ] Criteria 1–4 verified (manual curl / browser)
+- [x] Criteria 1–4 verified (manual curl / browser)
 - [ ] Review with human
 
 ## Risks and Mitigations

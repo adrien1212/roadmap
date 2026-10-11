@@ -86,13 +86,13 @@ how Readers will see it.
 **Description:** Readers see whose Roadmap it is, and shared links say so.
 
 **Acceptance criteria:**
-- [ ] With a Brand, the letter mark and Brand name show above the Roadmap name.
-- [ ] `<title>` "{Roadmap} · {Brand}" (Roadmap alone without a Brand);
+- [x] With a Brand, the letter mark and Brand name show above the Roadmap name.
+- [x] `<title>` "{Roadmap} · {Brand}" (Roadmap alone without a Brand);
       `og:title`, `og:description`, `og:type=website`, `twitter:card=summary`
       in the SSR HTML.
 
 **Verification:**
-- [ ] `npm run build`; curl the SSR HTML of `/r/{publicId}` with and without a
+- [x] `npm run build`; curl the SSR HTML of `/r/{publicId}` with and without a
       Brand for the row, `<title>` and `og:` tags.
 
 **Dependencies:** Tasks 2, 3
@@ -101,12 +101,12 @@ how Readers will see it.
 **Estimated scope:** S
 
 ### Checkpoint: Complete (Success Criteria of SPEC-branding.md)
-- [ ] 1. An Owner can set, change and clear their Brand in Settings; it
+- [x] 1. An Owner can set, change and clear their Brand in Settings; it
       persists.
-- [ ] 2. With a Brand, the Public pages show the letter mark and Brand, and
+- [x] 2. With a Brand, the Public pages show the letter mark and Brand, and
       their title, `og:` tags and Feed title include it; without one, the
       Roadmap name only.
-- [ ] 3. The public payload gains `brandName` and nothing else; no Owner name,
+- [x] 3. The public payload gains `brandName` and nothing else; no Owner name,
       email or provider is sent.
-- [ ] 4. `./mvnw test` green; `npm run build` clean.
+- [x] 4. `./mvnw test` green; `npm run build` clean.
 - [ ] Review with human

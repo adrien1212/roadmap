@@ -8,6 +8,8 @@ import type { ItemStatus } from '#/lib/items'
 export interface PublicPage {
   name: string
   publishedAt: string
+  /** The Owner's Brand, the only Owner data a Reader receives; null when unset. */
+  brandName: string | null
   /** Only the Categories used by the Items below. */
   categories: Category[]
   /** Non-Internal Items, in manual order. */
