@@ -33,19 +33,19 @@ their tests
 and never returned.
 
 **Acceptance criteria:**
-- [ ] Changeset `007-smtp-settings.sql`; `SmtpSettings` entity (one per Owner)
+- [x] Changeset `007-smtp-settings.sql`; `SmtpSettings` entity (one per Owner)
       with state NONE / UNTESTED / CONNECTED / NOT_WORKING.
-- [ ] `GET /api/smtp-settings` (no password; `passwordSaved` flag),
+- [x] `GET /api/smtp-settings` (no password; `passwordSaved` flag),
       `PUT /api/smtp-settings` (password optional, omitted keeps it; host,
       port and sender email validated; saving sets UNTESTED); scoped by
       `CurrentOwner`.
-- [ ] Without `SMTP_SECRET_KEY`, `PUT` answers 503 "Email to Readers is not
+- [x] Without `SMTP_SECRET_KEY`, `PUT` answers 503 "Email to Readers is not
       available on this server".
 
 **Verification:**
-- [ ] Unit tests first for the settings rules (port, sender email, state on
+- [x] Unit tests first for the settings rules (port, sender email, state on
       change): `./mvnw test`
-- [ ] Manual: `PUT` then `GET` → no password in the JSON; the DB column holds
+- [x] Manual: `PUT` then `GET` → no password in the JSON; the DB column holds
       ciphertext.
 
 **Dependencies:** Task 1

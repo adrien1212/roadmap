@@ -1,5 +1,6 @@
 package fr.adriencaubel.roadmap.common;
 
+import fr.adriencaubel.roadmap.smtp.SecretBox;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -23,6 +24,12 @@ public class ApiExceptionHandler {
 	@ExceptionHandler(ConflictException.class)
 	ProblemDetail conflict(ConflictException e) {
 		return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, e.getMessage());
+	}
+
+	/** No SMTP_SECRET_KEY on this server: Email to Readers can't be configured. */
+	@ExceptionHandler(SecretBox.SecretUnavailableException.class)
+	ProblemDetail secretUnavailable(SecretBox.SecretUnavailableException e) {
+		return ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
 	}
 
 	/** Safety net for unique constraints hit by a concurrent request. */
