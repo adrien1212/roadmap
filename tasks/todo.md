@@ -220,7 +220,7 @@ refresh (SSR path).
 **Estimated scope:** M
 
 ### Checkpoint: Roadmaps & Categories UI
-- [ ] Success Criterion 3 holds; review with human
+- [x] Success Criterion 3 holds; review with human
 
 ### Task 13: Editor list view with Item form
 
@@ -301,9 +301,9 @@ year; unpublish → 404.
 **Estimated scope:** S
 
 ### Checkpoint: App complete without auth
-- [ ] Success Criteria 2–6 verified manually (as the dev Owner)
-- [ ] `./mvnw test` green, `npm run build` clean
-- [ ] Review with human — ready for Phase 4
+- [x] Success Criteria 2–6 verified manually (as the dev Owner)
+- [x] `./mvnw test` green, `npm run build` clean
+- [x] Review with human — ready for Phase 4
 
 ---
 
