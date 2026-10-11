@@ -48,11 +48,11 @@ Task 1  Shipped date (schema + rule + editor API)
 
 ### Phase 1: Shipped date
 - [x] Task 1: Shipped date on Items (backend)
-- [ ] Task 2: Shipped date in the Item dialog
+- [x] Task 2: Shipped date in the Item dialog
 
 ### Checkpoint: Shipped date
-- [ ] `./mvnw test` green, `npm run build` clean
-- [ ] Switching an Item to Shipped and back sets then clears its date
+- [x] `./mvnw test` green, `npm run build` clean
+- [x] Switching an Item to Shipped and back sets then clears its date
 
 ### Phase 2: Readers see what shipped
 - [ ] Task 3: Recently shipped on the Public page

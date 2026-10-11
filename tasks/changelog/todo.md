@@ -35,13 +35,13 @@ in the entity, and expose `shippedAt` in the editor's Item API.
 **Description:** Show the Owner when an Item shipped.
 
 **Acceptance criteria:**
-- [ ] `Item` type gains `shippedAt: string | null`.
-- [ ] The Item dialog shows "Shipped Oct 2, 2026" under the Status when the
+- [x] `Item` type gains `shippedAt: string | null`.
+- [x] The Item dialog shows "Shipped Oct 2, 2026" under the Status when the
       Item has a Shipped date (read-only; not shown for a new Item).
 
 **Verification:**
-- [ ] `npx tsc --noEmit`, `npm run build`
-- [ ] Manual: open a Shipped Item → its date shows; an Item shipped before this
+- [x] `npx tsc --noEmit`, `npm run build`
+- [x] Manual: open a Shipped Item → its date shows; an Item shipped before this
       module shows none.
 
 **Dependencies:** Task 1
@@ -50,8 +50,8 @@ in the entity, and expose `shippedAt` in the editor's Item API.
 **Estimated scope:** XS
 
 ### Checkpoint: Shipped date
-- [ ] `./mvnw test` green, `npm run build` clean
-- [ ] Switching an Item to Shipped and back sets then clears its date
+- [x] `./mvnw test` green, `npm run build` clean
+- [x] Switching an Item to Shipped and back sets then clears its date
 
 ## Phase 2: Readers see what shipped
 

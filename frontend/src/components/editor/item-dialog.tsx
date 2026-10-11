@@ -21,6 +21,7 @@ import {
   type Item,
   type ItemDraft,
 } from '#/lib/items'
+import { formatInstant } from '#/lib/format'
 import { cn } from '#/lib/utils'
 
 type FieldProblem = { field: 'title' | 'end' | 'form'; message: string }
@@ -78,7 +79,7 @@ function ItemForm({
   onDelete: (item: Item) => void
 }) {
   const queryClient = useQueryClient()
-  const [draft, setDraft] = useState<ItemDraft>(item ? { ...item } : emptyDraft)
+  const [draft, setDraft] = useState<ItemDraft>(item ? toDraft(item) : emptyDraft)
   const [problem, setProblem] = useState<FieldProblem | null>(null)
   const set = <K extends keyof ItemDraft>(key: K, value: ItemDraft[K]) => setDraft((d) => ({ ...d, [key]: value }))
 
@@ -168,6 +169,9 @@ function ItemForm({
             ))}
           </div>
           <p className={hint}>Set by hand. It never changes when a date passes.</p>
+          {item?.shippedAt && draft.status === 'shipped' && (
+            <p className="m-0 text-[13px] font-medium text-success-text">Shipped {formatInstant(item.shippedAt)}</p>
+          )}
         </div>
 
         <div>
@@ -251,4 +255,8 @@ function ItemForm({
       </footer>
     </>
   )
+}
+
+function toDraft({ title, description, startDate, endDate, status, categoryId, internal }: Item): ItemDraft {
+  return { title, description, startDate, endDate, status, categoryId, internal }
 }

@@ -24,10 +24,12 @@ export interface Item {
   categoryId: number | null
   internal: boolean
   position: number
+  /** When the Status last became Shipped; set by the backend, null otherwise. */
+  shippedAt: string | null
 }
 
 /** Every field the Owner edits in the Item dialog. */
-export type ItemDraft = Omit<Item, 'id' | 'position'>
+export type ItemDraft = Omit<Item, 'id' | 'position' | 'shippedAt'>
 
 export const emptyDraft: ItemDraft = {
   title: '',
