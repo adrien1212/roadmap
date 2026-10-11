@@ -16,7 +16,8 @@ Owner who authors, and the anonymous Readers who only read.
 ### Out of scope (MVP)
 - Workspaces, multiple people per account, invitations, roles.
 - Billing / paying Customers.
-- Custom domains, embeds, Reader subscriptions or feedback.
+- Custom domains, embeds, Reader feedback. (Email subscriptions are in scope
+  since `SPEC-reader-updates.md`.)
 
 ## Language
 
@@ -77,9 +78,27 @@ Roadmap, with Internal Items removed at serve time.
 _Avoid_: public roadmap, shared link, landing page, microsite
 
 **Reader**:
-Anyone who opens a Public page. Never authenticated, never identified, and
-cannot write anything.
+Anyone who opens a Public page. Never authenticated. May choose to leave an
+email address to subscribe to a Roadmap; otherwise never identified. Cannot
+write anything else.
 _Avoid_: customer, viewer, visitor, end user, subscriber, stakeholder
+
+**Subscription**:
+A Reader's email address on one Published Roadmap. Pending until the Reader
+confirms it from the email they receive, then confirmed. Ends when the Reader
+unsubscribes or the Owner removes it; the address is then deleted.
+(`SPEC-reader-updates.md`)
+_Avoid_: follow, membership, mailing list, newsletter
+
+**Subscribed Reader**:
+A Reader with a confirmed Subscription. Only subscribed Readers are emailed,
+once per Item that becomes Shipped.
+_Avoid_: subscriber, follower, contact, lead, audience
+
+**SMTP settings**:
+The Owner's mail server, set once in Settings, used to email subscribed
+Readers from the Owner's own address.
+_Avoid_: mail provider, email integration
 
 **Shipped date** (`shippedAt`):
 The instant an Item's Status last became Shipped. Set by the app when the Owner
@@ -163,6 +182,12 @@ exist)
   their Brand ("Product name", trimmed, ≤ 60 characters, empty clears it) and
   sees a preview of the Public page header and link preview. No file upload.
   API: `GET` / `PUT /api/brand`.
+- "Email to Readers": the Owner's SMTP settings (password write-only and
+  encrypted), "Send test email", and a state. Only SMTP ports and public hosts
+  are accepted. Until a test succeeds, Public pages offer RSS only.
+- Per Roadmap, `/roadmaps/{id}/readers` lists confirmed and pending Readers
+  with their dates and the confirmed / pending / unsubscribed counts; the Owner
+  can remove a Reader. Details in `SPEC-reader-updates.md`.
 
 ### Publishing
 - Publish sets `publishedAt = now`; Unpublish sets it to null.
@@ -197,6 +222,11 @@ exist)
   non-Internal Items with a Shipped date, newest first; Private or unknown →
   the same 404 as the Public page; linked from the Public page head.
   Details in `SPEC-changelog.md`.
+- With working SMTP settings, a subscribe box (email, double opt-in; it says
+  the Brand receives the address) replaces the RSS-only box. Subscribed Readers
+  get one email per Item that becomes Shipped, with one-click unsubscribe.
+  Confirm and unsubscribe pages at `/r/{publicId}/confirm` and
+  `/r/{publicId}/unsubscribe`. Details in `SPEC-reader-updates.md`.
 - Timeline view spans one calendar year, by months, opening on the current
   year; the Reader can navigate to previous and next years. Items with both
   dates are drawn as bars (clipped to the year shown); Items with a single
@@ -221,8 +251,12 @@ exist)
 - Backend: Spring Boot 4 (Web MVC, Data JPA), Java 27, MariaDB, Lombok.
   Spring Security OAuth2 client for Google (to be added) — Spring owns
   the whole login flow and the session; the frontend holds no tokens.
-  Liquibase for schema migrations (to be added). Local MariaDB via
+  Liquibase for schema migrations. Local MariaDB via
   `docker compose up -d` (root `docker-compose.yml`).
+  `spring-boot-starter-mail` sends emails to subscribed Readers through the
+  Owner's SMTP server; the SMTP password is encrypted under the
+  `SMTP_SECRET_KEY` environment variable. Mailpit (in `docker-compose.yml`)
+  catches emails locally.
 - Frontend calls the backend REST API via TanStack Query, always same-origin
   with relative URLs (`/api/...`). A proxy routes `/api/**`, `/oauth2/**` and
   `/login/**` to Spring and everything else to TanStack Start:
@@ -288,7 +322,9 @@ backend/src/test/java/...   → JUnit tests
 - Ask first: adding dependencies, editing an already-applied Liquibase
   changeset (add a new one instead), changing the public URL format.
 - Never: expose Owner identity or Internal Items on the Public page; infer
-  Status from dates; introduce a draft/staging state.
+  Status from dates; introduce a draft/staging state; email pending Readers,
+  or about Internal Items or Private Roadmaps; return the SMTP password from
+  the API; show Subscriptions to Readers.
 
 ## Success Criteria
 
