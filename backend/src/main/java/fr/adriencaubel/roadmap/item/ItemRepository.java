@@ -1,6 +1,7 @@
 package fr.adriencaubel.roadmap.item;
 
 import fr.adriencaubel.roadmap.roadmap.Roadmap;
+import org.springframework.data.domain.Limit;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
@@ -13,6 +14,14 @@ public interface ItemRepository extends Repository<Item, Long> {
 	List<Item> findAllByRoadmapOrderByPositionAsc(Roadmap roadmap);
 
 	Optional<Item> findByIdAndRoadmap(Long id, Roadmap roadmap);
+
+	/** For the Feed: non-Internal Items with a Shipped date, newest first. */
+	@Query("""
+			select i from Item i
+			where i.roadmap = :roadmap and i.internal = false
+			  and i.status = fr.adriencaubel.roadmap.item.ItemStatus.SHIPPED and i.shippedAt is not null
+			order by i.shippedAt desc""")
+	List<Item> findRecentlyShipped(Roadmap roadmap, Limit limit);
 
 	@Query("select max(i.position) from Item i where i.roadmap = :roadmap")
 	Integer findLastPosition(Roadmap roadmap);

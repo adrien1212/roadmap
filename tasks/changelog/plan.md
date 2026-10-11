@@ -56,7 +56,7 @@ Task 1  Shipped date (schema + rule + editor API)
 
 ### Phase 2: Readers see what shipped
 - [x] Task 3: Recently shipped on the Public page
-- [ ] Task 4: RSS feed endpoint
+- [x] Task 4: RSS feed endpoint
 - [ ] Task 5: Feed links on the Public page
 
 ### Checkpoint: Complete (Success Criteria of SPEC-changelog.md)
@@ -70,7 +70,7 @@ Task 1  Shipped date (schema + rule + editor API)
 | An Internal Item leaks through the new payload field or the Feed | High | Feed query filters `internal = false`; `RssFeed` test asserts no Internal Item; public mapping test kept; manual check at the checkpoint |
 | Existing Shipped Items have no date, so Recently shipped looks empty on old Roadmaps | Med | Accepted in the spec (no invented dates); the dates appear as Owners ship again |
 | Feed links point at `:8045` instead of the public origin | Med | Build URLs from the forwarded request; verify through port 3000 with curl |
-| ETag ignores edits to an already-shipped Item's title | Low | Accepted: feed readers refresh within the 5-minute cache; revisit with an `updated_at` column if needed |
+| ETag ignores edits to an already-shipped Item's title | Low | Resolved in Task 4: the ETag is an MD5 of the feed content, so any change in it changes the ETag |
 | Hibernate `validate` rejects the new column type | Low | `DATETIME(6)` already validates for `Instant` (`published_at`) |
 
 ## Open Questions

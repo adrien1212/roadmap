@@ -84,19 +84,19 @@ Items above the filters.
 Feed of a Published Roadmap.
 
 **Acceptance criteria:**
-- [ ] `ItemRepository.findRecentlyShipped(roadmap, limit)`: non-Internal,
+- [x] `ItemRepository.findRecentlyShipped(roadmap, limit)`: non-Internal,
       Shipped, with a Shipped date, newest first; called with 20.
-- [ ] `RssFeed.of(...)` builds RSS 2.0 (channel title, link, description,
+- [x] `RssFeed.of(...)` builds RSS 2.0 (channel title, link, description,
       `lastBuildDate`; items with title, description, link, `pubDate`,
       `guid = {publicId}-{itemId}`), XML-escaping Owner text.
-- [ ] Endpoint: `application/rss+xml; charset=UTF-8`,
+- [x] Endpoint: `application/rss+xml; charset=UTF-8`,
       `Cache-Control: public, max-age=300`, `ETag` with 304 on match; Private
       or unknown → the same 404 as the Public page; links use the public origin.
 
 **Verification:**
-- [ ] Unit tests first, then green: `./mvnw test -Dtest=RssFeedTest`
-- [ ] `./mvnw test`
-- [ ] Manual through port 3000: `curl -i .../feed.xml` (200, links on :3000),
+- [x] Unit tests first, then green: `./mvnw test -Dtest=RssFeedTest`
+- [x] `./mvnw test`
+- [x] Manual through port 3000: `curl -i .../feed.xml` (200, links on :3000),
       again with `If-None-Match` (304), Private and unknown ids (identical 404).
 
 **Dependencies:** Task 1
