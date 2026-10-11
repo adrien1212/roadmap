@@ -4,6 +4,7 @@ import fr.adriencaubel.roadmap.common.ValidationException;
 import fr.adriencaubel.roadmap.owner.CurrentOwner;
 import fr.adriencaubel.roadmap.owner.Owner;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class SmtpSettingsService {
 
 	private final SmtpSettingsRepository settings;
@@ -58,6 +60,7 @@ public class SmtpSettingsService {
 			saved.markConnected(Instant.now());
 		} catch (Mailer.MailFailure | ValidationException e) {
 			saved.markNotWorking(e.getMessage());
+			log.error("Mail error", e);
 		}
 		return settings.save(saved);
 	}
