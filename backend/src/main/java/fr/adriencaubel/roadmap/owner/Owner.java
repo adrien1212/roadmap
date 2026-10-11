@@ -1,5 +1,6 @@
 package fr.adriencaubel.roadmap.owner;
 
+import fr.adriencaubel.roadmap.common.ValidationException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,6 +17,8 @@ import java.time.Instant;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Owner {
+
+	static final int BRAND_MAX_LENGTH = 60;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,11 +37,23 @@ public class Owner {
 	@Column(nullable = false)
 	private Instant createdAt;
 
+	/** The product name Readers see on Public pages; optional, never taken from the Google profile. */
+	private String brandName;
+
 	public Owner(String provider, String providerSubject, String email, String name) {
 		this.provider = provider;
 		this.providerSubject = providerSubject;
 		this.email = email;
 		this.name = name;
 		this.createdAt = Instant.now();
+	}
+
+	/** Trimmed, at most {@value BRAND_MAX_LENGTH} characters; blank or null clears the Brand. */
+	public void changeBrand(String name) {
+		String trimmed = name == null ? "" : name.strip();
+		if (trimmed.length() > BRAND_MAX_LENGTH) {
+			throw new ValidationException("Product name must be at most " + BRAND_MAX_LENGTH + " characters");
+		}
+		this.brandName = trimmed.isEmpty() ? null : trimmed;
 	}
 }

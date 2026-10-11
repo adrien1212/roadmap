@@ -12,16 +12,16 @@ Spring context).
 change it.
 
 **Acceptance criteria:**
-- [ ] Changeset `006-owner-brand.sql` adds `owner.brand_name VARCHAR(60) NULL`.
-- [ ] `Owner.changeBrand(name)`: trimmed; blank or null clears it; more than 60
+- [x] Changeset `006-owner-brand.sql` adds `owner.brand_name VARCHAR(60) NULL`.
+- [x] `Owner.changeBrand(name)`: trimmed; blank or null clears it; more than 60
       characters → `ValidationException`.
-- [ ] `GET /api/brand` → `{ "name": … }`; `PUT /api/brand` with `{ "name": … }`
+- [x] `GET /api/brand` → `{ "name": … }`; `PUT /api/brand` with `{ "name": … }`
       saves and returns it (400 over 60 characters); scoped by `CurrentOwner`.
 
 **Verification:**
-- [ ] Unit tests first, then green: `./mvnw test -Dtest=OwnerTest`
-- [ ] `./mvnw test`
-- [ ] Manual: `PUT` " Acme " → `"Acme"`; `GET` → `"Acme"`; `PUT` "" → null;
+- [x] Unit tests first, then green: `./mvnw test -Dtest=OwnerTest`
+- [x] `./mvnw test`
+- [x] Manual: `PUT` " Acme " → `"Acme"`; `GET` → `"Acme"`; `PUT` "" → null;
       61 characters → 400.
 
 **Dependencies:** None

@@ -41,7 +41,7 @@ Task 1  Brand on the Owner (schema + rule + /api/brand)
 ## Task List
 
 ### Phase 1: The Owner sets a Brand
-- [ ] Task 1: Brand on the Owner (backend)
+- [x] Task 1: Brand on the Owner (backend)
 - [ ] Task 2: Settings screen
 
 ### Checkpoint: Owner side

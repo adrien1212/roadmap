@@ -14,3 +14,6 @@ databaseChangeLog:
   - include:
       file: changes/005-item-shipped-at.sql
       relativeToChangelogFile: true
+  - include:
+      file: changes/006-owner-brand.sql
+      relativeToChangelogFile: true
