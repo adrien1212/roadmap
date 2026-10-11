@@ -227,7 +227,7 @@ refresh (SSR path).
 **Acceptance criteria:**
 - [x] Items in manual order with Status, Category chip, dates, Internal
       marker; optional swimlanes by Category (+ "No Category").
-- [x] Create/edit side drawer (all Item fields) with validation; delete with
+- [x] Create/edit dialog, centred (all Item fields) with validation; delete with
       confirm, then Undo toast (5 s, `DELETE` sent after the window).
 - [x] Category legend with per-Roadmap counts and inline "+ Category".
 

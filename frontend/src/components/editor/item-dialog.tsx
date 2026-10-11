@@ -5,9 +5,9 @@ import { toast } from 'sonner'
 
 import { FieldError } from '#/components/field-error'
 import { Button } from '#/components/ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '#/components/ui/dialog'
 import { Label } from '#/components/ui/label'
 import { Input } from '#/components/ui/input'
-import { Sheet, SheetContent, SheetDescription, SheetTitle } from '#/components/ui/sheet'
 import { Switch } from '#/components/ui/switch'
 import { Textarea } from '#/components/ui/textarea'
 import type { Category } from '#/lib/categories'
@@ -28,8 +28,8 @@ type FieldProblem = { field: 'title' | 'end' | 'form'; message: string }
 const hint = 'm-0 text-[13px] text-muted-foreground'
 const label = 'text-[13px] font-medium text-body'
 
-/** Create / edit an Item in a side drawer. `item` is null for a new Item. */
-export function ItemDrawer({
+/** Create / edit an Item in a dialog centred on the screen. `item` is null for a new Item. */
+export function ItemDialog({
   roadmapId,
   item,
   open,
@@ -45,8 +45,9 @@ export function ItemDrawer({
   onDelete: (item: Item) => void
 }) {
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="gap-0">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      {/* Header and footer stay put; the fields scroll when the screen is short. */}
+      <DialogContent className="flex max-h-[calc(100dvh-2rem)] flex-col gap-0 p-0 sm:max-w-[560px]">
         {open && (
           // Remount per Item so the form starts from that Item's values.
           <ItemForm
@@ -58,8 +59,8 @@ export function ItemDrawer({
             onDelete={onDelete}
           />
         )}
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   )
 }
 
@@ -110,11 +111,11 @@ function ItemForm({
 
   return (
     <>
-      <header className="flex items-center justify-between border-b border-hairline-soft px-6 pt-5 pb-4">
-        <SheetTitle className="font-display text-[22px] leading-[1.3] font-semibold tracking-[-0.3px]">
+      <header className="flex items-center justify-between border-b border-hairline-soft px-6 pt-5 pb-4 pr-14">
+        <DialogTitle className="font-display text-[22px] leading-[1.3] font-semibold tracking-[-0.3px]">
           {item ? 'Edit Item' : 'New Item'}
-        </SheetTitle>
-        <SheetDescription className="sr-only">All fields of the Item.</SheetDescription>
+        </DialogTitle>
+        <DialogDescription className="sr-only">All fields of the Item.</DialogDescription>
       </header>
 
       <form id="item-form" noValidate onSubmit={submit} className="flex flex-1 flex-col gap-5 overflow-y-auto p-6">

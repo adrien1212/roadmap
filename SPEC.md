@@ -115,7 +115,7 @@ _Avoid_: customer, viewer, visitor, end user, subscriber, stakeholder
 
 ### Items
 - Owner creates, edits, deletes Items on a Roadmap. Items are edited in a
-  side drawer.
+  dialog centred on the screen.
 - Deleting an Item shows an "Undo" toast for 5 seconds; the delete is only
   sent to the backend once that window ends (client-side delay).
 - Title required, ≤ 140 characters. Description is plain text (line breaks

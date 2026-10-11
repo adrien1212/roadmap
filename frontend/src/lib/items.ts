@@ -26,7 +26,7 @@ export interface Item {
   position: number
 }
 
-/** Every field the Owner edits in the drawer. */
+/** Every field the Owner edits in the Item dialog. */
 export type ItemDraft = Omit<Item, 'id' | 'position'>
 
 export const emptyDraft: ItemDraft = {

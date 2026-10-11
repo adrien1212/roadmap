@@ -6,7 +6,7 @@ import { ArrowLeft, ExternalLink, Globe, Lock, Plus, Rows2 } from 'lucide-react'
 import { StateBadge } from '#/components/chips'
 import { ConfirmDialog } from '#/components/confirm-dialog'
 import { CategoryLegend } from '#/components/editor/category-legend'
-import { ItemDrawer } from '#/components/editor/item-drawer'
+import { ItemDialog } from '#/components/editor/item-dialog'
 import { ItemList } from '#/components/editor/item-list'
 import { ItemTimeline } from '#/components/editor/item-timeline'
 import { PublishDialog } from '#/components/editor/publish-dialog'
@@ -47,7 +47,7 @@ export const Route = createFileRoute('/_app/roadmaps/$roadmapId')({
   component: EditorPage,
 })
 
-type DrawerState = { item: Item | null } | null
+type EditingState = { item: Item | null } | null
 
 function EditorPage() {
   const { roadmapId } = Route.useParams()
@@ -61,7 +61,7 @@ function EditorPage() {
   const [view, setView] = useState<View>('timeline')
   const [year, setYear] = useState(() => new Date().getFullYear())
   const [lanes, setLanes] = useState(false)
-  const [drawer, setDrawer] = useState<DrawerState>(null)
+  const [editing, setEditing] = useState<EditingState>(null)
   const [confirmingDelete, setConfirmingDelete] = useState<Item | null>(null)
   const [publishing, setPublishing] = useState(false)
   const { hidden, remove } = useDelayedDelete(roadmapId)
@@ -76,7 +76,7 @@ function EditorPage() {
     if (!editing && rename) navigate({ search: {}, replace: true })
   }
 
-  const newItem = () => setDrawer({ item: null })
+  const newItem = () => setEditing({ item: null })
 
   return (
     <main className="mx-auto max-w-[1200px] px-4 pb-35 sm:px-8">
@@ -154,14 +154,14 @@ function EditorPage() {
             categories={categories}
             lanes={lanes}
             year={year}
-            onEdit={(item) => setDrawer({ item })}
+            onEdit={(item) => setEditing({ item })}
           />
         ) : (
           <ItemList
             items={items}
             categories={categories}
             lanes={lanes}
-            onEdit={(item) => setDrawer({ item })}
+            onEdit={(item) => setEditing({ item })}
             onDelete={setConfirmingDelete}
             onMove={(activeId, overId) => reorder(allItems, activeId, overId)}
           />
@@ -179,12 +179,12 @@ function EditorPage() {
         </div>
       )}
 
-      <ItemDrawer
+      <ItemDialog
         roadmapId={roadmapId}
-        item={drawer?.item ?? null}
-        open={drawer !== null}
+        item={editing?.item ?? null}
+        open={editing !== null}
         categories={categories}
-        onOpenChange={(open) => !open && setDrawer(null)}
+        onOpenChange={(open) => !open && setEditing(null)}
         onDelete={setConfirmingDelete}
       />
 
@@ -200,7 +200,7 @@ function EditorPage() {
         cta="Delete Item"
         onConfirm={() => {
           if (!confirmingDelete) return
-          setDrawer(null)
+          setEditing(null)
           remove(confirmingDelete)
         }}
       />
