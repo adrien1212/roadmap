@@ -40,10 +40,6 @@ public class Roadmap {
 
 	private Instant publishedAt;
 
-	/** Readers who unsubscribed or were removed; their addresses are deleted, only the count is kept. */
-	@Column(nullable = false)
-	private int unsubscribedCount;
-
 	private Roadmap(Owner owner, String name) {
 		this.owner = owner;
 		this.publicId = PublicId.generate();
@@ -76,9 +72,5 @@ public class Roadmap {
 	/** Makes the Roadmap Private; its publicId is kept for a later republish. */
 	public void unpublish() {
 		publishedAt = null;
-	}
-
-	public void countUnsubscribe() {
-		unsubscribedCount++;
 	}
 }

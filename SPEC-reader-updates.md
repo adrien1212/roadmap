@@ -23,9 +23,10 @@ many**, and can remove a Reader.
   stored encrypted and never shown again. "Send test email" checks it. Until a
   test succeeds, the Public page offers RSS only.
 - Owner list per Roadmap: confirmed and pending Readers with their date.
-  Unsubscribed Readers are not listed, only counted.
+  Unsubscribed Readers are deleted and neither listed nor counted (decided
+  2026-10-11, after the first build).
 - The Owner can remove a Reader. No export.
-- Statistics: counts only (confirmed, pending, unsubscribed) per Roadmap.
+- Statistics: counts only (confirmed, pending) per Roadmap.
 - When the SMTP server fails: the email is dropped and the Owner is warned.
   Subscriptions pause (RSS only on the Public page) until a test email
   succeeds.
@@ -37,10 +38,9 @@ many**, and can remove a Reader.
    background (after the transaction commits). There is no grace period: an
    Item switched to Shipped by mistake has already been emailed.
 2. **Pending subscriptions expire after 7 days** without confirmation and are
-   deleted; they are not counted as unsubscribed.
-3. **Unsubscribing deletes the email address**; the Roadmap keeps only a
-   counter of unsubscribed Readers. Removing a Reader from the Owner's list
-   counts the same way.
+   deleted.
+3. **Unsubscribing deletes the email address**, and nothing else is kept.
+   Removing a Reader from the Owner's list does the same.
 4. **The SMTP password is encrypted with AES-256-GCM** (JDK only) under a key
    from the `SMTP_SECRET_KEY` environment variable. Without the key, the server
    refuses to save SMTP settings ("Email to Readers is not available on this
@@ -141,17 +141,16 @@ _Avoid_: mail provider, email integration
   /api/public/subscriptions/unsubscribe`; a link preview that only fetches the
   page does not) and shows "You're unsubscribed", with "See the Roadmap".
 - The one-click header posts to the same endpoint.
-- Unsubscribing deletes the address and increments the Roadmap's unsubscribed
-  count. Tokens are random, at least 128-bit and URL-safe, like `publicId`.
+- Unsubscribing deletes the address. Tokens are random, at least 128-bit and URL-safe, like `publicId`.
 
 ### Subscribed Readers (Owner, editor)
 - The Share dialog says "{N} Readers are subscribed" with a link to the new
   screen `/roadmaps/{id}/readers`.
-- That screen shows the counts (confirmed, pending, unsubscribed) and the list:
+- That screen shows the counts (confirmed, pending) and the list:
   email, Pending or Confirmed, and the date (subscribed / confirmed). Newest
   first.
 - "Remove" on a row, after a confirm ("{email} won't get emails about this
-  Roadmap anymore."), deletes the Subscription and counts it as unsubscribed.
+  Roadmap anymore."), deletes the Subscription.
 - API, scoped by `CurrentOwner` (another Owner's Roadmap → 404):
   `GET /api/roadmaps/{id}/subscriptions` → `{ counts, subscriptions[] }`,
   `DELETE /api/roadmaps/{id}/subscriptions/{subscriptionId}`.
@@ -169,7 +168,6 @@ subscription    id, roadmap_id FK (on delete cascade), email VARCHAR(254),
                 state (PENDING | CONFIRMED), token CHAR(22) ascii_bin unique,
                 created_at, confirmed_at, confirmation_sent_at;
                 unique (roadmap_id, email)
-roadmap         + unsubscribed_count INT NOT NULL DEFAULT 0
 ```
 
 ## Changes to SPEC.md (applied)
@@ -257,7 +255,7 @@ Frontend: no automated tests (as in `SPEC.md`).
 2. No email is ever sent for an Internal Item, for a Private Roadmap, to a
    pending Reader, or when the SMTP state is not Connected.
 3. The Owner sees, per Roadmap, the confirmed and pending Readers with their
-   dates and the confirmed / pending / unsubscribed counts, and can remove a
+   dates and the confirmed / pending counts, and can remove a
    Reader.
 4. The SMTP password is never returned by the API and is stored encrypted;
    SMTP hosts on private networks and non-SMTP ports are refused.

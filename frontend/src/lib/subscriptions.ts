@@ -3,7 +3,7 @@ import { queryOptions } from '@tanstack/react-query'
 import { api } from '#/lib/api'
 
 export interface Readers {
-  counts: { confirmed: number; pending: number; unsubscribed: number }
+  counts: { confirmed: number; pending: number }
   /** Confirmed and pending, newest first. */
   subscriptions: SubscribedReader[]
 }

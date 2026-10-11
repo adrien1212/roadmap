@@ -60,15 +60,14 @@ public class SubscriptionService {
 		subscription.confirm(now);
 	}
 
-	/** Ends the Subscription: the address is deleted, only the Roadmap's unsubscribed count remains. */
+	/** Ends the Subscription: the address is deleted. */
 	public void unsubscribe(String token) {
 		Subscription subscription = subscriptions.findByToken(token == null ? "" : token)
 				.orElseThrow(() -> new NotFoundException("This link has expired"));
-		subscription.getRoadmap().countUnsubscribe();
 		subscriptions.delete(subscription);
 	}
 
-	/** The Owner's view: confirmed and pending Readers (newest first, expired pending left out) and the counts. */
+	/** The Owner's view: confirmed and pending Readers (newest first, expired pending left out) and their counts. */
 	@Transactional(readOnly = true)
 	public ReadersOverview overview(Long roadmapId) {
 		Roadmap roadmap = ownerRoadmaps.get(roadmapId);
@@ -77,19 +76,18 @@ public class SubscriptionService {
 				.filter(s -> !s.isExpired(now))
 				.toList();
 		long confirmed = current.stream().filter(Subscription::isConfirmed).count();
-		return new ReadersOverview(confirmed, current.size() - confirmed, roadmap.getUnsubscribedCount(), current);
+		return new ReadersOverview(confirmed, current.size() - confirmed, current);
 	}
 
-	/** The Owner removes a Reader; it counts as unsubscribed. */
+	/** The Owner removes a Reader: the address is deleted. */
 	public void remove(Long roadmapId, Long subscriptionId) {
 		Roadmap roadmap = ownerRoadmaps.get(roadmapId);
 		Subscription subscription = subscriptions.findByIdAndRoadmap(subscriptionId, roadmap)
 				.orElseThrow(() -> new NotFoundException("Subscription not found"));
-		roadmap.countUnsubscribe();
 		subscriptions.delete(subscription);
 	}
 
-	public record ReadersOverview(long confirmed, long pending, long unsubscribed, List<Subscription> subscriptions) {
+	public record ReadersOverview(long confirmed, long pending, List<Subscription> subscriptions) {
 	}
 
 	/** Readers can subscribe when the Roadmap is Published and its Owner's SMTP server is connected. */

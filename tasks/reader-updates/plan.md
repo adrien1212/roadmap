@@ -54,6 +54,10 @@ Tasks live in `tasks/reader-updates/todo.md`. All are _Assignee: Claude_.
 - **New dependency** `spring-boot-starter-mail` and a `mailpit` service in
   `docker-compose.yml` (approved with the spec).
 
+> **Changed after the build (2026-10-11):** the unsubscribed count was removed.
+> Unsubscribing or removing a Reader only deletes the Subscription; changeset
+> `009-drop-unsubscribed-count.sql` drops `roadmap.unsubscribed_count`.
+
 ## Dependency graph
 
 ```

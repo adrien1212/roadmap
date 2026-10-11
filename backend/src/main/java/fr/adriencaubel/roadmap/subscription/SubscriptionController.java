@@ -23,7 +23,7 @@ public class SubscriptionController {
 	@GetMapping
 	public ReadersResponse list(@PathVariable Long roadmapId) {
 		SubscriptionService.ReadersOverview overview = service.overview(roadmapId);
-		return new ReadersResponse(new Counts(overview.confirmed(), overview.pending(), overview.unsubscribed()),
+		return new ReadersResponse(new Counts(overview.confirmed(), overview.pending()),
 				overview.subscriptions().stream().map(SubscriptionResponse::of).toList());
 	}
 
@@ -36,7 +36,7 @@ public class SubscriptionController {
 	public record ReadersResponse(Counts counts, List<SubscriptionResponse> subscriptions) {
 	}
 
-	public record Counts(long confirmed, long pending, long unsubscribed) {
+	public record Counts(long confirmed, long pending) {
 	}
 
 	/** No token: it is the Reader's key, not the Owner's. */

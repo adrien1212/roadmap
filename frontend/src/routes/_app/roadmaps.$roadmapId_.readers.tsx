@@ -52,7 +52,6 @@ function ReadersPage() {
   const counts = [
     { label: 'Subscribed', value: readers.counts.confirmed },
     { label: 'Waiting to confirm', value: readers.counts.pending },
-    { label: 'Unsubscribed', value: readers.counts.unsubscribed },
   ]
 
   return (
@@ -72,7 +71,7 @@ function ReadersPage() {
         </p>
       </div>
 
-      <dl className="mb-8 grid grid-cols-3 gap-3">
+      <dl className="mb-8 grid grid-cols-2 gap-3">
         {counts.map(({ label, value }) => (
           <div key={label} className="rounded-lg bg-surface-card p-4">
             <dt className="text-[13px] font-medium text-muted-foreground">{label}</dt>

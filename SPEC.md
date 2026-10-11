@@ -186,7 +186,7 @@ exist)
   encrypted), "Send test email", and a state. Only SMTP ports and public hosts
   are accepted. Until a test succeeds, Public pages offer RSS only.
 - Per Roadmap, `/roadmaps/{id}/readers` lists confirmed and pending Readers
-  with their dates and the confirmed / pending / unsubscribed counts; the Owner
+  with their dates and the confirmed / pending counts; the Owner
   can remove a Reader. Details in `SPEC-reader-updates.md`.
 
 ### Publishing
