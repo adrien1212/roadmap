@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, createFileRoute, notFound, useNavigate } from '@tanstack/react-router'
-import { useSuspenseQuery } from '@tanstack/react-query'
-import { ArrowLeft, ExternalLink, Globe, Lock, Plus, Rows2 } from 'lucide-react'
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query'
+import { ArrowLeft, CircleAlert, ExternalLink, Globe, Lock, Plus, Rows2 } from 'lucide-react'
 
 import { StateBadge } from '#/components/chips'
 import { ConfirmDialog } from '#/components/confirm-dialog'
@@ -22,6 +22,8 @@ import { categoriesQuery } from '#/lib/categories'
 import { daysAgo, plural } from '#/lib/format'
 import { itemsQuery, type Item } from '#/lib/items'
 import { publicPath, roadmapQuery } from '#/lib/roadmaps'
+import { smtpSettingsQuery } from '#/lib/smtp'
+import { readersQuery } from '#/lib/subscriptions'
 
 export const Route = createFileRoute('/_app/roadmaps/$roadmapId')({
   params: {
@@ -37,6 +39,9 @@ export const Route = createFileRoute('/_app/roadmaps/$roadmapId')({
         queryClient.ensureQueryData(roadmapQuery(roadmapId)),
         queryClient.ensureQueryData(itemsQuery(roadmapId)),
         queryClient.ensureQueryData(categoriesQuery),
+        // Email state (Item dialog hint, SMTP warning): prefetched, but never blocks the editor.
+        queryClient.prefetchQuery(smtpSettingsQuery),
+        queryClient.prefetchQuery(readersQuery(roadmapId)),
       ])
     } catch (error) {
       if (error instanceof ApiError && error.status === 404) throw notFound()
@@ -66,6 +71,11 @@ function EditorPage() {
   const [publishing, setPublishing] = useState(false)
   const { hidden, remove } = useDelayedDelete(roadmapId)
   const reorder = useReorder(roadmapId)
+  // Email state, for the Item dialog hint and the warning; not needed to render the editor.
+  const { data: smtp } = useQuery(smtpSettingsQuery)
+  const { data: readers } = useQuery({ ...readersQuery(roadmapId), enabled: roadmap.publishedAt !== null })
+  const subscribed = readers?.counts.confirmed ?? 0
+  const emailsOnShip = roadmap.publishedAt && smtp?.state === 'connected' ? subscribed : 0
 
   // Items waiting out their Undo window are already gone from the Owner's view.
   const items = allItems.filter((item) => !hidden.has(item.id))
@@ -127,6 +137,18 @@ function EditorPage() {
         {internalCount > 0 && ` · ${internalCount} Internal, left off the Public page`}
       </p>
 
+      {smtp?.state === 'not_working' && subscribed > 0 && (
+        <div role="alert" className="mt-4 flex items-start gap-2 rounded-md border border-[#fecaca] bg-[#fef2f2] px-4 py-3 text-sm text-error-text">
+          <CircleAlert className="mt-0.5 size-4 shrink-0" aria-hidden />
+          <span>
+            Emails to subscribed Readers aren't being sent: {smtp.lastError}{' '}
+            <Link to="/settings" className="font-semibold underline">
+              Fix it in Settings
+            </Link>
+          </span>
+        </div>
+      )}
+
       <CategoryLegend categories={categories} items={items} />
 
       <div className="sticky top-0 z-10 flex flex-wrap items-center gap-3 border-b border-hairline-soft bg-background/95 py-3.5">
@@ -186,6 +208,7 @@ function EditorPage() {
         categories={categories}
         onOpenChange={(open) => !open && setEditing(null)}
         onDelete={setConfirmingDelete}
+        emailsOnShip={emailsOnShip}
       />
 
       <PublishDialog roadmap={roadmap} internalCount={internalCount} open={publishing} onOpenChange={setPublishing} />

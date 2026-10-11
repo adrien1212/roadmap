@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Trash2 } from 'lucide-react'
+import { Mail, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { FieldError } from '#/components/field-error'
@@ -37,6 +37,7 @@ export function ItemDialog({
   categories,
   onOpenChange,
   onDelete,
+  emailsOnShip,
 }: {
   roadmapId: number
   item: Item | null
@@ -44,6 +45,8 @@ export function ItemDialog({
   categories: Category[]
   onOpenChange: (open: boolean) => void
   onDelete: (item: Item) => void
+  /** How many subscribed Readers an Item becoming Shipped would email right now (0 when it wouldn't). */
+  emailsOnShip: number
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -58,6 +61,7 @@ export function ItemDialog({
             categories={categories}
             onClose={() => onOpenChange(false)}
             onDelete={onDelete}
+            emailsOnShip={emailsOnShip}
           />
         )}
       </DialogContent>
@@ -71,12 +75,14 @@ function ItemForm({
   categories,
   onClose,
   onDelete,
+  emailsOnShip,
 }: {
   roadmapId: number
   item: Item | null
   categories: Category[]
   onClose: () => void
   onDelete: (item: Item) => void
+  emailsOnShip: number
 }) {
   const queryClient = useQueryClient()
   const [draft, setDraft] = useState<ItemDraft>(item ? toDraft(item) : emptyDraft)
@@ -168,7 +174,16 @@ function ItemForm({
               </button>
             ))}
           </div>
-          <p className={hint}>Set by hand. It never changes when a date passes.</p>
+          {emailsOnShip > 0 && draft.status === 'shipped' && !draft.internal && item?.status !== 'shipped' ? (
+            <p className="m-0 flex items-center gap-1.5 text-[13px] text-body">
+              <Mail className="size-4 shrink-0" aria-hidden />
+              {emailsOnShip === 1
+                ? '1 subscribed Reader gets an email about this Item when you save.'
+                : `${emailsOnShip} subscribed Readers get an email about this Item when you save.`}
+            </p>
+          ) : (
+            <p className={hint}>Set by hand. It never changes when a date passes.</p>
+          )}
           {item?.shippedAt && draft.status === 'shipped' && (
             <p className="m-0 text-[13px] font-medium text-success-text">Shipped {formatInstant(item.shippedAt)}</p>
           )}

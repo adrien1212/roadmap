@@ -96,10 +96,10 @@ T1 SecretBox + SmtpServerGuard (pure)
 - [x] Task 8: Shipped emails
 - [x] Task 9: Unsubscribe
 - [x] Task 10: Subscribed Readers screen
-- [ ] Task 11: Hints, warnings and pending expiry
+- [x] Task 11: Hints, warnings and pending expiry
 
 ### Checkpoint: Complete (Success Criteria of SPEC-reader-updates.md)
-- [ ] Criteria 1–6 verified with Mailpit
+- [x] Criteria 1–6 verified with Mailpit
 - [ ] Review with human
 
 ## Risks and Mitigations

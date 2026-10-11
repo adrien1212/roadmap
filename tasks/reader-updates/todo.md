@@ -259,17 +259,17 @@ confirm page.
 clean up stale pending Subscriptions.
 
 **Acceptance criteria:**
-- [ ] Item dialog: "{N} subscribed Readers get an email about this Item when
+- [x] Item dialog: "{N} subscribed Readers get an email about this Item when
       you save" when saving would send it (Published, SMTP Connected, becoming
       Shipped, not Internal, N > 0).
-- [ ] Editor of a Roadmap with subscribed Readers: a warning when the SMTP
+- [x] Editor of a Roadmap with subscribed Readers: a warning when the SMTP
       state is Not working, linking to Settings.
-- [ ] Daily job deletes pending Subscriptions older than 7 days
+- [x] Daily job deletes pending Subscriptions older than 7 days
       (`@EnableScheduling`).
 
 **Verification:**
-- [ ] `./mvnw test`; `npm run build`
-- [ ] Manual: hint shows / hides as the Status and Internal toggle change;
+- [x] `./mvnw test`; `npm run build`
+- [x] Manual: hint shows / hides as the Status and Internal toggle change;
       break the SMTP host → warning in the editor.
 
 **Dependencies:** Task 10
@@ -279,14 +279,14 @@ clean up stale pending Subscriptions.
 **Estimated scope:** M
 
 ### Checkpoint: Complete (Success Criteria of SPEC-reader-updates.md)
-- [ ] 1. Subscribe, confirm, receive a Shipped email, unsubscribe in one click.
-- [ ] 2. No email for Internal Items, Private Roadmaps, pending Readers, or SMTP
+- [x] 1. Subscribe, confirm, receive a Shipped email, unsubscribe in one click.
+- [x] 2. No email for Internal Items, Private Roadmaps, pending Readers, or SMTP
       not Connected.
-- [ ] 3. The Owner sees confirmed / pending Readers with dates and the three
+- [x] 3. The Owner sees confirmed / pending Readers with dates and the three
       counts, and can remove a Reader.
-- [ ] 4. The SMTP password is never returned and stored encrypted; private
+- [x] 4. The SMTP password is never returned and stored encrypted; private
       hosts and non-SMTP ports are refused.
-- [ ] 5. On SMTP failure the Owner is warned and the Public page offers RSS
+- [x] 5. On SMTP failure the Owner is warned and the Public page offers RSS
       only until a test succeeds.
-- [ ] 6. `./mvnw test` green; `npm run build` clean.
+- [x] 6. `./mvnw test` green; `npm run build` clean.
 - [ ] Review with human
