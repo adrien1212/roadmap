@@ -18,7 +18,7 @@ Detailed tasks live in `tasks/todo.md`.
 
 - **Same-origin via proxy.** The browser only talks to port 3000; Vite
   `server.proxy` forwards `/api/**`, `/oauth2/**`, `/login/**`, `/logout` to
-  Spring on 8080. No CORS, first-party session cookie.
+  Spring on 8045. No CORS, first-party session cookie.
 - **Spring is the OAuth2 client and owns the session.** The frontend never
   sees a token; it only knows "signed in or not" through `GET /api/me`.
 - **Owner identity = (provider, providerSubject)**, i.e. (`google`, OIDC `sub`).
@@ -115,7 +115,7 @@ Detailed tasks live in `tasks/todo.md`.
 | A query not scoped by Owner slips in while only one Owner exists | High | Repositories never expose bare `findById`; manual cross-Owner check at the final checkpoint |
 | Internal Items leak to Readers (no security/integration tests) | High | Public DTO separate from editor DTO; unit test on the public mapping; manual check |
 | `DevCurrentOwner` left in place | Med | Deleted in Task 21; two `CurrentOwner` beans would fail startup anyway |
-| OAuth redirect URIs break behind the proxy (Spring builds `:8080` URLs) | High | `forward-headers-strategy=framework` + `X-Forwarded-*` (Task 2); verify in Task 19 |
+| OAuth redirect URIs break behind the proxy (Spring builds `:8045` URLs) | High | `forward-headers-strategy=framework` + `X-Forwarded-*` (Task 2); verify in Task 19 |
 | Mockups diverge from SPEC | Med | Task 9 lists mismatches for a human decision before UI work |
 | Spring Boot 4 / Java 27 starter names differ from older tutorials | Med | Check Boot 4 docs when adding starters |
 | Timeline layout (partial dates, cross-year bars) | Med | Pure layout function, reused in editor and Public page |

@@ -34,7 +34,7 @@ API checks go through port 3000 (`curl -i localhost:3000/api/...`).
 
 **Acceptance criteria:**
 - [ ] Vite `server.proxy` forwards `/api`, `/oauth2`, `/login`, `/logout` to
-      `localhost:8080` with `X-Forwarded-*` (host 3000).
+      `localhost:8045` with `X-Forwarded-*` (host 3000).
 - [ ] Spring sets `server.forward-headers-strategy=framework`.
 - [ ] Frontend `/` still renders.
 
@@ -322,7 +322,7 @@ should not need to change. Tell Claude if the contract moves.
 - [ ] `localhost:3000/oauth2/authorization/google` round-trips back to
       `localhost:3000` with a `JSESSIONID` cookie for `localhost:3000`.
 
-**Verification:** Manual round trip; the Network tab never shows `:8080`.
+**Verification:** Manual round trip; the Network tab never shows `:8045`.
 
 **Concepts to learn:** Authorization Code flow; OpenID Connect vs plain
 OAuth2 (`id_token`, `sub`, scopes `openid profile email`); Spring's

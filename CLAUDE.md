@@ -11,7 +11,7 @@ Monorepo with two independent apps; no root build:
 - `frontend/` — TanStack Start (React 19, SSR) + TanStack Router (file-based) + TanStack Query, Tailwind v4, shadcn/ui.
 - `backend/` — Spring Boot 4 (Web MVC + Data JPA), Java 27, MariaDB, Lombok. Package root `fr.adriencaubel.roadmap`.
 
-The browser only talks to the frontend origin (port 3000 in dev): a proxy (Vite `server.proxy` in dev, reverse proxy in prod) forwards `/api/**`, `/oauth2/**`, `/login/**` to Spring (8080). Spring is the OAuth2 client and owns the session cookie; use relative `/api/...` URLs, no CORS, no tokens in the frontend.
+The browser only talks to the frontend origin (port 3000 in dev): a proxy (Vite `server.proxy` in dev, reverse proxy in prod) forwards `/api/**`, `/oauth2/**`, `/login/**` to Spring (8045). Spring is the OAuth2 client and owns the session cookie; use relative `/api/...` URLs, no CORS, no tokens in the frontend.
 
 ## Commands
 

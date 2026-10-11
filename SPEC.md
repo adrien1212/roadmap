@@ -179,8 +179,8 @@ _Avoid_: customer, viewer, visitor, end user, subscriber, stakeholder
 - Frontend calls the backend REST API via TanStack Query, always same-origin
   with relative URLs (`/api/...`). A proxy routes `/api/**`, `/oauth2/**` and
   `/login/**` to Spring and everything else to TanStack Start:
-  - Dev: Vite `server.proxy` from port 3000 to Spring on 8080; the browser
-    never sees 8080.
+  - Dev: Vite `server.proxy` from port 3000 to Spring on 8045; the browser
+    never sees 8045.
   - Prod: a reverse proxy does the same on a single domain.
   - No CORS. The Spring session cookie is first-party.
   - The OAuth redirect URI registered at Google uses the public origin
