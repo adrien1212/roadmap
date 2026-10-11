@@ -94,7 +94,7 @@ Detailed tasks live in `tasks/todo.md`.
 - [x] Task 14: Drag-and-drop reorder
 - [x] Task 15: Year timeline component and editor timeline view
 - [x] Task 16: Publish controls in the editor
-- [ ] Task 17: Public page
+- [x] Task 17: Public page
 - [ ] Task 18: Home page
 
 ### Checkpoint: App complete without auth

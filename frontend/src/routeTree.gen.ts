@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppCategoriesRouteImport } from './routes/_app/categories'
+import { Route as RPublicIdRouteImport } from './routes/r.$publicId'
 import { Route as AppRoadmapsIndexRouteImport } from './routes/_app/roadmaps.index'
 import { Route as AppRoadmapsRoadmapIdRouteImport } from './routes/_app/roadmaps.$roadmapId'
 
@@ -29,6 +30,11 @@ const AppCategoriesRoute = AppCategoriesRouteImport.update({
   path: '/categories',
   getParentRoute: () => AppRoute,
 } as any)
+const RPublicIdRoute = RPublicIdRouteImport.update({
+  id: '/r/$publicId',
+  path: '/r/$publicId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoadmapsIndexRoute = AppRoadmapsIndexRouteImport.update({
   id: '/roadmaps/',
   path: '/roadmaps/',
@@ -43,12 +49,14 @@ const AppRoadmapsRoadmapIdRoute = AppRoadmapsRoadmapIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/categories': typeof AppCategoriesRoute
+  '/r/$publicId': typeof RPublicIdRoute
   '/roadmaps/$roadmapId': typeof AppRoadmapsRoadmapIdRoute
   '/roadmaps/': typeof AppRoadmapsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/categories': typeof AppCategoriesRoute
+  '/r/$publicId': typeof RPublicIdRoute
   '/roadmaps/$roadmapId': typeof AppRoadmapsRoadmapIdRoute
   '/roadmaps': typeof AppRoadmapsIndexRoute
 }
@@ -57,19 +65,23 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/_app/categories': typeof AppCategoriesRoute
+  '/r/$publicId': typeof RPublicIdRoute
   '/_app/roadmaps/$roadmapId': typeof AppRoadmapsRoadmapIdRoute
   '/_app/roadmaps/': typeof AppRoadmapsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/categories' | '/roadmaps/$roadmapId' | '/roadmaps/'
+  fullPaths:
+    '/' | '/categories' | '/r/$publicId' | '/roadmaps/$roadmapId' | '/roadmaps/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/categories' | '/roadmaps/$roadmapId' | '/roadmaps'
+  to:
+    '/' | '/categories' | '/r/$publicId' | '/roadmaps/$roadmapId' | '/roadmaps'
   id:
     | '__root__'
     | '/'
     | '/_app'
     | '/_app/categories'
+    | '/r/$publicId'
     | '/_app/roadmaps/$roadmapId'
     | '/_app/roadmaps/'
   fileRoutesById: FileRoutesById
@@ -77,6 +89,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  RPublicIdRoute: typeof RPublicIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -101,6 +114,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/categories'
       preLoaderRoute: typeof AppCategoriesRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/r/$publicId': {
+      id: '/r/$publicId'
+      path: '/r/$publicId'
+      fullPath: '/r/$publicId'
+      preLoaderRoute: typeof RPublicIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_app/roadmaps/': {
       id: '/_app/roadmaps/'
@@ -136,6 +156,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  RPublicIdRoute: RPublicIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

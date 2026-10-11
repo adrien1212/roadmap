@@ -42,6 +42,8 @@ export function CategoryDot({ colour }: { colour: Colour | null }) {
 export function StateBadge({ published, label }: { published: boolean; label?: string }) {
   return (
     <span
+      // "N days ago" depends on the viewer's day, which may differ from the server's.
+      suppressHydrationWarning
       className={cn(
         'inline-flex items-center gap-1.5 text-[13px] font-medium whitespace-nowrap',
         published ? 'text-success-text' : 'text-muted-foreground',

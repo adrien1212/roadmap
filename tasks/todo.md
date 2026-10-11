@@ -275,8 +275,8 @@ years.
 ### Task 17: Public page
 
 **Acceptance criteria:**
-- [ ] `/r/$publicId` with SSR, outside `_app`; 404 page on API 404.
-- [ ] Header with name and published date; timeline (current year,
+- [x] `/r/$publicId` with SSR, outside `_app`; 404 page on API 404.
+- [x] Header with name and published date; timeline (current year,
       navigation, expandable rows with description, note about undated /
       outside-year Items) and list views (with descriptions); filters by
       Category (in use) and Status; no swimlanes; "Page not found" page.
