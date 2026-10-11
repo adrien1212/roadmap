@@ -1,13 +1,17 @@
 import { Link } from '@tanstack/react-router'
 import { useSuspenseQuery } from '@tanstack/react-query'
+import { LogOut } from 'lucide-react'
 
 import { Wordmark } from '#/components/wordmark'
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '#/components/ui/dropdown-menu'
+import { signOut } from '#/lib/api'
 import { initials, meQuery } from '#/lib/me'
 
 const navLink =
@@ -48,6 +52,11 @@ export function AppBar() {
               <div className="text-base font-semibold">Signed in</div>
               <div className="text-[13px] font-medium text-muted-foreground">with {providerLabel(me.provider)}</div>
             </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onSelect={() => signOut()}>
+              <LogOut aria-hidden />
+              Sign out
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </header>

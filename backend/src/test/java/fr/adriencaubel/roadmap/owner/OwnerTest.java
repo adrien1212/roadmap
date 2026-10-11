@@ -46,4 +46,21 @@ class OwnerTest {
 	void isNeverTakenFromTheGoogleProfile() {
 		assertThat(owner.getBrandName()).isNotEqualTo(owner.getName());
 	}
+
+	@Test
+	void takesTheLatestEmailAndNameFromItsProvider() {
+		owner.refreshProfile("jane.doe@example.com", "Jane D.");
+
+		assertThat(owner.getEmail()).isEqualTo("jane.doe@example.com");
+		assertThat(owner.getName()).isEqualTo("Jane D.");
+	}
+
+	@Test
+	void keepsItsBrandWhenTheProfileChanges() {
+		owner.changeBrand("Acme");
+
+		owner.refreshProfile("jane.doe@example.com", "Jane D.");
+
+		assertThat(owner.getBrandName()).isEqualTo("Acme");
+	}
 }

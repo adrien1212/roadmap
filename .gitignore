@@ -3,3 +3,6 @@
 .claude
 skills-lock.json
 
+
+# Local secrets (Google client, SMTP key, …)
+.env

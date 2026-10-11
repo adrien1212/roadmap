@@ -1,18 +1,24 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { ArrowRight, EyeOff } from 'lucide-react'
 
 import { NeutralChip, StateBadge, StatusChip } from '#/components/chips'
 import { GoogleButton } from '#/components/google-button'
 import { Wordmark } from '#/components/wordmark'
+import { meQuery } from '#/lib/me'
 import { Button } from '#/components/ui/button'
 import type { ItemStatus } from '#/lib/items'
 import { cn } from '#/lib/utils'
 
-/**
- * Home: presents the product and is where an Owner signs in (design/ui-design.html, Landing page).
- * Sending a signed-in Owner on to their Roadmaps comes with real sign-in (Task 21).
- */
+/** Home: presents the product and is where an Owner signs in (design/ui-design.html, Landing page). */
 export const Route = createFileRoute('/')({
+  // A signed-in Owner goes straight to their Roadmaps; anyone else (or a backend error) sees Home.
+  beforeLoad: async ({ context }) => {
+    const signedIn = await context.queryClient.fetchQuery(meQuery).then(
+      () => true,
+      () => false,
+    )
+    if (signedIn) throw redirect({ to: '/roadmaps' })
+  },
   component: HomePage,
 })
 

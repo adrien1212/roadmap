@@ -48,6 +48,12 @@ public class Owner {
 		this.createdAt = Instant.now();
 	}
 
+	/** The email and name the provider currently has for this person, taken at each sign-in. Never the Brand. */
+	public void refreshProfile(String email, String name) {
+		this.email = email;
+		this.name = name;
+	}
+
 	/** Trimmed, at most {@value BRAND_MAX_LENGTH} characters; blank or null clears the Brand. */
 	public void changeBrand(String name) {
 		String trimmed = name == null ? "" : name.strip();
