@@ -95,7 +95,7 @@ T1 SecretBox + SmtpServerGuard (pure)
 ### Phase 3: Emails, unsubscribe, Owner view
 - [x] Task 8: Shipped emails
 - [x] Task 9: Unsubscribe
-- [ ] Task 10: Subscribed Readers screen
+- [x] Task 10: Subscribed Readers screen
 - [ ] Task 11: Hints, warnings and pending expiry
 
 ### Checkpoint: Complete (Success Criteria of SPEC-reader-updates.md)

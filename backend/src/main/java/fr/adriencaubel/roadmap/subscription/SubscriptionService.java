@@ -5,6 +5,7 @@ import fr.adriencaubel.roadmap.common.EmailAddress;
 import fr.adriencaubel.roadmap.common.NotFoundException;
 import fr.adriencaubel.roadmap.roadmap.Roadmap;
 import fr.adriencaubel.roadmap.roadmap.RoadmapRepository;
+import fr.adriencaubel.roadmap.roadmap.RoadmapService;
 import fr.adriencaubel.roadmap.smtp.SmtpSettingsRepository;
 import fr.adriencaubel.roadmap.smtp.SmtpState;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 
 /** Readers subscribe and confirm. Answers never reveal whether an address is already subscribed. */
 @Service
@@ -21,6 +23,7 @@ import java.time.Instant;
 public class SubscriptionService {
 
 	private final RoadmapRepository roadmaps;
+	private final RoadmapService ownerRoadmaps;
 	private final SubscriptionRepository subscriptions;
 	private final SmtpSettingsRepository smtpSettings;
 	private final ApplicationEventPublisher events;
@@ -63,6 +66,30 @@ public class SubscriptionService {
 				.orElseThrow(() -> new NotFoundException("This link has expired"));
 		subscription.getRoadmap().countUnsubscribe();
 		subscriptions.delete(subscription);
+	}
+
+	/** The Owner's view: confirmed and pending Readers (newest first, expired pending left out) and the counts. */
+	@Transactional(readOnly = true)
+	public ReadersOverview overview(Long roadmapId) {
+		Roadmap roadmap = ownerRoadmaps.get(roadmapId);
+		Instant now = Instant.now();
+		List<Subscription> current = subscriptions.findAllByRoadmapOrderByCreatedAtDesc(roadmap).stream()
+				.filter(s -> !s.isExpired(now))
+				.toList();
+		long confirmed = current.stream().filter(Subscription::isConfirmed).count();
+		return new ReadersOverview(confirmed, current.size() - confirmed, roadmap.getUnsubscribedCount(), current);
+	}
+
+	/** The Owner removes a Reader; it counts as unsubscribed. */
+	public void remove(Long roadmapId, Long subscriptionId) {
+		Roadmap roadmap = ownerRoadmaps.get(roadmapId);
+		Subscription subscription = subscriptions.findByIdAndRoadmap(subscriptionId, roadmap)
+				.orElseThrow(() -> new NotFoundException("Subscription not found"));
+		roadmap.countUnsubscribe();
+		subscriptions.delete(subscription);
+	}
+
+	public record ReadersOverview(long confirmed, long pending, long unsubscribed, List<Subscription> subscriptions) {
 	}
 
 	/** Readers can subscribe when the Roadmap is Published and its Owner's SMTP server is connected. */

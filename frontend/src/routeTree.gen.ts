@@ -18,6 +18,7 @@ import { Route as AppRoadmapsIndexRouteImport } from './routes/_app/roadmaps.ind
 import { Route as AppRoadmapsRoadmapIdRouteImport } from './routes/_app/roadmaps.$roadmapId'
 import { Route as RPublicIdConfirmRouteImport } from './routes/r.$publicId_.confirm'
 import { Route as RPublicIdUnsubscribeRouteImport } from './routes/r.$publicId_.unsubscribe'
+import { Route as AppRoadmapsRoadmapIdReadersRouteImport } from './routes/_app/roadmaps.$roadmapId_.readers'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -63,6 +64,12 @@ const RPublicIdUnsubscribeRoute = RPublicIdUnsubscribeRouteImport.update({
   path: '/r/$publicId/unsubscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRoadmapsRoadmapIdReadersRoute =
+  AppRoadmapsRoadmapIdReadersRouteImport.update({
+    id: '/roadmaps/$roadmapId_/readers',
+    path: '/roadmaps/$roadmapId/readers',
+    getParentRoute: () => AppRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -73,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/r/$publicId/confirm': typeof RPublicIdConfirmRoute
   '/r/$publicId/unsubscribe': typeof RPublicIdUnsubscribeRoute
   '/roadmaps/': typeof AppRoadmapsIndexRoute
+  '/roadmaps/$roadmapId/readers': typeof AppRoadmapsRoadmapIdReadersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -83,6 +91,7 @@ export interface FileRoutesByTo {
   '/r/$publicId/confirm': typeof RPublicIdConfirmRoute
   '/r/$publicId/unsubscribe': typeof RPublicIdUnsubscribeRoute
   '/roadmaps': typeof AppRoadmapsIndexRoute
+  '/roadmaps/$roadmapId/readers': typeof AppRoadmapsRoadmapIdReadersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -95,6 +104,7 @@ export interface FileRoutesById {
   '/r/$publicId_/confirm': typeof RPublicIdConfirmRoute
   '/r/$publicId_/unsubscribe': typeof RPublicIdUnsubscribeRoute
   '/_app/roadmaps/': typeof AppRoadmapsIndexRoute
+  '/_app/roadmaps/$roadmapId_/readers': typeof AppRoadmapsRoadmapIdReadersRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/r/$publicId/confirm'
     | '/r/$publicId/unsubscribe'
     | '/roadmaps/'
+    | '/roadmaps/$roadmapId/readers'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/r/$publicId/confirm'
     | '/r/$publicId/unsubscribe'
     | '/roadmaps'
+    | '/roadmaps/$roadmapId/readers'
   id:
     | '__root__'
     | '/'
@@ -128,6 +140,7 @@ export interface FileRouteTypes {
     | '/r/$publicId_/confirm'
     | '/r/$publicId_/unsubscribe'
     | '/_app/roadmaps/'
+    | '/_app/roadmaps/$roadmapId_/readers'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -203,6 +216,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RPublicIdUnsubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/roadmaps/$roadmapId_/readers': {
+      id: '/_app/roadmaps/$roadmapId_/readers'
+      path: '/roadmaps/$roadmapId/readers'
+      fullPath: '/roadmaps/$roadmapId/readers'
+      preLoaderRoute: typeof AppRoadmapsRoadmapIdReadersRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
@@ -211,6 +231,7 @@ interface AppRouteChildren {
   AppSettingsRoute: typeof AppSettingsRoute
   AppRoadmapsRoadmapIdRoute: typeof AppRoadmapsRoadmapIdRoute
   AppRoadmapsIndexRoute: typeof AppRoadmapsIndexRoute
+  AppRoadmapsRoadmapIdReadersRoute: typeof AppRoadmapsRoadmapIdReadersRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -218,6 +239,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsRoute: AppSettingsRoute,
   AppRoadmapsRoadmapIdRoute: AppRoadmapsRoadmapIdRoute,
   AppRoadmapsIndexRoute: AppRoadmapsIndexRoute,
+  AppRoadmapsRoadmapIdReadersRoute: AppRoadmapsRoadmapIdReadersRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

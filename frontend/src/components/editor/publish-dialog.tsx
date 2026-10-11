@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Check, Clock, Copy, ExternalLink, EyeOff, Globe, Lock } from 'lucide-react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Link } from '@tanstack/react-router'
+import { Check, Clock, Copy, ExternalLink, EyeOff, Globe, Lock, Mail } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { Button } from '#/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '#/components/ui/dialog'
 import { daysAgo, formatInstant, plural } from '#/lib/format'
 import { publicPath, publishRoadmap, unpublishRoadmap, type Roadmap } from '#/lib/roadmaps'
+import { readersQuery } from '#/lib/subscriptions'
 
 const title = 'pr-8 font-display text-[22px] leading-[1.3] font-semibold tracking-[-0.3px]'
 
@@ -28,6 +30,8 @@ export function PublishDialog({
   const queryClient = useQueryClient()
   const [confirmingUnpublish, setConfirmingUnpublish] = useState(false)
   const [copied, setCopied] = useState(false)
+  const readers = useQuery({ ...readersQuery(roadmap.id), enabled: open && roadmap.publishedAt !== null })
+  const subscribed = readers.data?.counts.confirmed ?? 0
   useEffect(() => {
     if (!open) setConfirmingUnpublish(false)
   }, [open])
@@ -107,6 +111,21 @@ export function PublishDialog({
               {daysAgo(roadmap.publishedAt)}). Edits already show to Readers. Publishing again only moves this date to
               today.
             </DialogDescription>
+            <p className="flex items-center gap-2 text-sm text-body">
+              <Mail className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+              <span>
+                <span className="tabular-nums">{plural(subscribed, 'Reader')}</span>{' '}
+                {subscribed === 1 ? 'is' : 'are'} subscribed.{' '}
+                <Link
+                  to="/roadmaps/$roadmapId/readers"
+                  params={{ roadmapId: roadmap.id }}
+                  className="font-medium text-foreground underline"
+                  onClick={() => onOpenChange(false)}
+                >
+                  See subscribed Readers
+                </Link>
+              </span>
+            </p>
             <div className="flex flex-wrap gap-3">
               <Button variant="secondary" className="flex-1" onClick={() => publish.mutate()} disabled={publish.isPending}>
                 Publish again

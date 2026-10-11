@@ -235,16 +235,16 @@ confirm page.
 **Description:** The Owner sees and manages who is subscribed to each Roadmap.
 
 **Acceptance criteria:**
-- [ ] `GET /api/roadmaps/{id}/subscriptions` → counts (confirmed, pending,
+- [x] `GET /api/roadmaps/{id}/subscriptions` → counts (confirmed, pending,
       unsubscribed) + list (email, state, date), newest first;
       `DELETE /api/roadmaps/{id}/subscriptions/{subscriptionId}` (counts as
       unsubscribed); another Owner's Roadmap → 404.
-- [ ] `/roadmaps/$roadmapId/readers`: counts, list, Remove with confirm; the
+- [x] `/roadmaps/$roadmapId/readers`: counts, list, Remove with confirm; the
       Share dialog says "{N} Readers are subscribed" and links to it.
 
 **Verification:**
-- [ ] `./mvnw test`; `npm run build`; curl the SSR HTML of the screen
-- [ ] Manual: remove a Reader → list and counts update.
+- [x] `./mvnw test`; `npm run build`; curl the SSR HTML of the screen
+- [x] Manual: remove a Reader → list and counts update.
 
 **Dependencies:** Task 9
 **Files likely touched:** `subscription/SubscriptionController.java`,
