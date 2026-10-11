@@ -22,8 +22,8 @@ Frontend (run in `frontend/`, use **npm** — `package-lock.json` is canonical):
 - Add shadcn components: `npx shadcn@latest add <component>`
 
 Backend (run in `backend/`):
-- `docker compose up -d` (repo root) — local MariaDB on 3306
-- `./mvnw spring-boot:run` — run the API
+- `docker compose up -d` (repo root) — local MariaDB on 3306 and Mailpit (SMTP on 2525, inbox at http://localhost:8025)
+- `./mvnw spring-boot:run` — run the API. For emails to Readers in dev: `SMTP_SECRET_KEY=$(openssl rand -base64 32) SMTP_ALLOW_PRIVATE_HOSTS=true ./mvnw spring-boot:run`, then set SMTP to `localhost:2525` (STARTTLS, no username) in Settings. Keep the same key between runs, or saved SMTP passwords can't be decrypted. Never set `SMTP_ALLOW_PRIVATE_HOSTS` in production.
 - `./mvnw test` — unit tests only (no Spring context, no DB); single test: `./mvnw test -Dtest=ClassName#method`
 - `./mvnw package` — build jar
 

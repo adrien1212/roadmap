@@ -11,5 +11,15 @@ services:
     ports:
       - "3306:3306"
 
+  # Local SMTP server with a web inbox (http://localhost:8025) to see emails sent to Readers.
+  # Exposed on 2525, one of the SMTP ports the app accepts. Dev only.
+  mailpit:
+    image: axllent/mailpit:v1.21
+    container_name: roadmap_mailpit
+    restart: always
+    ports:
+      - "2525:1025"
+      - "8025:8025"
+
 volumes:
   mariadb-data:

@@ -58,18 +58,18 @@ and never returned.
 **Description:** Prove the settings work by sending an email to the Owner.
 
 **Acceptance criteria:**
-- [ ] `spring-boot-starter-mail` added; `mailpit` service in
+- [x] `spring-boot-starter-mail` added; `mailpit` service in
       `docker-compose.yml` (SMTP exposed on 2525, an allowed port; inbox 8025); `app.smtp.allow-private-hosts`
       and `app.public-url` properties.
-- [ ] `Mailer` builds a sender from the settings (security, timeouts 10 s),
+- [x] `Mailer` builds a sender from the settings (security, timeouts 10 s),
       checks the guard first, and sends one message.
-- [ ] `POST /api/smtp-settings/test` emails the Owner's account email (or the
+- [x] `POST /api/smtp-settings/test` emails the Owner's account email (or the
       sender email): success → CONNECTED with the date; failure → NOT_WORKING
       with the error message.
 
 **Verification:**
-- [ ] `./mvnw test`
-- [ ] Manual: settings for Mailpit → test email in the Mailpit inbox, state
+- [x] `./mvnw test`
+- [x] Manual: settings for Mailpit → test email in the Mailpit inbox, state
       CONNECTED; host `127.0.0.1` with the guard on, or port 22 → refused.
 
 **Dependencies:** Task 2

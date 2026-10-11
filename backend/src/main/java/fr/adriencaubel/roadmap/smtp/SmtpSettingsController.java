@@ -2,6 +2,7 @@ package fr.adriencaubel.roadmap.smtp;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,12 @@ public class SmtpSettingsController {
 		return SmtpSettingsResponse.of(service.save(request.host(), request.port() == null ? 0 : request.port(),
 				SmtpSecurity.fromKey(request.security()), request.username(), request.password(), request.fromName(),
 				request.fromEmail()));
+	}
+
+	/** Sends a test email to the Owner; the answer carries the new state (connected or not_working + error). */
+	@PostMapping("/test")
+	public SmtpSettingsResponse test() {
+		return SmtpSettingsResponse.of(service.test());
 	}
 
 	public record SmtpSettingsRequest(String host, Integer port, String security, String username, String password,
