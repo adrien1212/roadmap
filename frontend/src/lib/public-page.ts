@@ -22,6 +22,8 @@ export interface PublicItem {
   endDate: string | null
   status: ItemStatus
   categoryId: number | null
+  /** When it became Shipped; null when not Shipped or shipped before Shipped dates existed. */
+  shippedAt: string | null
 }
 
 export const publicPageQuery = (publicId: string) =>

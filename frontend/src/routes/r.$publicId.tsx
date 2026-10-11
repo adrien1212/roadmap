@@ -5,6 +5,7 @@ import { ChevronRight } from 'lucide-react'
 
 import { CategoryChip, CategoryDot, StatusChip } from '#/components/chips'
 import { NotFound } from '#/components/not-found'
+import { RecentlyShipped } from '#/components/recently-shipped'
 import { Button } from '#/components/ui/button'
 import { ViewToggle, type View } from '#/components/view-toggle'
 import { StatusKey, YearNav, YearTimeline } from '#/components/year-timeline'
@@ -72,6 +73,10 @@ function PublicPageView() {
           <ViewToggle view={view} onChange={setView} />
         </div>
       </header>
+
+      <div className="mb-7">
+        <RecentlyShipped items={page.items} categories={page.categories} />
+      </div>
 
       <div className="mb-7 flex flex-col gap-3 border-y border-hairline-soft py-5">
         <div role="group" aria-label="Filter by Category" className="flex flex-wrap items-center gap-2">

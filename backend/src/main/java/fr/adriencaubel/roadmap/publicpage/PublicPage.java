@@ -39,12 +39,12 @@ public record PublicPage(String name, Instant publishedAt, List<PublicCategory> 
 	}
 
 	public record PublicItem(Long id, String title, String description, LocalDate startDate, LocalDate endDate,
-			String status, Long categoryId) {
+			String status, Long categoryId, Instant shippedAt) {
 
 		static PublicItem of(Item item) {
 			return new PublicItem(item.getId(), item.getTitle(), item.getDescription(), item.getStartDate(),
 					item.getEndDate(), item.getStatus().key(),
-					item.getCategory() == null ? null : item.getCategory().getId());
+					item.getCategory() == null ? null : item.getCategory().getId(), item.getShippedAt());
 		}
 	}
 }

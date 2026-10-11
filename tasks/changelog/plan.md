@@ -55,7 +55,7 @@ Task 1  Shipped date (schema + rule + editor API)
 - [x] Switching an Item to Shipped and back sets then clears its date
 
 ### Phase 2: Readers see what shipped
-- [ ] Task 3: Recently shipped on the Public page
+- [x] Task 3: Recently shipped on the Public page
 - [ ] Task 4: RSS feed endpoint
 - [ ] Task 5: Feed links on the Public page
 

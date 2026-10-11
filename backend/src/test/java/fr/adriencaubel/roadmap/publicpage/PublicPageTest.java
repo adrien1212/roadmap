@@ -77,11 +77,31 @@ class PublicPageTest {
 	}
 
 	@Test
+	void carriesTheShippedDateOfShippedItems() {
+		Item shipped = item("SSO", null, false);
+		shipped.changeStatus(ItemStatus.SHIPPED, Instant.parse("2026-10-02T08:00:00Z"));
+		Item planned = item("Dark mode", null, false);
+
+		List<PublicPage.PublicItem> items = PublicPage.of(roadmap, List.of(shipped, planned)).items();
+
+		assertThat(items.get(0).shippedAt()).isEqualTo(Instant.parse("2026-10-02T08:00:00Z"));
+		assertThat(items.get(1).shippedAt()).isNull();
+	}
+
+	@Test
+	void dropsShippedInternalItemsToo() {
+		Item internal = item("Pricing v2", null, true);
+		internal.changeStatus(ItemStatus.SHIPPED, Instant.parse("2026-10-02T08:00:00Z"));
+
+		assertThat(PublicPage.of(roadmap, List.of(internal)).items()).isEmpty();
+	}
+
+	@Test
 	void exposesExactlyTheFieldsOfTheSpec() {
 		assertThat(fields(PublicPage.class)).containsExactly("name", "publishedAt", "categories", "items");
 		assertThat(fields(PublicPage.PublicCategory.class)).containsExactly("id", "name", "colour");
 		assertThat(fields(PublicPage.PublicItem.class))
-				.containsExactly("id", "title", "description", "startDate", "endDate", "status", "categoryId");
+				.containsExactly("id", "title", "description", "startDate", "endDate", "status", "categoryId", "shippedAt");
 	}
 
 	private static List<String> fields(Class<? extends Record> type) {

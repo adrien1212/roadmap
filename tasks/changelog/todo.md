@@ -61,16 +61,16 @@ in the entity, and expose `shippedAt` in the editor's Item API.
 Items above the filters.
 
 **Acceptance criteria:**
-- [ ] `PublicItem` gains `shippedAt`; the exact-fields test is updated to the
+- [x] `PublicItem` gains `shippedAt`; the exact-fields test is updated to the
       new list, and Internal Items are still dropped.
-- [ ] The Public page shows "Recently shipped": up to 3 Items with a Shipped
+- [x] The Public page shows "Recently shipped": up to 3 Items with a Shipped
       date, newest first, each with a Shipped chip, title, Category chip and
       date; hidden when none; unaffected by the filters.
 
 **Verification:**
-- [ ] Unit tests first, then green: `./mvnw test -Dtest=PublicPageTest`
-- [ ] `npm run build`; curl the SSR HTML of `/r/{publicId}` for the section
-- [ ] Manual: ship an Internal Item → it does not appear.
+- [x] Unit tests first, then green: `./mvnw test -Dtest=PublicPageTest`
+- [x] `npm run build`; curl the SSR HTML of `/r/{publicId}` for the section
+- [x] Manual: ship an Internal Item → it does not appear.
 
 **Dependencies:** Task 1
 **Files likely touched:** `PublicPage.java`, `PublicPageTest.java`,
