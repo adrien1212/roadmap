@@ -1,4 +1,4 @@
 databaseChangeLog:
   - include:
-      file: changes/001-owner.yaml
+      file: changes/001-owner.sql
       relativeToChangelogFile: true

@@ -51,7 +51,9 @@ Detailed tasks live in `tasks/todo.md`.
   `DELETE` after 5 s unless undone; no soft delete in the backend.
 - **Category removal via FK `ON DELETE SET NULL`** on `item.category_id`;
   Roadmap removal cascades to Items.
-- **Schema only through Liquibase changesets**; JPA `ddl-auto=validate`.
+- **Schema only through Liquibase changesets**, written as formatted SQL
+  (`db/changelog/changes/NNN-name.sql`, included from the YAML master);
+  JPA `ddl-auto=validate`.
 - **Domain rules live in plain Java** (entity methods / small services without
   Spring) so they are unit-testable without a context or database.
 - **Tests: unit only.** API behaviour checked manually with `curl` through
