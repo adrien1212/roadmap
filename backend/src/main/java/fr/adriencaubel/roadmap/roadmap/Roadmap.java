@@ -61,4 +61,16 @@ public class Roadmap {
 		}
 		this.name = trimmed;
 	}
+
+	/** Makes the Roadmap Published; on an already Published one, publishedAt only moves forward. */
+	public void publish(Instant now) {
+		if (publishedAt == null || now.isAfter(publishedAt)) {
+			publishedAt = now;
+		}
+	}
+
+	/** Makes the Roadmap Private; its publicId is kept for a later republish. */
+	public void unpublish() {
+		publishedAt = null;
+	}
 }

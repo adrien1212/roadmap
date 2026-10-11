@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.Year;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,18 @@ public class RoadmapService {
 		if (name != null) {
 			roadmap.rename(name);
 		}
+		return roadmap;
+	}
+
+	public Roadmap publish(Long id) {
+		Roadmap roadmap = get(id);
+		roadmap.publish(Instant.now());
+		return roadmap;
+	}
+
+	public Roadmap unpublish(Long id) {
+		Roadmap roadmap = get(id);
+		roadmap.unpublish();
 		return roadmap;
 	}
 

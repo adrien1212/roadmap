@@ -45,6 +45,16 @@ public class RoadmapController {
 		return RoadmapResponse.of(service.update(id, request.name()));
 	}
 
+	@PostMapping("/{id}/publish")
+	public RoadmapResponse publish(@PathVariable Long id) {
+		return RoadmapResponse.of(service.publish(id));
+	}
+
+	@PostMapping("/{id}/unpublish")
+	public RoadmapResponse unpublish(@PathVariable Long id) {
+		return RoadmapResponse.of(service.unpublish(id));
+	}
+
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable Long id) {
