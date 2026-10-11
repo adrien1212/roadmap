@@ -65,9 +65,9 @@ Detailed tasks live in `tasks/todo.md`.
 ## Task List
 
 ### Phase 1: Foundation — Claude
-- [ ] Task 1: Database and Liquibase
-- [ ] Task 2: Dev proxy and forwarded headers
-- [ ] Task 3: Owner schema, `CurrentOwner` and `DevCurrentOwner`
+- [x] Task 1: Database and Liquibase
+- [x] Task 2: Dev proxy and forwarded headers
+- [x] Task 3: Owner schema, `CurrentOwner` and `DevCurrentOwner`
 
 ### Checkpoint: Foundation
 
