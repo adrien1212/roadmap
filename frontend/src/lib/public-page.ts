@@ -26,6 +26,9 @@ export interface PublicItem {
   shippedAt: string | null
 }
 
+/** The Feed (RSS 2.0) of a Published Roadmap. */
+export const feedPath = (publicId: string) => `/api/public/roadmaps/${encodeURIComponent(publicId)}/feed.xml`
+
 export const publicPageQuery = (publicId: string) =>
   queryOptions({
     queryKey: ['public', publicId],

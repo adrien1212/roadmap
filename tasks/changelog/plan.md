@@ -57,10 +57,10 @@ Task 1  Shipped date (schema + rule + editor API)
 ### Phase 2: Readers see what shipped
 - [x] Task 3: Recently shipped on the Public page
 - [x] Task 4: RSS feed endpoint
-- [ ] Task 5: Feed links on the Public page
+- [x] Task 5: Feed links on the Public page
 
 ### Checkpoint: Complete (Success Criteria of SPEC-changelog.md)
-- [ ] Criteria 1–5 verified (manual curl / browser)
+- [x] Criteria 1–5 verified (manual curl / browser)
 - [ ] Review with human
 
 ## Risks and Mitigations

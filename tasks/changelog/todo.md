@@ -109,14 +109,14 @@ Feed of a Published Roadmap.
 **Description:** Let Readers and feed readers find the Feed.
 
 **Acceptance criteria:**
-- [ ] The `/r/$publicId` head has `<link rel="alternate"
+- [x] The `/r/$publicId` head has `<link rel="alternate"
       type="application/rss+xml">` to the Feed.
-- [ ] Next to Recently shipped, "Follow what ships" with an "RSS feed" link
+- [x] Next to Recently shipped, "Follow what ships" with an "RSS feed" link
       (always shown on a Public page, even when nothing has shipped yet).
 
 **Verification:**
-- [ ] `npm run build`; curl the SSR HTML for the alternate link
-- [ ] Manual: add the Public page URL to a feed reader → it finds the Feed.
+- [x] `npm run build`; curl the SSR HTML for the alternate link
+- [x] Manual: add the Public page URL to a feed reader → it finds the Feed.
 
 **Dependencies:** Tasks 3, 4
 **Files likely touched:** `frontend/src/routes/r.$publicId.tsx`,
@@ -124,13 +124,13 @@ Feed of a Published Roadmap.
 **Estimated scope:** XS
 
 ### Checkpoint: Complete (Success Criteria of SPEC-changelog.md)
-- [ ] 1. Switching an Item to Shipped records a Shipped date; switching it away
+- [x] 1. Switching an Item to Shipped records a Shipped date; switching it away
       clears it.
-- [ ] 2. The Public page shows the last 3 non-Internal Shipped Items, newest
+- [x] 2. The Public page shows the last 3 non-Internal Shipped Items, newest
       first; absent when none.
-- [ ] 3. The Feed is valid RSS 2.0 with the same Items (up to 20) and is found
+- [x] 3. The Feed is valid RSS 2.0 with the same Items (up to 20) and is found
       from the Public page URL.
-- [ ] 4. No Internal Item in the payload or the Feed; a Private or unknown
+- [x] 4. No Internal Item in the payload or the Feed; a Private or unknown
       Roadmap's Feed returns the same 404 as its Public page.
-- [ ] 5. `./mvnw test` green; `npm run build` clean.
+- [x] 5. `./mvnw test` green; `npm run build` clean.
 - [ ] Review with human

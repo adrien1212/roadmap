@@ -5,7 +5,7 @@ import { ChevronRight } from 'lucide-react'
 
 import { CategoryChip, CategoryDot, StatusChip } from '#/components/chips'
 import { NotFound } from '#/components/not-found'
-import { RecentlyShipped } from '#/components/recently-shipped'
+import { FollowFeed, RecentlyShipped } from '#/components/recently-shipped'
 import { Button } from '#/components/ui/button'
 import { ViewToggle, type View } from '#/components/view-toggle'
 import { StatusKey, YearNav, YearTimeline } from '#/components/year-timeline'
@@ -13,7 +13,7 @@ import { ApiError } from '#/lib/api'
 import { colourVar, type Category } from '#/lib/categories'
 import { formatDates, formatInstant } from '#/lib/format'
 import { STATUSES, STATUS_LABEL, type ItemStatus } from '#/lib/items'
-import { publicPageQuery, type PublicItem } from '#/lib/public-page'
+import { feedPath, publicPageQuery, type PublicItem } from '#/lib/public-page'
 import { place } from '#/lib/timeline'
 import { cn } from '#/lib/utils'
 
@@ -27,7 +27,13 @@ export const Route = createFileRoute('/r/$publicId')({
       throw error
     }
   },
-  head: ({ loaderData }) => ({ meta: [{ title: loaderData?.name ?? 'Page not found' }] }),
+  head: ({ loaderData, params }) => ({
+    meta: [{ title: loaderData?.name ?? 'Page not found' }],
+    // Lets feed readers find the Feed from the Public page URL.
+    links: loaderData
+      ? [{ rel: 'alternate', type: 'application/rss+xml', title: loaderData.name, href: feedPath(params.publicId) }]
+      : [],
+  }),
   notFoundComponent: NotFound,
   component: PublicPageView,
 })
@@ -74,8 +80,11 @@ function PublicPageView() {
         </div>
       </header>
 
-      <div className="mb-7">
-        <RecentlyShipped items={page.items} categories={page.categories} />
+      <div className="mb-7 grid grid-cols-1 items-start gap-6 min-[640px]:grid-cols-[minmax(0,1fr)_340px]">
+        <div>
+          <RecentlyShipped items={page.items} categories={page.categories} />
+        </div>
+        <FollowFeed publicId={publicId} />
       </div>
 
       <div className="mb-7 flex flex-col gap-3 border-y border-hairline-soft py-5">

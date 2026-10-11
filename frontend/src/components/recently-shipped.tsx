@@ -1,7 +1,10 @@
+import { Rss } from 'lucide-react'
+
 import { CategoryChip, StatusChip } from '#/components/chips'
+import { Button } from '#/components/ui/button'
 import type { Category } from '#/lib/categories'
 import { formatInstant } from '#/lib/format'
-import type { PublicItem } from '#/lib/public-page'
+import { feedPath, type PublicItem } from '#/lib/public-page'
 
 const RECENTLY_SHIPPED = 3
 
@@ -45,5 +48,26 @@ export function RecentlyShipped({ items, categories }: { items: PublicItem[]; ca
         })}
       </ul>
     </section>
+  )
+}
+
+/** "Follow what ships": the Feed, for Readers who use a feed reader. Shown on every Public page. */
+export function FollowFeed({ publicId }: { publicId: string }) {
+  return (
+    <aside aria-labelledby="follow-feed" className="flex flex-col gap-3 rounded-lg bg-surface-soft p-5">
+      <h2 id="follow-feed" className="flex items-center gap-2 text-base font-semibold">
+        <Rss className="size-4" aria-hidden />
+        Follow what ships
+      </h2>
+      <p className="m-0 text-[13px] text-muted-foreground">Add this Roadmap's feed to your RSS reader.</p>
+      <div>
+        <Button variant="secondary" size="sm" asChild>
+          <a href={feedPath(publicId)}>
+            <Rss aria-hidden />
+            RSS feed
+          </a>
+        </Button>
+      </div>
+    </aside>
   )
 }
