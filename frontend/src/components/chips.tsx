@@ -1,6 +1,7 @@
 import { EyeOff } from 'lucide-react'
 
 import { colourVar, type Colour } from '#/lib/categories'
+import { STATUS_LABEL, type ItemStatus } from '#/lib/items'
 import { cn } from '#/lib/utils'
 
 const chip = 'inline-flex items-center gap-1.5 rounded-full px-2.5 py-[3px] text-[13px] leading-[1.4] font-medium whitespace-nowrap'
@@ -50,4 +51,14 @@ export function StateBadge({ published, label }: { published: boolean; label?: s
       {label ?? (published ? 'Published' : 'Private')}
     </span>
   )
+}
+
+const STATUS_STYLE: Record<ItemStatus, string> = {
+  planned: 'border border-border px-[9px] py-0.5 text-body',
+  in_progress: 'bg-progress text-white',
+  shipped: 'bg-foreground text-white',
+}
+
+export function StatusChip({ status }: { status: ItemStatus }) {
+  return <span className={cn(chip, STATUS_STYLE[status])}>{STATUS_LABEL[status]}</span>
 }

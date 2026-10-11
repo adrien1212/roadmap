@@ -90,7 +90,7 @@ Detailed tasks live in `tasks/todo.md`.
 
 ### Checkpoint: Roadmaps & Categories UI
 
-- [ ] Task 13: Editor list view with Item form
+- [x] Task 13: Editor list view with Item form
 - [ ] Task 14: Drag-and-drop reorder
 - [ ] Task 15: Year timeline component and editor timeline view
 - [ ] Task 16: Publish controls in the editor

@@ -225,11 +225,11 @@ refresh (SSR path).
 ### Task 13: Editor list view with Item form
 
 **Acceptance criteria:**
-- [ ] Items in manual order with Status, Category chip, dates, Internal
+- [x] Items in manual order with Status, Category chip, dates, Internal
       marker; optional swimlanes by Category (+ "No Category").
-- [ ] Create/edit side drawer (all Item fields) with validation; delete with
+- [x] Create/edit side drawer (all Item fields) with validation; delete with
       confirm, then Undo toast (5 s, `DELETE` sent after the window).
-- [ ] Category legend with per-Roadmap counts and inline "+ Category".
+- [x] Category legend with per-Roadmap counts and inline "+ Category".
 
 **Verification:** `npm run build`; Manual: Items with no / start-only /
 end-only / both dates.

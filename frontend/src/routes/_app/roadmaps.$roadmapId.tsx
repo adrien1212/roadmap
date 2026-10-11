@@ -1,12 +1,21 @@
 import { useState } from 'react'
 import { Link, createFileRoute, notFound, useNavigate } from '@tanstack/react-router'
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Lock, Plus, Rows2 } from 'lucide-react'
 
+import { StateBadge } from '#/components/chips'
+import { ConfirmDialog } from '#/components/confirm-dialog'
+import { CategoryLegend } from '#/components/editor/category-legend'
+import { ItemDrawer } from '#/components/editor/item-drawer'
+import { ItemList } from '#/components/editor/item-list'
+import { useDelayedDelete } from '#/components/editor/use-delayed-delete'
 import { NotFound } from '#/components/not-found'
 import { RoadmapTitle } from '#/components/roadmap-title'
 import { Button } from '#/components/ui/button'
 import { ApiError } from '#/lib/api'
+import { categoriesQuery } from '#/lib/categories'
+import { daysAgo, plural } from '#/lib/format'
+import { itemsQuery, type Item } from '#/lib/items'
 import { roadmapQuery } from '#/lib/roadmaps'
 
 export const Route = createFileRoute('/_app/roadmaps/$roadmapId')({
@@ -17,9 +26,13 @@ export const Route = createFileRoute('/_app/roadmaps/$roadmapId')({
   /** `?rename=true` opens the name in inline-rename mode (right after "New Roadmap"). */
   validateSearch: (search: Record<string, unknown>): { rename?: boolean } =>
     search.rename === true || search.rename === 'true' ? { rename: true } : {},
-  loader: async ({ context, params }) => {
+  loader: async ({ context: { queryClient }, params: { roadmapId } }) => {
     try {
-      await context.queryClient.ensureQueryData(roadmapQuery(params.roadmapId))
+      await Promise.all([
+        queryClient.ensureQueryData(roadmapQuery(roadmapId)),
+        queryClient.ensureQueryData(itemsQuery(roadmapId)),
+        queryClient.ensureQueryData(categoriesQuery),
+      ])
     } catch (error) {
       if (error instanceof ApiError && error.status === 404) throw notFound()
       throw error
@@ -29,33 +42,126 @@ export const Route = createFileRoute('/_app/roadmaps/$roadmapId')({
   component: EditorPage,
 })
 
+type DrawerState = { item: Item | null } | null
+
 function EditorPage() {
   const { roadmapId } = Route.useParams()
   const { rename } = Route.useSearch()
   const navigate = useNavigate({ from: Route.fullPath })
   const { data: roadmap } = useSuspenseQuery(roadmapQuery(roadmapId))
+  const { data: allItems } = useSuspenseQuery(itemsQuery(roadmapId))
+  const { data: categories } = useSuspenseQuery(categoriesQuery)
+
   const [renaming, setRenaming] = useState(rename === true)
+  const [lanes, setLanes] = useState(false)
+  const [drawer, setDrawer] = useState<DrawerState>(null)
+  const [confirmingDelete, setConfirmingDelete] = useState<Item | null>(null)
+  const { hidden, remove } = useDelayedDelete(roadmapId)
+
+  // Items waiting out their Undo window are already gone from the Owner's view.
+  const items = allItems.filter((item) => !hidden.has(item.id))
+  const internalCount = items.filter((item) => item.internal).length
 
   function onRenamingChange(editing: boolean) {
     setRenaming(editing)
     if (!editing && rename) navigate({ search: {}, replace: true })
   }
 
+  const newItem = () => setDrawer({ item: null })
+
   return (
     <main className="mx-auto max-w-[1200px] px-4 pb-35 sm:px-8">
       <div className="mt-6">
         <Button variant="ghost" size="sm" asChild className="-ml-2.5">
-          <Link to="/roadmaps">
+          <Link to="/roadmaps" activeOptions={{ exact: true }}>
             <ArrowLeft aria-hidden />
             Roadmaps
           </Link>
         </Button>
       </div>
+
       <div className="mt-2.5 mb-1 flex flex-wrap items-center justify-between gap-4">
         <div className="flex min-w-[260px] flex-1 items-center gap-1.5">
           <RoadmapTitle roadmap={roadmap} editing={renaming} onEditingChange={onRenamingChange} />
         </div>
+        <div className="flex flex-wrap items-center gap-3">
+          {roadmap.publishedAt ? (
+            <StateBadge published label={`Published ${daysAgo(roadmap.publishedAt)}`} />
+          ) : (
+            <span className="inline-flex items-center gap-1.5 text-[13px] font-medium text-muted-foreground">
+              <Lock className="size-4" aria-hidden />
+              Private
+            </span>
+          )}
+        </div>
       </div>
+      <p className="text-sm text-muted-foreground tabular-nums">
+        {plural(items.length, 'Item')}
+        {internalCount > 0 && ` · ${internalCount} Internal, left off the Public page`}
+      </p>
+
+      <CategoryLegend categories={categories} items={items} />
+
+      <div className="sticky top-0 z-10 flex flex-wrap items-center gap-3 border-b border-hairline-soft bg-background/95 py-3.5">
+        <button
+          aria-pressed={lanes}
+          onClick={() => setLanes(!lanes)}
+          className="inline-flex h-8 cursor-pointer items-center gap-[7px] rounded-full border border-border bg-background px-3.5 text-[13px] font-medium text-body transition-colors hover:border-[#d1d5db] hover:text-foreground aria-pressed:border-foreground aria-pressed:bg-foreground aria-pressed:font-semibold aria-pressed:text-white"
+        >
+          <Rows2 className="size-4" aria-hidden />
+          Swimlanes by Category
+        </button>
+        <span className="flex-1" />
+        <Button onClick={newItem}>
+          <Plus aria-hidden />
+          Item
+        </Button>
+      </div>
+
+      {items.length ? (
+        <ItemList
+          items={items}
+          categories={categories}
+          lanes={lanes}
+          onEdit={(item) => setDrawer({ item })}
+          onDelete={setConfirmingDelete}
+        />
+      ) : (
+        <div className="mt-6 flex flex-col items-center gap-3 rounded-lg border border-dashed border-[#d1d5db] px-6 py-14 text-center">
+          <h2 className="font-display text-[22px] font-semibold tracking-[-0.3px]">This Roadmap has no Items yet</h2>
+          <p className="max-w-[420px] text-body">
+            Add the first thing you're working on. Dates are optional, and you can set the Status by hand at any time.
+          </p>
+          <Button onClick={newItem}>
+            <Plus aria-hidden />
+            Add Item
+          </Button>
+        </div>
+      )}
+
+      <ItemDrawer
+        roadmapId={roadmapId}
+        item={drawer?.item ?? null}
+        open={drawer !== null}
+        categories={categories}
+        onOpenChange={(open) => !open && setDrawer(null)}
+        onDelete={setConfirmingDelete}
+      />
+
+      <ConfirmDialog
+        open={confirmingDelete !== null}
+        onOpenChange={(open) => !open && setConfirmingDelete(null)}
+        title={`Delete "${confirmingDelete?.title}"?`}
+        body={`It's removed from this Roadmap${
+          roadmap.publishedAt && !confirmingDelete?.internal ? ' and from its Public page' : ''
+        }.`}
+        cta="Delete Item"
+        onConfirm={() => {
+          if (!confirmingDelete) return
+          setDrawer(null)
+          remove(confirmingDelete)
+        }}
+      />
     </main>
   )
 }
