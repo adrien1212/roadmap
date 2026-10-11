@@ -138,13 +138,13 @@ Items; deleting a Roadmap removes its Items.
 ### Task 8: Publish / unpublish and public API
 
 **Acceptance criteria:**
-- [ ] `POST /api/roadmaps/{id}/publish` sets/moves `publishedAt`;
+- [x] `POST /api/roadmaps/{id}/publish` sets/moves `publishedAt`;
       `POST .../unpublish` clears it.
-- [ ] `GET /api/public/roadmaps/{publicId}` returns exactly the payload in
+- [x] `GET /api/public/roadmaps/{publicId}` returns exactly the payload in
       SPEC (name, `publishedAt`, Categories in use, non-Internal Items with
       descriptions); no Owner data, no `internal` flag; Private or unknown →
       identical 404.
-- [ ] Unit tests: publish/unpublish rules, public mapping drops Internal Items.
+- [x] Unit tests: publish/unpublish rules, public mapping drops Internal Items.
 
 **Verification:** `./mvnw test`; Manual: payload has no Internal Item;
 Private → 404; republish keeps the URL.

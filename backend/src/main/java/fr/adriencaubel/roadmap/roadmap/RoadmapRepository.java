@@ -7,12 +7,18 @@ import org.springframework.data.repository.Repository;
 import java.util.List;
 import java.util.Optional;
 
-/** Every query is scoped by Owner; there is deliberately no bare findById. */
+/**
+ * Every Owner query is scoped by Owner; there is deliberately no bare findById.
+ * The one exception is the anonymous Public page lookup by publicId.
+ */
 public interface RoadmapRepository extends Repository<Roadmap, Long> {
 
 	List<Roadmap> findAllByOwnerOrderByIdAsc(Owner owner);
 
 	Optional<Roadmap> findByIdAndOwner(Long id, Owner owner);
+
+	/** For Readers: only a Published Roadmap matches. */
+	Optional<Roadmap> findByPublicIdAndPublishedAtIsNotNull(String publicId);
 
 	/** Item and Internal Item counts per Roadmap; Roadmaps without Items are absent. */
 	@Query("""
