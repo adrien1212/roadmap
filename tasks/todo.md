@@ -239,7 +239,7 @@ end-only / both dates.
 ### Task 14: Drag-and-drop reorder
 
 **Acceptance criteria:**
-- [ ] Reorder by drag and drop and by arrow keys on the handle
+- [x] Reorder by drag and drop and by arrow keys on the handle
       (`@dnd-kit`), optimistic with rollback; survives refresh; swimlanes
       never change the order.
 

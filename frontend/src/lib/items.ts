@@ -86,3 +86,17 @@ export function lanesByCategory(items: Item[], categories: Category[]): Lane[] {
   lanes.push({ category: null, items: items.filter((item) => item.categoryId === null || !known.has(item.categoryId)) })
   return lanes.filter((lane) => lane.items.length > 0)
 }
+
+/**
+ * The manual order after moving `activeId` to where `overId` is (dnd-kit's arrayMove).
+ * Works on the full order, so Items in other swimlanes keep their relative places.
+ */
+export function moveItem(order: number[], activeId: number, overId: number): number[] {
+  const from = order.indexOf(activeId)
+  const to = order.indexOf(overId)
+  if (from === -1 || to === -1 || from === to) return order
+  const next = [...order]
+  next.splice(from, 1)
+  next.splice(to, 0, activeId)
+  return next
+}

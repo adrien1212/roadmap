@@ -9,6 +9,7 @@ import { CategoryLegend } from '#/components/editor/category-legend'
 import { ItemDrawer } from '#/components/editor/item-drawer'
 import { ItemList } from '#/components/editor/item-list'
 import { useDelayedDelete } from '#/components/editor/use-delayed-delete'
+import { useReorder } from '#/components/editor/use-reorder'
 import { NotFound } from '#/components/not-found'
 import { RoadmapTitle } from '#/components/roadmap-title'
 import { Button } from '#/components/ui/button'
@@ -57,6 +58,7 @@ function EditorPage() {
   const [drawer, setDrawer] = useState<DrawerState>(null)
   const [confirmingDelete, setConfirmingDelete] = useState<Item | null>(null)
   const { hidden, remove } = useDelayedDelete(roadmapId)
+  const reorder = useReorder(roadmapId)
 
   // Items waiting out their Undo window are already gone from the Owner's view.
   const items = allItems.filter((item) => !hidden.has(item.id))
@@ -125,6 +127,7 @@ function EditorPage() {
           lanes={lanes}
           onEdit={(item) => setDrawer({ item })}
           onDelete={setConfirmingDelete}
+          onMove={(activeId, overId) => reorder(allItems, activeId, overId)}
         />
       ) : (
         <div className="mt-6 flex flex-col items-center gap-3 rounded-lg border border-dashed border-[#d1d5db] px-6 py-14 text-center">
