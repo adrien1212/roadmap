@@ -325,6 +325,11 @@ input[type=date].input{padding-right:8px}
 .og .img .t{font-family:var(--font-display);font-size:26px;font-weight:600;letter-spacing:-.5px;line-height:1.15}
 .og .meta{padding:12px 14px;border-top:1px solid var(--c-hairline);display:flex;flex-direction:column;gap:2px}
 
+.smtp-grid{display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:12px}
+.smtp-grid .full{grid-column:1/-1}
+.secret{display:flex;align-items:center;gap:8px;height:40px;padding:0 6px 0 14px;border:1px solid var(--c-hairline);border-radius:var(--radius-md);background:var(--c-surface-soft);font-size:15px;color:var(--c-body)}
+.secret span{flex:1;letter-spacing:2px}
+
 /* public page: recently shipped + subscribe */
 .pub-top{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:24px;margin-bottom:28px;align-items:start}
 .shipped-list{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column}
@@ -379,6 +384,7 @@ input[type=date].input{padding-right:8px}
   .plist li{grid-template-columns:1fr;gap:10px}
   .pub-top{grid-template-columns:1fr}
   .settings-grid{grid-template-columns:1fr}
+  .smtp-grid{grid-template-columns:1fr}
   .subscribe form{flex-direction:column}
   .tl{--label:0px}
   .tl-head{grid-template-columns:1fr;top:0}
@@ -408,6 +414,10 @@ const S = {
   screen: 'editor',
   owner: { initials:'MR', provider:'Google' },
   brand: { name:'Acme', logo:'A' },   // Owner settings: shown on every Public page and in emails
+  // Owner settings: emails to subscribed Readers go through the Owner's own SMTP server.
+  // The password is stored encrypted and never shown again. Subscribing needs a working server.
+  smtp: { host:'smtp.acme.com', port:'587', security:'starttls', username:'updates@acme.com', passwordSaved:true, replacing:false,
+          fromName:'Acme', fromEmail:'updates@acme.com', verifiedAt:new Date(2026,9,10,11,5), status:'ok', error:'' },
   categories: [
     { id:'c1', name:'Security', colour:'violet' },
     { id:'c2', name:'Integrations', colour:'emerald' },
@@ -708,7 +718,7 @@ function drawer(){
   const { id, draft:x, error } = S.drawer;
   const r = rm(), was = id && r.items.find(i=>i.id===id);
   // Becoming Shipped on a Published Roadmap emails the subscribed Readers (never for Internal Items)
-  const notify = r.publishedAt && r.subscribed && x.status==='shipped' && !x.internal && (!was || was.status!=='shipped');
+  const notify = r.publishedAt && r.subscribed && S.smtp.status==='ok' && x.status==='shipped' && !x.internal && (!was || was.status!=='shipped');
   return `<div class="scrim" data-a="close-drawer"></div>
   <div class="drawer-wrap"><aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="dr-title">
     <header><h2 class="t-lg" id="dr-title">${id?'Edit Item':'New Item'}</h2><button class="btn btn-ghost btn-icon" data-a="close-drawer" aria-label="Close">${ic('x')}</button></header>
@@ -781,13 +791,16 @@ function publicPage(){
       ${undated||outside ? `<div class="tl-note">${undated?`<span>${undated} Item${undated===1?' has':'s have'} no dates.</span>`:''}${outside?`<span>${outside} fall${outside===1?'s':''} outside ${P.year}.</span>`:''}<button class="btn btn-ghost btn-sm" data-a="pf-view" data-v="list">See all in List ${ic('right')}</button></div>` : ''}`;
   }
   const shipped = recentlyShipped(r);
-  const subscribe = `<aside class="subscribe" aria-labelledby="sub-t">
+  const canEmail = S.smtp.status==='ok';
+  const subscribe = !canEmail
+    ? `<aside class="subscribe" aria-labelledby="sub-t"><h2 class="t-sm" id="sub-t" style="display:flex;gap:8px;align-items:center">${ic('rss')}Follow what ships</h2><p class="hint" style="margin:0">Add this Roadmap's feed to your RSS reader.</p><div><button class="btn btn-secondary btn-sm" data-a="noop">${ic('rss')}RSS feed</button></div></aside>`
+    : `<aside class="subscribe" aria-labelledby="sub-t">
       <h2 class="t-sm" id="sub-t" style="display:flex;gap:8px;align-items:center">${ic('mail')}Get an email when something ships</h2>
       ${P.subscribed
         ? `<p class="body-sm text-body" style="margin:0" role="status">Check your inbox. Confirm your email to start getting updates.</p>`
         : `<form data-form="subscribe" novalidate><label class="sr" for="sub-email">Email</label><input class="input" id="sub-email" type="email" placeholder="you@example.com" value="${esc(P.email)}" ${P.error?'aria-invalid="true" aria-describedby="sub-err"':''}><button class="btn btn-primary" type="submit">Subscribe</button></form>
            ${P.error?`<p class="error" id="sub-err">${ic('alert')}${P.error}</p>`:''}
-           <p class="hint">One email per shipped Item, from ${esc(S.brand.name)}. Unsubscribe in one click.</p>`}
+           <p class="hint">One email per shipped Item, from ${esc(S.smtp.fromName || S.brand.name)}. Unsubscribe in one click.</p>`}
       <a class="caption muted" href="#" data-a="noop" style="display:inline-flex;gap:6px;align-items:center">${ic('rss')}Or follow with RSS</a>
     </aside>`;
   const top = `<div class="pub-top">
@@ -805,6 +818,14 @@ function publicPage(){
   </main>`;
 }
 
+function smtpState(){
+  const m = S.smtp;
+  if (m.status==='ok') return `<span class="state state-published"><span class="dot"></span>Connected · test email sent ${fmt(m.verifiedAt)}</span>`;
+  if (m.status==='untested') return `<span class="state state-private"><span class="dot"></span>Saved · send a test email</span>`;
+  if (m.status==='error') return `<span class="state" style="color:var(--c-error-text)"><span class="dot" style="background:var(--c-error)"></span>Not working</span>`;
+  return `<span class="state state-private"><span class="dot"></span>Not set up. Readers can follow with RSS only.</span>`;
+}
+
 function settingsScreen(){
   const B = S.brand, r = S.roadmaps.find(x=>x.publishedAt) || rm();
   return `${appbar('settings')}<main class="wrap" style="padding-bottom:120px;max-width:1000px">
@@ -817,6 +838,27 @@ function settingsScreen(){
           <p class="hint">Square PNG or SVG, up to 1 MB. Without one, the first letter of the name is used.</p></div>
         <p class="hint" style="margin:0">Public pages always end with "Made with Product name".</p>
         <div><button class="btn btn-primary" type="submit">Save</button></div>
+      </form>
+      <form class="panel" data-form="smtp" novalidate style="grid-column:1/-1" aria-labelledby="smtp-t">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap">
+          <div><h2 class="t-md" id="smtp-t">Email to Readers</h2><p class="hint" style="margin:4px 0 0">Readers who subscribe get an email when an Item becomes Shipped. It's sent through your own SMTP server, from your address.</p></div>
+          ${smtpState()}
+        </div>
+        <div class="smtp-grid">
+          <div class="field"><label class="label" for="s-host">SMTP host</label><input class="input" id="s-host" data-smtp="host" value="${esc(S.smtp.host)}" placeholder="smtp.example.com"></div>
+          <div class="field"><label class="label" for="s-port">Port</label><input class="input num" id="s-port" data-smtp="port" value="${esc(S.smtp.port)}" inputmode="numeric" placeholder="587"></div>
+          <div class="field full"><span class="label" id="l-sec">Security</span><div class="seg" role="radiogroup" aria-labelledby="l-sec">${[['starttls','STARTTLS'],['ssl','SSL/TLS']].map(([k,v])=>`<button type="button" role="radio" aria-checked="${S.smtp.security===k}" data-a="smtp-security" data-v="${k}">${v}</button>`).join('')}</div><p class="hint">Usually STARTTLS on port 587, or SSL/TLS on port 465.</p></div>
+          <div class="field full"><label class="label" for="s-user">Username</label><input class="input" id="s-user" data-smtp="username" value="${esc(S.smtp.username)}" autocomplete="off"></div>
+          <div class="field full"><label class="label" for="s-pass">Password</label>
+            ${S.smtp.passwordSaved && !S.smtp.replacing
+              ? `<div class="secret"><span aria-label="Password saved">••••••••••</span><span class="caption muted" style="letter-spacing:0;flex:none">Saved, encrypted</span><button type="button" class="btn btn-ghost btn-sm" data-a="smtp-replace">Replace</button></div>`
+              : `<input class="input" id="s-pass" type="password" autocomplete="new-password" placeholder="App password or SMTP key">`}
+            <p class="hint">Stored encrypted. It's never shown again after you save it.</p></div>
+          <div class="field full"><label class="label" for="s-from-name">Sender name</label><input class="input" id="s-from-name" data-smtp="fromName" value="${esc(S.smtp.fromName)}" placeholder="${esc(S.brand.name)}"></div>
+          <div class="field full"><label class="label" for="s-from">Sender email</label><input class="input" id="s-from" type="email" data-smtp="fromEmail" value="${esc(S.smtp.fromEmail)}" placeholder="updates@example.com"><p class="hint">Readers see it as the sender. Use an address your SMTP server is allowed to send from.</p></div>
+        </div>
+        ${S.smtp.status==='error' ? `<p class="error" role="alert">${ic('alert')}${esc(S.smtp.error)}</p>` : ''}
+        <div style="display:flex;gap:12px;flex-wrap:wrap"><button class="btn btn-primary" type="submit">Save</button><button type="button" class="btn btn-secondary" data-a="smtp-test">${ic('mail')}Send test email</button></div>
       </form>
       <section style="display:flex;flex-direction:column;gap:16px" aria-label="Preview">
         <span class="label">Public page</span>
@@ -832,7 +874,7 @@ function settingsScreen(){
 function emailScreen(){
   const r = S.roadmaps[0], it = recentlyShipped(r, 1)[0] || r.items[0], c = cat(it.categoryId);
   return `<main class="mail-bg">
-    <div class="mail-meta"><span><strong style="color:var(--c-ink)">From:</strong> ${esc(S.brand.name)} &lt;updates@${ORIGIN}&gt;</span><span><strong style="color:var(--c-ink)">Subject:</strong> Shipped: ${esc(it.title)}</span></div>
+    <div class="mail-meta"><span><strong style="color:var(--c-ink)">From:</strong> ${esc(S.smtp.fromName || S.brand.name)} &lt;${esc(S.smtp.fromEmail)}&gt;</span><span><strong style="color:var(--c-ink)">Subject:</strong> Shipped: ${esc(it.title)}</span></div>
     <article class="mail">
       ${brandMark()}
       <h1 class="t-lg">${esc(it.title)} is shipped</h1>
@@ -904,7 +946,7 @@ function saveDraft(){
   // changelog: shippedAt is set when an Item becomes Shipped, cleared when it stops being Shipped
   if (x.status==='shipped' && (!was || was.status!=='shipped')) x.shippedAt = TODAY.toISOString().slice(0,10);
   if (x.status!=='shipped') x.shippedAt = '';
-  const emails = r.publishedAt && r.subscribed && x.status==='shipped' && !x.internal && (!was || was.status!=='shipped');
+  const emails = r.publishedAt && r.subscribed && S.smtp.status==='ok' && x.status==='shipped' && !x.internal && (!was || was.status!=='shipped');
   if (S.drawer.id) r.items = r.items.map(i => i.id===S.drawer.id ? {...x} : i);
   else r.items.push({ ...x, id:uid('i') }); // appended at the end of the manual order
   const isNew = !S.drawer.id;
@@ -914,6 +956,7 @@ function readDrawerFields(){
   const x = S.drawer?.draft; if (!x || $('#item-form')?.dataset.key !== S.drawer.key) return;
   ['title','description','start','end','categoryId'].forEach(k => { const el = $(`[data-f="${k}"]`); if (el) x[k] = el.value; });
 }
+function readSmtp(){ document.querySelectorAll('[data-smtp]').forEach(el => { S.smtp[el.dataset.smtp] = el.value.trim(); }); }
 function confirmDialog(title, body, cta, run){ S.dialog = { kind:'confirm', title, body, cta, run }; S.menu=null; render(); }
 function addCategory(){
   const f = S.catForm; const name = ($('#cat-name')?.value ?? f.name).trim(); f.name = name;
@@ -926,6 +969,12 @@ const A = {
   screen: v => { S.drawer=null; S.dialog=null; S.menu=null; set({ screen:v }); },
   'go-landing': () => A.screen('landing'), 'go-roadmaps': () => A.screen('roadmaps'), 'go-categories': () => A.screen('categories'),
   'go-settings': () => A.screen('settings'), 'go-unsub': () => A.screen('unsub'), noop: () => {},
+  'smtp-security': v => { readSmtp(); S.smtp.security = v; if (v==='ssl' && S.smtp.port==='587') S.smtp.port='465'; if (v==='starttls' && S.smtp.port==='465') S.smtp.port='587'; render(); },
+  'smtp-replace': () => { readSmtp(); S.smtp.replacing = true; S.focus = '#s-pass'; render(); },
+  // Demo: a host containing "bad" fails, anything else sends the test email to the Owner.
+  'smtp-test': () => { readSmtp();
+    if (!S.smtp.host || /bad/.test(S.smtp.host)){ S.smtp.status='error'; S.smtp.error = `Couldn't connect to ${S.smtp.host || 'the SMTP host'} on port ${S.smtp.port}. Check the host, port and security.`; return render(); }
+    S.smtp.status='ok'; S.smtp.error=''; S.smtp.verifiedAt = TODAY; toast('Test email sent to you. Readers can subscribe now.'); },
   'go-public': () => { S.pub = { ...S.pub, year:TODAY.getFullYear(), open:'' }; A.screen('public'); },
   'go-public-of': id => { S.sel=id; A['go-public'](); },
   open: id => { S.sel=id; S.renaming=false; S.year=TODAY.getFullYear(); A.screen('editor'); },
@@ -981,6 +1030,9 @@ document.addEventListener('submit', e => {
   e.preventDefault();
   if (e.target.dataset.form==='item') saveDraft();
   if (e.target.dataset.form==='cat') addCategory();
+  if (e.target.dataset.form==='smtp'){ readSmtp(); if ($('#s-pass')?.value){ S.smtp.passwordSaved = true; } S.smtp.replacing = false;
+    // Saving changed settings needs a new test before Readers can subscribe again.
+    S.smtp.status = S.smtp.host ? 'untested' : 'none'; render(); toast('Saved. Send a test email to turn on subscriptions.'); return; }
   if (e.target.dataset.form==='brand'){ const n = $('#b-name').value.trim(); if (n){ S.brand.name = n; S.brand.logo = n[0].toUpperCase(); } toast('Settings saved'); }
   if (e.target.dataset.form==='subscribe'){
     const v = $('#sub-email').value.trim(); S.pub.email = v;

@@ -78,12 +78,17 @@ page shows it.
   name and logo, used on every Public page and in emails.
 - `reader-updates` sends **one email per Item that becomes Shipped** (never for
   an Internal Item), with double opt-in and one-click unsubscribe.
+- Emails go through **the Owner's own SMTP server**, set in Settings (host,
+  port, STARTTLS or SSL/TLS, username, password, sender name and email). The
+  password is stored encrypted and never shown again. "Send test email" checks
+  the settings. Until a test succeeds, the Public page offers RSS only, so no
+  Reader subscribes to emails that can't be sent.
 - The "Made with Product name" footer **always shows**; removing it may become
   a paid option with `teams-billing`.
 - Copy says "subscribed Readers", never "subscribers" (SPEC's _Avoid_ list for
   Reader).
 
-Mockups: `design/roadmap-ui.html` shows Settings, Recently shipped and
+Mockups: `design/roadmap-ui.html` shows Settings (branding and SMTP), Recently shipped and
 subscribe on the Public page, the email, and the unsubscribed page.
 
 ## Open questions (answered in each module's spec)
@@ -91,4 +96,8 @@ subscribe on the Public page, the email, and the unsubscribed page.
 - `changelog`: "Recently shipped" shows the last 3 Shipped Items in the
   mockup; is that the rule, or the last N days? It needs a new `shippedAt`,
   set when an Item becomes Shipped.
-- `reader-updates`: which email provider (SMTP, Postmark, Resend…)?
+- `reader-updates`: where does the key that encrypts SMTP passwords live, and
+  how is it rotated? Which hosts and ports may the server connect to? (The
+  Owner chooses the host, so block private network addresses and allow only
+  SMTP ports 25, 465, 587 and 2525.) What happens to subscriptions when SMTP
+  later stops working: pause and warn the Owner?
