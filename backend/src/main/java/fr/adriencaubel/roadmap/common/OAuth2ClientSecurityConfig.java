@@ -26,6 +26,7 @@ public class OAuth2ClientSecurityConfig {
 						// Readers are never signed in: Public page API, Feed, subscribe / confirm / unsubscribe.
 						.requestMatchers("/api/public/**").permitAll()
 						.requestMatchers("/error").permitAll()
+						.requestMatchers("/actuator/**").permitAll()
 						// Everything else is the Owner's.
 						.anyRequest().authenticated())
 				// The frontend calls /api with fetch: answer 401 (it then shows sign-in), never a redirect to Google.
