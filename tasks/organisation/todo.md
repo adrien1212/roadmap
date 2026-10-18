@@ -13,26 +13,26 @@ existing Owner into their own Organisation with Role Owner, and add
 `organisation_id` next to `owner_id` everywhere, filled in.
 
 **Acceptance criteria:**
-- [ ] `010-organisation.sql`: table `organisation` (id, name VARCHAR(80),
+- [x] `010-organisation.sql`: table `organisation` (id, name VARCHAR(80),
       brand_name VARCHAR(60), created_at); `owner.organisation_id` (FK,
       nullable), `owner.role`, `owner.joined_at`, `owner.email_verified`;
       nullable `organisation_id` (FK) on `roadmap`, `category`,
       `smtp_settings`; one Organisation per existing Owner (same id, "{name}'s
       Organisation", Brand copied), Role `OWNER`; all backfilled; rollback
       drops it all.
-- [ ] `Organisation` entity with `rename(name)` (trimmed, required, ≤ 80);
+- [x] `Organisation` entity with `rename(name)` (trimmed, required, ≤ 80);
       `Role` enum `OWNER, ADMIN, EDITOR` with `invitable()`; `Owner` gains
       `organisation`, `role`, `joinedAt`, `emailVerified`.
-- [ ] Owner rules: `joinAs(organisation, role, now)`, `changeRole(role)` and
+- [x] Owner rules: `joinAs(organisation, role, now)`, `changeRole(role)` and
       `leave()` refuse on Role Owner and refuse `OWNER` as a target
       (`ConflictException`).
-- [ ] `CurrentOrganisation` (throws `NotFoundException` without one);
+- [x] `CurrentOrganisation` (throws `NotFoundException` without one);
       `OwnerProvisioningService` stores `email_verified`.
 
 **Verification:**
-- [ ] Unit tests first, then green: `./mvnw test -Dtest='OrganisationTest,RoleTest,OwnerTest'`
-- [ ] `./mvnw test`
-- [ ] Manual: run the app on the dev database; every `owner` row has an
+- [x] Unit tests first, then green: `./mvnw test -Dtest='OrganisationTest,RoleTest,OwnerTest'`
+- [x] `./mvnw test`
+- [x] Manual: run the app on the dev database; every `owner` row has an
       Organisation with the same id and Role `OWNER`; every `roadmap`,
       `category` and `smtp_settings` row has `organisation_id = owner_id`.
 

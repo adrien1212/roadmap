@@ -65,7 +65,7 @@ Tasks live in `tasks/organisation/todo.md`. All are _Assignee: Claude_.
 ## Task List
 
 ### Phase 1: Everything belongs to an Organisation (no visible change)
-- [ ] Task 1: Organisation, Role and the expand changeset
+- [x] Task 1: Organisation, Role and the expand changeset
 - [ ] Task 2: Roadmaps and Items scoped by Organisation
 - [ ] Task 3: Categories scoped by Organisation
 - [ ] Task 4: Brand on the Organisation

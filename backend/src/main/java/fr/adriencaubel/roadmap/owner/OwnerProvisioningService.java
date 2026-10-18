@@ -28,7 +28,7 @@ public class OwnerProvisioningService extends OidcUserService {
 
 		Owner owner = owners.findByProviderAndProviderSubject(provider, subject)
 				.orElseGet(() -> create(provider, subject, user));
-		owner.refreshProfile(user.getEmail(), user.getFullName());
+		owner.refreshProfile(user.getEmail(), user.getFullName(), Boolean.TRUE.equals(user.getEmailVerified()));
 		owners.save(owner);
 		return user;
 	}
