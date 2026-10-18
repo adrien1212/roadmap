@@ -84,7 +84,7 @@ Tasks live in `tasks/organisation/todo.md`. All are _Assignee: Claude_.
 - [x] Task 9: Invitations (domain and API)
 - [x] Task 10: Invite popup
 - [x] Task 11: Accept an Invitation (API and sign-in return)
-- [ ] Task 12: Join page
+- [x] Task 12: Join page
 
 ### Checkpoint: invite and join end to end
 

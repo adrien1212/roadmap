@@ -127,7 +127,7 @@ function JoinCard() {
         e.preventDefault()
         const secret = invitationSecret(link)
         if (!secret) return setError("This link isn't an invitation link.")
-        navigate({ href: `/join/${secret}` })
+        navigate({ to: '/join/$secret', params: { secret } })
       }}
     >
       <div className="flex flex-col gap-1.5">

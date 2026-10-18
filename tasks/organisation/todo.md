@@ -294,15 +294,15 @@ handler), `OrganisationRepository.java`
 **Description:** `/join/{secret}` with a single Accept button.
 
 **Acceptance criteria:**
-- [ ] Inviter, Organisation name, Role, masked email and expiry, as in the
+- [x] Inviter, Organisation name, Role, masked email and expiry, as in the
       spec's sketch; "This invitation is no longer valid" on 404.
-- [ ] Signed out: Accept → Google → back with `?accept=1` → accepts. Signed
+- [x] Signed out: Accept → Google → back with `?accept=1` → accepts. Signed
       in: Accept accepts. Success → `/roadmaps`; 403 and 409 show the spec's
       messages.
 
 **Verification:**
-- [ ] `npx tsc --noEmit`, `npm run build`
-- [ ] Manual: signed out and signed in; wrong account; already in an
+- [x] `npx tsc --noEmit`, `npm run build`
+- [ ] Manual (needs Google sign-ins): signed out and signed in; wrong account; already in an
       Organisation with Roadmaps; from the Welcome page's Join card.
 
 **Dependencies:** Tasks 8, 11
@@ -311,7 +311,7 @@ handler), `OrganisationRepository.java`
 **Estimated scope:** S
 
 ### Checkpoint: invite and join end to end
-- [ ] `./mvnw test` green, `npm run build` clean
+- [x] `./mvnw test` green, `npm run build` clean
 - [ ] A invites B (Admin) and C (Editor); both join and see the same Roadmaps
       and Categories; links fail for another account, a second time, after
       revoke and replacement

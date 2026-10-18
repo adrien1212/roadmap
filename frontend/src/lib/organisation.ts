@@ -1,3 +1,5 @@
+import { queryOptions } from '@tanstack/react-query'
+
 import { api } from '#/lib/api'
 
 /** What an Owner is in their Organisation; recorded, not enforced yet. */
@@ -37,3 +39,25 @@ export const createInvitation = (email: string, role: Exclude<Role, 'owner'>) =>
   api.post<CreatedInvitation>('/api/invitations', { email, role })
 
 export const revokeInvitation = (id: number) => api.delete(`/api/invitations/${id}`)
+
+/** What the join page shows, before sign-in. */
+export interface PendingInvitation {
+  inviterName: string
+  organisationName: string
+  role: Exclude<Role, 'owner'>
+  maskedEmail: string
+  expiresAt: string
+}
+
+export const invitationQuery = (secret: string) =>
+  queryOptions({
+    queryKey: ['invitation', secret],
+    queryFn: () => api.get<PendingInvitation>(`/api/invitations/${encodeURIComponent(secret)}`),
+  })
+
+export const acceptInvitation = (secret: string) =>
+  api.post<void>(`/api/invitations/${encodeURIComponent(secret)}/accept`)
+
+/** Google sign-in that comes back to the join page and accepts there. */
+export const signInToAccept = (secret: string) =>
+  `/oauth2/authorization/google?continue=${encodeURIComponent(`/join/${secret}?accept=1`)}`

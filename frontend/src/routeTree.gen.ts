@@ -14,6 +14,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as AppCategoriesRouteImport } from './routes/_app/categories'
 import { Route as AppSettingsRouteImport } from './routes/_app/settings'
+import { Route as JoinSecretRouteImport } from './routes/join.$secret'
 import { Route as RPublicIdRouteImport } from './routes/r.$publicId'
 import { Route as AppRoadmapsIndexRouteImport } from './routes/_app/roadmaps.index'
 import { Route as AppRoadmapsRoadmapIdRouteImport } from './routes/_app/roadmaps.$roadmapId'
@@ -44,6 +45,11 @@ const AppSettingsRoute = AppSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => AppRoute,
+} as any)
+const JoinSecretRoute = JoinSecretRouteImport.update({
+  id: '/join/$secret',
+  path: '/join/$secret',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const RPublicIdRoute = RPublicIdRouteImport.update({
   id: '/r/$publicId',
@@ -82,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/welcome': typeof WelcomeRoute
   '/categories': typeof AppCategoriesRoute
   '/settings': typeof AppSettingsRoute
+  '/join/$secret': typeof JoinSecretRoute
   '/r/$publicId': typeof RPublicIdRoute
   '/roadmaps/$roadmapId': typeof AppRoadmapsRoadmapIdRoute
   '/r/$publicId/confirm': typeof RPublicIdConfirmRoute
@@ -94,6 +101,7 @@ export interface FileRoutesByTo {
   '/welcome': typeof WelcomeRoute
   '/categories': typeof AppCategoriesRoute
   '/settings': typeof AppSettingsRoute
+  '/join/$secret': typeof JoinSecretRoute
   '/r/$publicId': typeof RPublicIdRoute
   '/roadmaps/$roadmapId': typeof AppRoadmapsRoadmapIdRoute
   '/r/$publicId/confirm': typeof RPublicIdConfirmRoute
@@ -108,6 +116,7 @@ export interface FileRoutesById {
   '/welcome': typeof WelcomeRoute
   '/_app/categories': typeof AppCategoriesRoute
   '/_app/settings': typeof AppSettingsRoute
+  '/join/$secret': typeof JoinSecretRoute
   '/r/$publicId': typeof RPublicIdRoute
   '/_app/roadmaps/$roadmapId': typeof AppRoadmapsRoadmapIdRoute
   '/r/$publicId_/confirm': typeof RPublicIdConfirmRoute
@@ -122,6 +131,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/categories'
     | '/settings'
+    | '/join/$secret'
     | '/r/$publicId'
     | '/roadmaps/$roadmapId'
     | '/r/$publicId/confirm'
@@ -134,6 +144,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/categories'
     | '/settings'
+    | '/join/$secret'
     | '/r/$publicId'
     | '/roadmaps/$roadmapId'
     | '/r/$publicId/confirm'
@@ -147,6 +158,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/_app/categories'
     | '/_app/settings'
+    | '/join/$secret'
     | '/r/$publicId'
     | '/_app/roadmaps/$roadmapId'
     | '/r/$publicId_/confirm'
@@ -159,6 +171,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   WelcomeRoute: typeof WelcomeRoute
+  JoinSecretRoute: typeof JoinSecretRoute
   RPublicIdRoute: typeof RPublicIdRoute
   RPublicIdConfirmRoute: typeof RPublicIdConfirmRoute
   RPublicIdUnsubscribeRoute: typeof RPublicIdUnsubscribeRoute
@@ -200,6 +213,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/settings'
       preLoaderRoute: typeof AppSettingsRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/join/$secret': {
+      id: '/join/$secret'
+      path: '/join/$secret'
+      fullPath: '/join/$secret'
+      preLoaderRoute: typeof JoinSecretRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/r/$publicId': {
       id: '/r/$publicId'
@@ -268,6 +288,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   WelcomeRoute: WelcomeRoute,
+  JoinSecretRoute: JoinSecretRoute,
   RPublicIdRoute: RPublicIdRoute,
   RPublicIdConfirmRoute: RPublicIdConfirmRoute,
   RPublicIdUnsubscribeRoute: RPublicIdUnsubscribeRoute,
