@@ -24,3 +24,16 @@ export function invitationSecret(text: string): string | null {
   if (fromLink) return fromLink[1]
   return /^[A-Za-z0-9_-]{20,}$/.test(trimmed) ? trimmed : null
 }
+
+/** The answer to an Invitation: the only time the link is ever shown. */
+export interface CreatedInvitation {
+  id: number
+  url: string
+  expiresAt: string
+  emailed: boolean
+}
+
+export const createInvitation = (email: string, role: Exclude<Role, 'owner'>) =>
+  api.post<CreatedInvitation>('/api/invitations', { email, role })
+
+export const revokeInvitation = (id: number) => api.delete(`/api/invitations/${id}`)

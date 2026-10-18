@@ -82,7 +82,7 @@ Tasks live in `tasks/organisation/todo.md`. All are _Assignee: Claude_.
 
 ### Phase 3: Invitations
 - [x] Task 9: Invitations (domain and API)
-- [ ] Task 10: Invite popup
+- [x] Task 10: Invite popup
 - [ ] Task 11: Accept an Invitation (API and sign-in return)
 - [ ] Task 12: Join page
 

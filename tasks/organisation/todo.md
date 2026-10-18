@@ -246,16 +246,16 @@ Welcome page and creates one, or pastes an invitation link.
 **Description:** The invite popup from the spec, opened from Settings.
 
 **Acceptance criteria:**
-- [ ] Email, Role (Editor default, Admin), the "expires in 7 days and works
+- [x] Email, Role (Editor default, Admin), the "expires in 7 days and works
       only for {email}" note; inline API errors.
-- [ ] After Invite: "Sent to {email}" or "Email isn't set up. Copy the link
+- [x] After Invite: "Sent to {email}" or "Email isn't set up. Copy the link
       and send it.", the link with Copy, "This link is shown only once."
-- [ ] A temporary "Invite" button in Settings opens it (Task 14 places it in
+- [x] A temporary "Invite" button in Settings opens it (Task 14 places it in
       People).
 
 **Verification:**
-- [ ] `npx tsc --noEmit`, `npm run build`
-- [ ] Manual: both outcomes, with and without working SMTP settings.
+- [x] `npx tsc --noEmit`, `npm run build`
+- [ ] Manual (needs a Google sign-in): both outcomes, with and without working SMTP settings.
 
 **Dependencies:** Task 9
 **Files likely touched:** `frontend/src/components/invite-dialog.tsx`,
