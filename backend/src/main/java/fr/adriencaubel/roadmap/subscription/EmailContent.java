@@ -1,5 +1,6 @@
 package fr.adriencaubel.roadmap.subscription;
 
+import fr.adriencaubel.roadmap.smtp.EmailText;
 import fr.adriencaubel.roadmap.smtp.OutgoingEmail;
 
 import java.util.Map;
@@ -78,12 +79,10 @@ final class EmailContent {
 	}
 
 	static String escape(String text) {
-		return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-				.replace("\"", "&quot;").replace("'", "&#39;");
+		return EmailText.escape(text);
 	}
 
-	/** No line breaks in headers: a title can't add headers (e.g. Bcc) to an email. */
 	static String oneLine(String text) {
-		return text.replaceAll("[\\r\\n]+", " ").strip();
+		return EmailText.oneLine(text);
 	}
 }

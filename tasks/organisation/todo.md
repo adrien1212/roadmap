@@ -219,20 +219,20 @@ Welcome page and creates one, or pastes an invitation link.
 **Description:** Create, list, replace and revoke Invitations, and email them.
 
 **Acceptance criteria:**
-- [ ] `012-invitation.sql` and `Invitation` (email, role, invitedBy,
+- [x] `012-invitation.sql` and `Invitation` (email, role, invitedBy,
       secretHash, createdAt, expiresAt = +7 days, usedAt, revokedAt) with
       `isPending(now)`, `revoke()`; tests first.
-- [ ] `POST /api/invitations` `{ email, role }` → `{ id, url, expiresAt,
+- [x] `POST /api/invitations` `{ email, role }` → `{ id, url, expiresAt,
       emailed }`: `owner` → 400; already in the Organisation → 409; earlier
       pending Invitation for that email revoked; only the hash stored.
-- [ ] `DELETE /api/invitations/{id}` → 204; another Organisation's → 404.
-- [ ] Email (subject "{inviter} invited you to {Organisation name}", Role,
+- [x] `DELETE /api/invitations/{id}` → 204; another Organisation's → 404.
+- [x] Email (subject "{inviter} invited you to {Organisation name}", Role,
       link, expiry) through the Organisation's working SMTP settings;
       `emailed: false` otherwise.
 
 **Verification:**
-- [ ] `./mvnw test -Dtest='InvitationTest,InvitationEmailTest'`
-- [ ] Manual (Mailpit): invite → email with the link; invite again → first
+- [x] `./mvnw test -Dtest='InvitationTest,InvitationEmailTest'`
+- [ ] Manual (needs a Google sign-in) (Mailpit): invite → email with the link; invite again → first
       link replaced; without SMTP → `emailed: false`.
 
 **Dependencies:** Task 7

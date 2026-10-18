@@ -81,7 +81,7 @@ Tasks live in `tasks/organisation/todo.md`. All are _Assignee: Claude_.
 ### Checkpoint: a new Owner creates an Organisation
 
 ### Phase 3: Invitations
-- [ ] Task 9: Invitations (domain and API)
+- [x] Task 9: Invitations (domain and API)
 - [ ] Task 10: Invite popup
 - [ ] Task 11: Accept an Invitation (API and sign-in return)
 - [ ] Task 12: Join page
