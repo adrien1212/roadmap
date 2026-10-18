@@ -14,7 +14,9 @@ Owner who authors, and the anonymous Readers who only read.
 - Publish / unpublish a Roadmap; anonymous Public page.
 
 ### Out of scope (MVP)
-- Workspaces, multiple people per account, invitations, roles.
+- Several Organisations per Owner, per-Roadmap access, enforcing Roles,
+  transferring ownership, deleting an Organisation. (Organisations, Roles
+  and Invitations are in scope since `SPEC-organisation.md`.)
 - Billing / paying Customers.
 - Custom domains, embeds, Reader feedback. (Email subscriptions are in scope
   since `SPEC-reader-updates.md`.)
@@ -25,12 +27,33 @@ These terms are binding for code, API, database and UI naming. Respect the
 _Avoid_ lists.
 
 **Owner**:
-A person signed in with Google. Owns a set of Roadmaps and one set of Categories.
-Can do everything to what they own and nothing to anyone else's.
-_Avoid_: user, member, author, editor, admin, account
+A person signed in with Google. Belongs to at most one Organisation, with one
+Role there; does everything to what their Organisation owns and nothing to
+anyone else's. Not to be confused with the Role Owner, always written "Role
+Owner" or `OWNER`. (`SPEC-organisation.md`)
+_Avoid_: user, member, author, account
+
+**Organisation**:
+The publisher's people who maintain the same Roadmaps. Owns the Roadmaps, the
+Categories, the Brand and the SMTP settings. Has a name, set in Settings, seen
+only by its people. Never shown to Readers.
+_Avoid_: workspace, team, account, company, tenant, group
+
+**Role**:
+What an Owner is in their Organisation: **Owner** (the person who created it;
+exactly one; cannot be removed, leave, or change Role), **Admin** (the same
+rights as the Owner) or **Editor** (adds and edits Items). Recorded, not yet
+enforced. Readers have no Role.
+_Avoid_: permission, access level, rights
+
+**Invitation**:
+A single-use link created for one email address, with a Role (Admin or
+Editor). Only the person who signs in with Google under that email can accept
+it. Pending until accepted, revoked, replaced or expired (7 days, fixed).
+_Avoid_: invite code, token (in the UI), membership, access request
 
 **Roadmap**:
-A named, publishable timeline belonging to one Owner. Holds one set of Items,
+A named, publishable timeline belonging to one Organisation. Holds one set of Items,
 and is either Published or Private.
 _Avoid_: board, plan, project, timeline
 
@@ -43,8 +66,8 @@ _Avoid_: feature, card, arrow, initiative, epic, ticket
 
 **Category**:
 An optional single label on an Item (name + colour), shown as a colour chip and
-used as a filter. Categories belong to the Owner and are shared across all
-their Roadmaps. The editor may group Items into swimlanes by Category; a Public
+used as a filter. Categories belong to the Organisation and are shared across
+all its Roadmaps. The editor may group Items into swimlanes by Category; a Public
 page never does. A lane is a layout, never a name for the Category itself.
 _Avoid_: tag, label, track, group
 
@@ -96,8 +119,8 @@ once per Item that becomes Shipped.
 _Avoid_: subscriber, follower, contact, lead, audience
 
 **SMTP settings**:
-The Owner's mail server, set once in Settings, used to email subscribed
-Readers from the Owner's own address.
+The Organisation's mail server, set once in Settings, used to email subscribed
+Readers from the Organisation's own address, and to send Invitations.
 _Avoid_: mail provider, email integration
 
 **Shipped date** (`shippedAt`):
@@ -118,12 +141,12 @@ readers. Anonymous, like the Public page.
 _Avoid_: newsletter, stream
 
 **Brand**:
-The Owner's product name as Readers see it: on every Public page, in its page
-title and link preview, and in the Feed. Set once per Owner in Settings;
-optional, never filled from the Owner's Google profile. Shown with a letter
+The Organisation's product name as Readers see it: on every Public page, in its
+page title and link preview, and in the Feed. Set once per Organisation in
+Settings; optional, never filled from the Owner's Google profile. Shown with a letter
 mark (its first letter on an ink tile). Unrelated to the app's own placeholder
 name "Product name". (`SPEC-branding.md`)
-_Avoid_: company, organisation, workspace, account, theme, logo (until uploads
+_Avoid_: company, workspace, account, theme, logo (until uploads
 exist)
 
 ## Functional requirements
@@ -132,18 +155,21 @@ exist)
 - Signs in with Google; first sign-in creates the Owner. An Owner is
   identified by provider (`google`) + provider subject id (OIDC `sub`); the
   provider column keeps the door open for more providers later.
-- Sees only their own Roadmaps and Categories; any access to another Owner's
-  resource returns 404.
+- Then, without an Organisation, sees the Welcome page: create an
+  Organisation (and get Role Owner) or join one with an Invitation link.
+- Sees only their Organisation's Roadmaps and Categories; any access to
+  another Organisation's resource returns 404.
+- Details: `SPEC-organisation.md`.
 
 ### Categories
 - Owner creates, renames, recolours and deletes Categories, from the
   Categories screen or inline from the editor.
 - Colour is one key of a fixed palette: `violet`, `emerald`, `orange`, `pink`, `sky`, `amber`, `lime`, `slate`. A new Category
   is offered the next palette colour in turn.
-- Category names are trimmed and unique per Owner, compared
+- Category names are trimmed and unique per Organisation, compared
   case-insensitively ("Security" and "security" clash).
 - The Categories screen shows how many Items use each Category across all
-  Roadmaps.
+  Roadmaps of the Organisation.
 - Deleting a Category clears it from every Item that used it (Items are kept).
 
 ### Roadmaps
@@ -179,12 +205,15 @@ exist)
 
 ### Settings
 - `/settings` (editor layout, "Settings" in the app bar nav): the Owner sets
-  their Brand ("Product name", trimmed, ≤ 60 characters, empty clears it) and
+  the Organisation's Brand ("Product name", trimmed, ≤ 60 characters, empty clears it) and
   sees a preview of the Public page header and link preview. No file upload.
   API: `GET` / `PUT /api/brand`.
-- "Email to Readers": the Owner's SMTP settings (password write-only and
+- "Email to Readers": the Organisation's SMTP settings (password write-only and
   encrypted), "Send test email", and a state. Only SMTP ports and public hosts
   are accepted. Until a test succeeds, Public pages offer RSS only.
+- "Organisation" (its name) and "People" (Owners with their Role, pending
+  Invitations, invite, change Role, remove, leave). Details in
+  `SPEC-organisation.md`.
 - Per Roadmap, `/roadmaps/{id}/readers` lists confirmed and pending Readers
   with their dates and the confirmed / pending counts; the Owner
   can remove a Reader. Details in `SPEC-reader-updates.md`.
@@ -319,7 +348,8 @@ backend/src/test/java/...   → JUnit tests
 ## Boundaries
 
 - Always: use the Language terms; filter Internal Items and Private Roadmaps
-  on the backend; scope every authenticated query by the current Owner.
+  on the backend; scope every authenticated query by the current Owner's
+  Organisation.
 - Ask first: adding dependencies, editing an already-applied Liquibase
   changeset (add a new one instead), changing the public URL format.
 - Never: expose Owner identity or Internal Items on the Public page; infer
@@ -339,7 +369,8 @@ backend/src/test/java/...   → JUnit tests
 5. The public API response for a Published Roadmap contains no Internal Item.
 6. After Unpublish, `/r/{publicId}` returns 404; after republish, the same URL
    works again.
-7. Owner A gets 404 on any of Owner B's Roadmaps, Items or Categories.
+7. An Owner of Organisation A gets 404 on any of Organisation B's Roadmaps,
+   Items or Categories.
 
 ## Deferred (post-MVP)
 

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/cal-com-design-system-7594af58-036d-451a-a8cc-06d6d26ad248/tokens/colors.css">
+<link rel="stylesheet" href="_ds/cal-com-design-system-7594af58-036d-451a-a8cc-06d6d26ad248/tokens/typography.css">
+<link rel="stylesheet" href="_ds/cal-com-design-system-7594af58-036d-451a-a8cc-06d6d26ad248/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/cal-com-design-system-7594af58-036d-451a-a8cc-06d6d26ad248/tokens/radii.css">
+<link rel="stylesheet" href="_ds/cal-com-design-system-7594af58-036d-451a-a8cc-06d6d26ad248/tokens/shadows.css">
+<link rel="stylesheet" href="_ds/cal-com-design-system-7594af58-036d-451a-a8cc-06d6d26ad248/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/cal-com-design-system-7594af58-036d-451a-a8cc-06d6d26ad248/styles.css">
+<script src="_ds/cal-com-design-system-7594af58-036d-451a-a8cc-06d6d26ad248/_ds_bundle.js"></script>
+<style>body{margin:0;} a{color:var(--c-brand-accent);} a:hover{color:var(--c-ink);}</style>
+</helmet>
+<div style="width:100%;height:100%;min-height:900px;background:var(--c-canvas);font-family:var(--font-body);color:var(--c-ink);display:flex;flex-direction:column;">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 40px;">
+    <span style="font-family:var(--font-display);font-size:20px;font-weight:600;">brand.com</span>
+    <x-import component-from-global-scope="CalComDesignSystem_7594af.AvatarCircle" initials="AK" fill="violet" size="{{ 36 }}" hint-size="36px,36px"></x-import>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px;padding:40px;">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;">
+      <span style="font-family:var(--font-display);font-size:40px;font-weight:600;letter-spacing:-1px;">Welcome to brand.com</span>
+      <span style="font-size:var(--fs-body);color:var(--c-body);">Start a new organisation or join your team's.</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,360px));gap:24px;">
+      <div style="background:var(--c-surface-card);border-radius:var(--radius-lg);padding:32px;display:flex;flex-direction:column;gap:20px;">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <span style="font-family:var(--font-display);font-size:22px;font-weight:600;">Create a new organisation</span>
+          <span style="font-size:var(--fs-body-sm);color:var(--c-body);">Set up a workspace and invite your team later.</span>
+        </div>
+        <x-import component-from-global-scope="CalComDesignSystem_7594af.TextInput" placeholder="Organisation name" hint-size="100%,40px"></x-import>
+        <x-import component-from-global-scope="CalComDesignSystem_7594af.Button" variant="primary" style="width:100%;" hint-size="100%,40px">Create organisation</x-import>
+      </div>
+      <div style="background:var(--c-surface-card);border-radius:var(--radius-lg);padding:32px;display:flex;flex-direction:column;gap:20px;">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <span style="font-family:var(--font-display);font-size:22px;font-weight:600;">Join an organisation</span>
+          <span style="font-size:var(--fs-body-sm);color:var(--c-body);">Paste the invite link a teammate sent you.</span>
+        </div>
+        <x-import component-from-global-scope="CalComDesignSystem_7594af.TextInput" placeholder="brand.com/join/…" hint-size="100%,40px"></x-import>
+        <x-import component-from-global-scope="CalComDesignSystem_7594af.Button" variant="secondary" style="width:100%;" hint-size="100%,40px">Join organisation</x-import>
+      </div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}"></script>
+</body>
+</html>

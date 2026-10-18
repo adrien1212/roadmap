@@ -38,7 +38,9 @@ Items and Owner data stay off the Public page, as before.
 | `embed` | The Public page inside the Owner's own site or app | `branding` |
 | `import` | CSV import first; Linear, Jira or GitHub later | — |
 | `custom-domain` | `roadmap.theirproduct.com` | `branding` |
-| `teams-billing` | Several people per account, and paid plans | authentication |
+| `organisation` | Several people per Organisation, with Roles (recorded) and Invitations (`SPEC-organisation.md`) | authentication |
+| `roles` | Enforce Roles (Spring Security); deleting an Organisation | `organisation` |
+| `billing` | Paid plans | `organisation` |
 
 Dependencies point one way; there are no cycles.
 
@@ -50,11 +52,14 @@ Dependencies point one way; there are no cycles.
 2. `branding`: emails and links need the product's name and logo.
 3. `reader-updates`: the release's goal.
 
+**Now (added 2026-10-18)** — `organisation`, before `embed`: the next modules
+are aimed at software publishers, who are a team.
+
 **Next — "Owners see it works"**
-`reader-feedback`, `analytics`, `fuzzy-dates`, `embed`
+`reader-feedback`, `analytics`, `fuzzy-dates`, `embed`, `roles`
 
 **Later**
-`import`, `custom-domain`, `teams-billing`
+`import`, `custom-domain`, `billing`
 
 ## How we'll know the release worked
 
@@ -84,7 +89,7 @@ page shows it.
   the settings. Until a test succeeds, the Public page offers RSS only, so no
   Reader subscribes to emails that can't be sent.
 - The "Made with Product name" footer **always shows**; removing it may become
-  a paid option with `teams-billing`.
+  a paid option with `billing`.
 - Copy says "subscribed Readers", never "subscribers" (SPEC's _Avoid_ list for
   Reader).
 
