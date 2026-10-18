@@ -4,7 +4,7 @@ import fr.adriencaubel.roadmap.category.Category;
 import fr.adriencaubel.roadmap.category.CategoryRepository;
 import fr.adriencaubel.roadmap.common.NotFoundException;
 import fr.adriencaubel.roadmap.common.ValidationException;
-import fr.adriencaubel.roadmap.owner.CurrentOwner;
+import fr.adriencaubel.roadmap.organisation.CurrentOrganisation;
 import fr.adriencaubel.roadmap.roadmap.Roadmap;
 import fr.adriencaubel.roadmap.roadmap.RoadmapService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class ItemService {
 	private final ItemRepository items;
 	private final RoadmapService roadmaps;
 	private final CategoryRepository categories;
-	private final CurrentOwner currentOwner;
+	private final CurrentOrganisation currentOrganisation;
 	private final ApplicationEventPublisher events;
 
 	@Transactional(readOnly = true)
@@ -83,12 +83,12 @@ public class ItemService {
 		items.delete(get(roadmapId, itemId));
 	}
 
-	/** Only the current Owner's Categories; an unknown or foreign id is the same 400. */
+	/** Only the current Organisation's Categories; an unknown or foreign id is the same 400. */
 	private Category category(Long categoryId) {
 		if (categoryId == null) {
 			return null;
 		}
-		return categories.findByIdAndOwner(categoryId, currentOwner.get())
+		return categories.findByIdAndOrganisation(categoryId, currentOrganisation.get())
 				.orElseThrow(() -> new ValidationException("Category not found"));
 	}
 }

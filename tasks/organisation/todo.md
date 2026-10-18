@@ -49,16 +49,16 @@ existing Owner into their own Organisation with Role Owner, and add
 query is scoped by `CurrentOrganisation`.
 
 **Acceptance criteria:**
-- [ ] `Roadmap.organisation` (mapped to `organisation_id`); `owner_id` still
+- [x] `Roadmap.organisation` (mapped to `organisation_id`); `owner_id` still
       written until Task 6, as the creator.
-- [ ] `RoadmapRepository`: `findAllByOrganisation…`, `findByIdAndOrganisation`,
+- [x] `RoadmapRepository`: `findAllByOrganisation…`, `findByIdAndOrganisation`,
       `countItems(organisation)`; `RoadmapService`, `ItemService` use
       `CurrentOrganisation`.
-- [ ] Someone in another Organisation gets 404 on the Roadmap and its Items.
+- [x] Someone in another Organisation gets 404 on the Roadmap and its Items.
 
 **Verification:**
-- [ ] `./mvnw test -Dtest=RoadmapTest`, `./mvnw test`
-- [ ] Manual: list, create, rename, publish and delete Roadmaps; add, edit,
+- [x] `./mvnw test -Dtest=RoadmapTest`, `./mvnw test`
+- [ ] Manual (with the Phase 1 checkpoint; needs a Google sign-in): list, create, rename, publish and delete Roadmaps; add, edit,
       reorder Items, as before.
 
 **Dependencies:** Task 1
@@ -72,16 +72,16 @@ query is scoped by `CurrentOrganisation`.
 Organisation.
 
 **Acceptance criteria:**
-- [ ] `Category.organisation`; repository methods by Organisation, including
+- [x] `Category.organisation`; repository methods by Organisation, including
       `existsByOrganisationAndName…` and `countItems(organisation)`;
       `CategoryService` and the Category lookup in `ItemService` use
       `CurrentOrganisation`.
-- [ ] A duplicate name (ignoring case) in the same Organisation → 409, as
+- [x] A duplicate name (ignoring case) in the same Organisation → 409, as
       today.
 
 **Verification:**
-- [ ] `./mvnw test -Dtest=CategoryTest`, `./mvnw test`
-- [ ] Manual: Categories screen counts, create, rename, recolour, delete; an
+- [x] `./mvnw test -Dtest=CategoryTest`, `./mvnw test`
+- [ ] Manual (with the Phase 1 checkpoint; needs a Google sign-in): Categories screen counts, create, rename, recolour, delete; an
       Item's Category select.
 
 **Dependencies:** Task 2

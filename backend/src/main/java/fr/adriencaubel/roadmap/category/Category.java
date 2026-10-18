@@ -1,6 +1,7 @@
 package fr.adriencaubel.roadmap.category;
 
 import fr.adriencaubel.roadmap.common.ValidationException;
+import fr.adriencaubel.roadmap.organisation.Organisation;
 import fr.adriencaubel.roadmap.owner.Owner;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,7 +16,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-/** A name + colour label, owned by an Owner and shared by all their Roadmaps. */
+/** A name + colour label, owned by an Organisation and shared by all its Roadmaps. */
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,8 +28,12 @@ public class Category {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	/** Its creator; the column goes in 011, once nothing reads it (SPEC-organisation.md). */
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private Owner owner;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Organisation organisation;
 
 	@Column(nullable = false)
 	private String name;
@@ -39,6 +44,7 @@ public class Category {
 
 	public Category(Owner owner, String name, CategoryColour colour) {
 		this.owner = owner;
+		this.organisation = owner.getOrganisation();
 		rename(name);
 		recolour(colour);
 	}

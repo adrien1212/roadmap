@@ -1,8 +1,12 @@
 package fr.adriencaubel.roadmap.category;
 
 import fr.adriencaubel.roadmap.common.ValidationException;
+import fr.adriencaubel.roadmap.organisation.Organisation;
+import fr.adriencaubel.roadmap.organisation.Role;
 import fr.adriencaubel.roadmap.owner.Owner;
 import org.junit.jupiter.api.Test;
+
+import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -10,6 +14,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class CategoryTest {
 
 	private final Owner owner = new Owner("dev", "dev", null, null);
+
+	@Test
+	void belongsToItsCreatorsOrganisation() {
+		Organisation organisation = new Organisation("Acme");
+		owner.joinAs(organisation, Role.EDITOR, Instant.now());
+
+		assertThat(new Category(owner, "Security", CategoryColour.SKY).getOrganisation()).isSameAs(organisation);
+	}
 
 	@Test
 	void trimsTheNameOnCreate() {
