@@ -116,14 +116,14 @@ see it as before.
 **Description:** SMTP settings belong to the Organisation.
 
 **Acceptance criteria:**
-- [ ] `SmtpSettings.organisationId`, `SmtpSettingsRepository.findByOrganisationId`;
+- [x] `SmtpSettings.organisationId`, `SmtpSettingsRepository.findByOrganisationId`;
       `SmtpSettingsService`, `SubscriptionEmails`, `SubscriptionService` use
       it.
-- [ ] Save, "Send test email" and emails to subscribed Readers work as before.
+- [x] Save, "Send test email" and emails to subscribed Readers work as before.
 
 **Verification:**
-- [ ] `./mvnw test -Dtest=SmtpSettingsTest`, `./mvnw test`
-- [ ] Manual (Mailpit): test email; a subscribed Reader gets the Shipped email.
+- [x] `./mvnw test -Dtest=SmtpSettingsTest`, `./mvnw test`
+- [ ] Manual (with the Phase 1 checkpoint; needs a Google sign-in) (Mailpit): test email; a subscribed Reader gets the Shipped email.
 
 **Dependencies:** Task 1
 **Files likely touched:** `SmtpSettings.java`, `SmtpSettingsRepository.java`,

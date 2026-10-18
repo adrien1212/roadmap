@@ -90,10 +90,10 @@ public class SubscriptionService {
 	public record ReadersOverview(long confirmed, long pending, List<Subscription> subscriptions) {
 	}
 
-	/** Readers can subscribe when the Roadmap is Published and its Owner's SMTP server is connected. */
+	/** Readers can subscribe when the Roadmap is Published and its Organisation's SMTP server is connected. */
 	@Transactional(readOnly = true)
 	public boolean emailsOpen(Roadmap roadmap) {
-		return roadmap.getPublishedAt() != null && smtpSettings.findByOwnerId(roadmap.getOwner().getId())
+		return roadmap.getPublishedAt() != null && smtpSettings.findByOrganisationId(roadmap.getOrganisation().getId())
 				.map(s -> s.getState() == SmtpState.CONNECTED).orElse(false);
 	}
 }

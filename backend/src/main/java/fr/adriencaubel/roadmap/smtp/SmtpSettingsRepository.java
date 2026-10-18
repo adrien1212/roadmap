@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface SmtpSettingsRepository extends Repository<SmtpSettings, Long> {
 
-	Optional<SmtpSettings> findByOwnerId(Long ownerId);
+	Optional<SmtpSettings> findByOrganisationId(Long organisationId);
 
 	SmtpSettings save(SmtpSettings settings);
 }

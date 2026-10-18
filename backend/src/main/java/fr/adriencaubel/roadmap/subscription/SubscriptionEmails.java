@@ -55,7 +55,7 @@ class SubscriptionEmails {
 	public void onItemShipped(ItemShipped event) {
 		items.findById(event.itemId()).ifPresent(item -> {
 			Roadmap roadmap = item.getRoadmap();
-			SmtpSettings settings = smtpSettings.findByOwnerId(roadmap.getOwner().getId()).orElse(null);
+			SmtpSettings settings = smtpSettings.findByOrganisationId(roadmap.getOrganisation().getId()).orElse(null);
 			List<Subscription> recipients = ShippedEmails.recipients(item, settings == null ? null : settings.getState(),
 					subscriptions.findAllByRoadmapAndState(roadmap, SubscriptionState.CONFIRMED));
 			String brand = roadmap.getOrganisation().getBrandName();
@@ -75,7 +75,7 @@ class SubscriptionEmails {
 
 	/** False when sending failed (the email is dropped and the SMTP server marked not working). */
 	private boolean send(Roadmap roadmap, OutgoingEmail email) {
-		SmtpSettings settings = smtpSettings.findByOwnerId(roadmap.getOwner().getId()).orElse(null);
+		SmtpSettings settings = smtpSettings.findByOrganisationId(roadmap.getOrganisation().getId()).orElse(null);
 		if (settings == null || settings.getState() != SmtpState.CONNECTED) {
 			return false;
 		}

@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class SmtpSettingsTest {
 
 	private SmtpSettings configured() {
-		SmtpSettings settings = SmtpSettings.forOwner(1L);
+		SmtpSettings settings = SmtpSettings.forOrganisation(1L, 1L);
 		settings.change(" smtp.acme.com ", 587, SmtpSecurity.STARTTLS, " updates@acme.com ", " Acme ", " Updates@Acme.com ");
 		return settings;
 	}
@@ -71,31 +71,31 @@ class SmtpSettingsTest {
 
 	@Test
 	void allowsOnlySmtpPorts() {
-		assertThatThrownBy(() -> SmtpSettings.forOwner(1L)
+		assertThatThrownBy(() -> SmtpSettings.forOrganisation(1L, 1L)
 				.change("smtp.acme.com", 22, SmtpSecurity.STARTTLS, null, null, "updates@acme.com"))
 				.isInstanceOf(ValidationException.class);
 	}
 
 	@Test
 	void requiresAHostAndAValidSenderEmail() {
-		assertThatThrownBy(() -> SmtpSettings.forOwner(1L)
+		assertThatThrownBy(() -> SmtpSettings.forOrganisation(1L, 1L)
 				.change(" ", 587, SmtpSecurity.STARTTLS, null, null, "updates@acme.com"))
 				.isInstanceOf(ValidationException.class);
-		assertThatThrownBy(() -> SmtpSettings.forOwner(1L)
+		assertThatThrownBy(() -> SmtpSettings.forOrganisation(1L, 1L)
 				.change("smtp.acme.com", 587, SmtpSecurity.STARTTLS, null, null, "not-an-email"))
 				.isInstanceOf(ValidationException.class);
 	}
 
 	@Test
 	void requiresASecurityMode() {
-		assertThatThrownBy(() -> SmtpSettings.forOwner(1L)
+		assertThatThrownBy(() -> SmtpSettings.forOrganisation(1L, 1L)
 				.change("smtp.acme.com", 587, null, null, null, "updates@acme.com"))
 				.isInstanceOf(ValidationException.class);
 	}
 
 	@Test
 	void treatsBlankOptionalFieldsAsNone() {
-		SmtpSettings settings = SmtpSettings.forOwner(1L);
+		SmtpSettings settings = SmtpSettings.forOrganisation(1L, 1L);
 
 		settings.change("smtp.acme.com", 587, SmtpSecurity.STARTTLS, "  ", "", "updates@acme.com");
 
