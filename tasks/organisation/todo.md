@@ -166,14 +166,14 @@ see it as before.
 Owner.
 
 **Acceptance criteria:**
-- [ ] `POST /api/organisation` `{ name }` → the Organisation, caller Role
+- [x] `POST /api/organisation` `{ name }` → the Organisation, caller Role
       `OWNER`; already in one → 409; name rules → 400.
-- [ ] `GET /api/me` adds `role` and `organisation: { name }` (null without).
-- [ ] Every scoped endpoint returns 404 without an Organisation.
+- [x] `GET /api/me` adds `role` and `organisation: { name }` (null without).
+- [x] Every scoped endpoint returns 404 without an Organisation.
 
 **Verification:**
-- [ ] `./mvnw test -Dtest=OrganisationTest`
-- [ ] Manual: a fresh Google account → `/api/me` has `organisation: null`,
+- [x] `./mvnw test -Dtest=OrganisationTest`
+- [ ] Manual (needs a Google sign-in): a fresh Google account → `/api/me` has `organisation: null`,
       `/api/roadmaps` → 404; after `POST`, both work.
 
 **Dependencies:** Task 6

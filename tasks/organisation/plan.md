@@ -75,7 +75,7 @@ Tasks live in `tasks/organisation/todo.md`. All are _Assignee: Claude_.
 ### Checkpoint: migrated, nothing visible changed
 
 ### Phase 2: Create an Organisation
-- [ ] Task 7: Create an Organisation (API) and `/api/me`
+- [x] Task 7: Create an Organisation (API) and `/api/me`
 - [ ] Task 8: Welcome page and guard
 
 ### Checkpoint: a new Owner creates an Organisation
