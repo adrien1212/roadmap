@@ -18,6 +18,10 @@ public interface InvitationRepository extends Repository<Invitation, Long> {
 	List<Invitation> findAllByOrganisationAndEmailAndUsedAtIsNullAndRevokedAtIsNull(Organisation organisation,
 			String email);
 
+	/** Pending ones, for People: not used, not revoked, not expired. */
+	List<Invitation> findAllByOrganisationAndUsedAtIsNullAndRevokedAtIsNullAndExpiresAtAfterOrderByCreatedAtAsc(
+			Organisation organisation, Instant now);
+
 	/** For the join page; the caller checks it is pending. */
 	Optional<Invitation> findBySecretHash(String secretHash);
 

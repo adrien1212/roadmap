@@ -324,16 +324,16 @@ handler), `OrganisationRepository.java`
 Roles; remove and leave.
 
 **Acceptance criteria:**
-- [ ] `GET /api/organisation` → `{ name, people, invitations }` (pending only);
+- [x] `GET /api/organisation` → `{ name, people, invitations }` (pending only);
       `PUT /api/organisation` `{ name }`.
-- [ ] `PUT /api/organisation/people/{id}/role` → 409 on Role Owner or to
+- [x] `PUT /api/organisation/people/{id}/role` → 409 on Role Owner or to
       `owner`; `DELETE /api/organisation/people/{id}` (oneself = Leave) → 409
       on Role Owner; the person is left without an Organisation.
-- [ ] Another Organisation's person or Invitation → 404.
+- [x] Another Organisation's person or Invitation → 404.
 
 **Verification:**
-- [ ] `./mvnw test -Dtest=OwnerTest`, `./mvnw test`
-- [ ] Manual: rename; change B's Role; remove C, who lands on Welcome at next
+- [x] `./mvnw test -Dtest=OwnerTest`, `./mvnw test`
+- [ ] Manual (needs Google sign-ins): rename; change B's Role; remove C, who lands on Welcome at next
       load; the Owner cannot be removed, leave or change Role.
 
 **Dependencies:** Task 11

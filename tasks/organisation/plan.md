@@ -89,7 +89,7 @@ Tasks live in `tasks/organisation/todo.md`. All are _Assignee: Claude_.
 ### Checkpoint: invite and join end to end
 
 ### Phase 4: Settings
-- [ ] Task 13: Organisation and People (API)
+- [x] Task 13: Organisation and People (API)
 - [ ] Task 14: Organisation and People sections
 
 ### Checkpoint: Complete (all Success Criteria of SPEC-organisation.md)
