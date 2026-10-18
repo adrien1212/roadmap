@@ -1,6 +1,8 @@
 package fr.adriencaubel.roadmap.roadmap;
 
 import fr.adriencaubel.roadmap.common.ValidationException;
+import fr.adriencaubel.roadmap.organisation.Organisation;
+import fr.adriencaubel.roadmap.organisation.Role;
 import fr.adriencaubel.roadmap.owner.Owner;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +14,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class RoadmapTest {
 
 	private final Owner owner = new Owner("dev", "dev", null, null);
+
+	@Test
+	void belongsToItsCreatorsOrganisation() {
+		Organisation organisation = new Organisation("Acme");
+		owner.joinAs(organisation, Role.EDITOR, Instant.now());
+
+		assertThat(Roadmap.create(owner, "Q3").getOrganisation()).isSameAs(organisation);
+	}
 
 	@Test
 	void isNamedUntitledRoadmapWhenNoNameIsGiven() {

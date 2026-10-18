@@ -1,6 +1,6 @@
 package fr.adriencaubel.roadmap.roadmap;
 
-import fr.adriencaubel.roadmap.owner.Owner;
+import fr.adriencaubel.roadmap.organisation.Organisation;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Every Owner query is scoped by Owner; there is deliberately no bare findById.
+ * Every Owner query is scoped by Organisation; there is deliberately no bare findById.
  * The one exception is the anonymous Public page lookup by publicId.
  */
 public interface RoadmapRepository extends Repository<Roadmap, Long> {
 
-	List<Roadmap> findAllByOwnerOrderByIdAsc(Owner owner);
+	List<Roadmap> findAllByOrganisationOrderByIdAsc(Organisation organisation);
 
-	Optional<Roadmap> findByIdAndOwner(Long id, Owner owner);
+	Optional<Roadmap> findByIdAndOrganisation(Long id, Organisation organisation);
 
 	/** For Readers: only a Published Roadmap matches. */
 	Optional<Roadmap> findByPublicIdAndPublishedAtIsNotNull(String publicId);
@@ -24,8 +24,8 @@ public interface RoadmapRepository extends Repository<Roadmap, Long> {
 	@Query("""
 			select new fr.adriencaubel.roadmap.roadmap.ItemCounts(
 			    i.roadmap.id, count(i), sum(case when i.internal = true then 1 else 0 end))
-			from Item i where i.roadmap.owner = :owner group by i.roadmap.id""")
-	List<ItemCounts> countItems(Owner owner);
+			from Item i where i.roadmap.organisation = :organisation group by i.roadmap.id""")
+	List<ItemCounts> countItems(Organisation organisation);
 
 	Roadmap save(Roadmap roadmap);
 

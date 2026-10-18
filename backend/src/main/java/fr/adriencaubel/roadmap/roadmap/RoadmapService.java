@@ -1,8 +1,9 @@
 package fr.adriencaubel.roadmap.roadmap;
 
 import fr.adriencaubel.roadmap.common.NotFoundException;
+import fr.adriencaubel.roadmap.organisation.CurrentOrganisation;
+import fr.adriencaubel.roadmap.organisation.Organisation;
 import fr.adriencaubel.roadmap.owner.CurrentOwner;
-import fr.adriencaubel.roadmap.owner.Owner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,14 +21,15 @@ public class RoadmapService {
 
 	private final RoadmapRepository roadmaps;
 	private final CurrentOwner currentOwner;
+	private final CurrentOrganisation currentOrganisation;
 
 	/** Each Roadmap with its Item and Internal Item counts. */
 	@Transactional(readOnly = true)
 	public List<RoadmapSummary> list() {
-		Owner owner = currentOwner.get();
-		Map<Long, ItemCounts> counts = roadmaps.countItems(owner).stream()
+		Organisation organisation = currentOrganisation.get();
+		Map<Long, ItemCounts> counts = roadmaps.countItems(organisation).stream()
 				.collect(Collectors.toMap(ItemCounts::roadmapId, Function.identity()));
-		return roadmaps.findAllByOwnerOrderByIdAsc(owner).stream()
+		return roadmaps.findAllByOrganisationOrderByIdAsc(organisation).stream()
 				.map(roadmap -> {
 					ItemCounts count = counts.get(roadmap.getId());
 					return new RoadmapSummary(roadmap,
@@ -37,7 +39,9 @@ public class RoadmapService {
 				.toList();
 	}
 
+	/** In the current Owner's Organisation; without one, 404 like every scoped request. */
 	public Roadmap create(String name) {
+		currentOrganisation.get();
 		return roadmaps.save(Roadmap.create(currentOwner.get(), name));
 	}
 
@@ -69,7 +73,7 @@ public class RoadmapService {
 
 	@Transactional(readOnly = true)
 	public Roadmap get(Long id) {
-		return roadmaps.findByIdAndOwner(id, currentOwner.get())
+		return roadmaps.findByIdAndOrganisation(id, currentOrganisation.get())
 				.orElseThrow(() -> new NotFoundException("Roadmap not found"));
 	}
 }
