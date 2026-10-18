@@ -154,7 +154,7 @@ see it as before.
 **Estimated scope:** S
 
 ### Checkpoint: migrated, nothing visible changed
-- [ ] `./mvnw test` green, `npm run build` clean
+- [x] `./mvnw test` green, `npm run build` clean
 - [ ] An existing Owner sees exactly their Roadmaps, Categories, Brand and
       SMTP settings; Public pages, Feed and emails unchanged
 
