@@ -70,7 +70,7 @@ Tasks live in `tasks/organisation/todo.md`. All are _Assignee: Claude_.
 - [x] Task 3: Categories scoped by Organisation
 - [x] Task 4: Brand on the Organisation
 - [x] Task 5: SMTP settings on the Organisation
-- [ ] Task 6: Contract changeset
+- [x] Task 6: Contract changeset
 
 ### Checkpoint: migrated, nothing visible changed
 

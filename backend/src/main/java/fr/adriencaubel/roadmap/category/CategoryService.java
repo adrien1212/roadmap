@@ -4,7 +4,6 @@ import fr.adriencaubel.roadmap.common.ConflictException;
 import fr.adriencaubel.roadmap.common.NotFoundException;
 import fr.adriencaubel.roadmap.organisation.CurrentOrganisation;
 import fr.adriencaubel.roadmap.organisation.Organisation;
-import fr.adriencaubel.roadmap.owner.CurrentOwner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +18,6 @@ import java.util.stream.Collectors;
 public class CategoryService {
 
 	private final CategoryRepository categories;
-	private final CurrentOwner currentOwner;
 	private final CurrentOrganisation currentOrganisation;
 
 	/** Each Category with the number of Items using it across all Roadmaps. */
@@ -35,7 +33,7 @@ public class CategoryService {
 
 	public Category create(String name, String colourKey) {
 		Organisation organisation = currentOrganisation.get();
-		Category category = new Category(currentOwner.get(), name, CategoryColour.fromKey(colourKey));
+		Category category = new Category(organisation, name, CategoryColour.fromKey(colourKey));
 		if (categories.existsByOrganisationAndName(organisation, category.getName())) {
 			throw duplicate(category.getName());
 		}

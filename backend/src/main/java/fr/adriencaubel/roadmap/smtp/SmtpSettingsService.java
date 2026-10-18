@@ -38,7 +38,7 @@ public class SmtpSettingsService {
 		}
 		Long organisationId = currentOrganisation.get().getId();
 		SmtpSettings saved = settings.findByOrganisationId(organisationId)
-				.orElseGet(() -> SmtpSettings.forOrganisation(organisationId, currentOwner.get().getId()));
+				.orElseGet(() -> SmtpSettings.forOrganisation(organisationId));
 		saved.change(host, port, security, username, fromName, fromEmail);
 		if (password != null && !password.isBlank()) {
 			saved.replacePassword(secretBox.encrypt(password));

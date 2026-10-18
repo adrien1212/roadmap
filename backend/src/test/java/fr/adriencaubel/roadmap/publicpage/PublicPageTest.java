@@ -5,8 +5,6 @@ import fr.adriencaubel.roadmap.category.CategoryColour;
 import fr.adriencaubel.roadmap.item.Item;
 import fr.adriencaubel.roadmap.item.ItemStatus;
 import fr.adriencaubel.roadmap.organisation.Organisation;
-import fr.adriencaubel.roadmap.organisation.Role;
-import fr.adriencaubel.roadmap.owner.Owner;
 import fr.adriencaubel.roadmap.roadmap.Roadmap;
 import org.junit.jupiter.api.Test;
 
@@ -21,16 +19,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 class PublicPageTest {
 
 	private final Organisation organisation = new Organisation("Acme product team");
-	private final Owner owner = new Owner("dev", "dev", "owner@example.com", "Owner");
-
-	{
-		owner.joinAs(organisation, Role.OWNER, Instant.now());
-	}
-
-	private final Roadmap roadmap = Roadmap.create(owner, "Q3");
-	private final Category security = new Category(owner, "Security", CategoryColour.SKY);
-	private final Category billing = new Category(owner, "Billing", CategoryColour.PINK);
-	private final Category secret = new Category(owner, "Secret", CategoryColour.SLATE);
+	private final Roadmap roadmap = Roadmap.create(organisation, "Q3");
+	private final Category security = new Category(organisation, "Security", CategoryColour.SKY);
+	private final Category billing = new Category(organisation, "Billing", CategoryColour.PINK);
+	private final Category secret = new Category(organisation, "Secret", CategoryColour.SLATE);
 
 	private Item item(String title, Category category, boolean internal) {
 		Item item = Item.append(roadmap, title, null);
@@ -117,13 +109,12 @@ class PublicPageTest {
 	}
 
 	@Test
-	void neverCarriesTheOwnersGoogleProfileNorTheOrganisationName() {
+	void neverCarriesTheOrganisationName() {
 		organisation.changeBrand("Acme");
 
 		String page = PublicPage.of(roadmap, List.of(item("SSO", security, false))).toString();
 
-		assertThat(page).doesNotContain("owner@example.com").doesNotContain("Owner,").doesNotContain("dev")
-				.doesNotContain("product team");
+		assertThat(page).contains("Acme").doesNotContain("product team");
 	}
 
 	@Test

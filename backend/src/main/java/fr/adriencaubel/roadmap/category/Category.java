@@ -2,7 +2,6 @@ package fr.adriencaubel.roadmap.category;
 
 import fr.adriencaubel.roadmap.common.ValidationException;
 import fr.adriencaubel.roadmap.organisation.Organisation;
-import fr.adriencaubel.roadmap.owner.Owner;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,11 +27,7 @@ public class Category {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	/** Its creator; the column goes in 011, once nothing reads it (SPEC-organisation.md). */
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	private Owner owner;
-
-	@ManyToOne(fetch = FetchType.LAZY)
 	private Organisation organisation;
 
 	@Column(nullable = false)
@@ -42,9 +37,8 @@ public class Category {
 	@Column(nullable = false)
 	private CategoryColour colour;
 
-	public Category(Owner owner, String name, CategoryColour colour) {
-		this.owner = owner;
-		this.organisation = owner.getOrganisation();
+	public Category(Organisation organisation, String name, CategoryColour colour) {
+		this.organisation = organisation;
 		rename(name);
 		recolour(colour);
 	}

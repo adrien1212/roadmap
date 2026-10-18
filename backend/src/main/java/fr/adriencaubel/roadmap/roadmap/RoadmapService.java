@@ -3,7 +3,6 @@ package fr.adriencaubel.roadmap.roadmap;
 import fr.adriencaubel.roadmap.common.NotFoundException;
 import fr.adriencaubel.roadmap.organisation.CurrentOrganisation;
 import fr.adriencaubel.roadmap.organisation.Organisation;
-import fr.adriencaubel.roadmap.owner.CurrentOwner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +19,6 @@ import java.util.stream.Collectors;
 public class RoadmapService {
 
 	private final RoadmapRepository roadmaps;
-	private final CurrentOwner currentOwner;
 	private final CurrentOrganisation currentOrganisation;
 
 	/** Each Roadmap with its Item and Internal Item counts. */
@@ -39,10 +37,8 @@ public class RoadmapService {
 				.toList();
 	}
 
-	/** In the current Owner's Organisation; without one, 404 like every scoped request. */
 	public Roadmap create(String name) {
-		currentOrganisation.get();
-		return roadmaps.save(Roadmap.create(currentOwner.get(), name));
+		return roadmaps.save(Roadmap.create(currentOrganisation.get(), name));
 	}
 
 	/** A null name is left unchanged. */

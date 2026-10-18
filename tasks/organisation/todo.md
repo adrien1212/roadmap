@@ -135,17 +135,17 @@ see it as before.
 **Description:** Drop what the Owner no longer owns.
 
 **Acceptance criteria:**
-- [ ] No repository or service scopes by Owner any more (`grep`).
-- [ ] `011-organisation-contract.sql`: drop `owner_id` from `roadmap` and
+- [x] No repository or service scopes by Owner any more (`grep`).
+- [x] `011-organisation-contract.sql`: drop `owner_id` from `roadmap` and
       `category`; `organisation_id` `NOT NULL`; unique
       `(organisation_id, name)` on `category`; `smtp_settings` primary key
       becomes `organisation_id`; drop `owner.brand_name`. Rollback restores
       them from `organisation_id`.
-- [ ] Entities no longer map the dropped columns.
+- [x] Entities no longer map the dropped columns.
 
 **Verification:**
-- [ ] `./mvnw test`
-- [ ] Manual: `010` and `011` on a dump of production data; row counts per
+- [x] `./mvnw test`
+- [x] Manual: `010` and `011` on a copy of the dev database (production: before deploying); row counts per
       Organisation equal those per Owner before; the app works as before.
 
 **Dependencies:** Tasks 3, 4, 5

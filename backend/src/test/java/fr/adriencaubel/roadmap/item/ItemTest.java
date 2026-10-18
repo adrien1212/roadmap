@@ -1,7 +1,7 @@
 package fr.adriencaubel.roadmap.item;
 
 import fr.adriencaubel.roadmap.common.ValidationException;
-import fr.adriencaubel.roadmap.owner.Owner;
+import fr.adriencaubel.roadmap.organisation.Organisation;
 import fr.adriencaubel.roadmap.roadmap.Roadmap;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +17,7 @@ class ItemTest {
 	private static final Instant MONDAY = Instant.parse("2026-10-12T09:00:00Z");
 	private static final Instant TUESDAY = Instant.parse("2026-10-13T09:00:00Z");
 
-	private final Roadmap roadmap = Roadmap.create(new Owner("dev", "dev", null, null), "Q3");
+	private final Roadmap roadmap = Roadmap.create(new Organisation("Acme"), "Q3");
 
 	private Item item() {
 		return Item.append(roadmap, "Dark mode", null);

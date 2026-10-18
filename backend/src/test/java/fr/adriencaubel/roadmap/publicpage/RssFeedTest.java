@@ -3,8 +3,6 @@ package fr.adriencaubel.roadmap.publicpage;
 import fr.adriencaubel.roadmap.item.Item;
 import fr.adriencaubel.roadmap.item.ItemStatus;
 import fr.adriencaubel.roadmap.organisation.Organisation;
-import fr.adriencaubel.roadmap.organisation.Role;
-import fr.adriencaubel.roadmap.owner.Owner;
 import fr.adriencaubel.roadmap.roadmap.Roadmap;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -26,13 +24,7 @@ class RssFeedTest {
 	private static final String PAGE = "https://example.com/r/abc";
 
 	private final Organisation organisation = new Organisation("Acme product team");
-	private final Owner owner = new Owner("dev", "dev", null, null);
-
-	{
-		owner.joinAs(organisation, Role.OWNER, Instant.now());
-	}
-
-	private final Roadmap roadmap = Roadmap.create(owner, "Product roadmap 2026");
+	private final Roadmap roadmap = Roadmap.create(organisation, "Product roadmap 2026");
 
 	private long nextId = 1;
 

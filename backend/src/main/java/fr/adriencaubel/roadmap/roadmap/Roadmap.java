@@ -2,7 +2,6 @@ package fr.adriencaubel.roadmap.roadmap;
 
 import fr.adriencaubel.roadmap.common.ValidationException;
 import fr.adriencaubel.roadmap.organisation.Organisation;
-import fr.adriencaubel.roadmap.owner.Owner;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -29,11 +28,7 @@ public class Roadmap {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	/** Its creator; the column goes in 011, once nothing reads it (SPEC-organisation.md). */
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	private Owner owner;
-
-	@ManyToOne(fetch = FetchType.LAZY)
 	private Organisation organisation;
 
 	@Column(nullable = false)
@@ -45,16 +40,15 @@ public class Roadmap {
 
 	private Instant publishedAt;
 
-	private Roadmap(Owner owner, String name) {
-		this.owner = owner;
-		this.organisation = owner.getOrganisation();
+	private Roadmap(Organisation organisation, String name) {
+		this.organisation = organisation;
 		this.publicId = PublicId.generate();
 		rename(name);
 	}
 
-	/** A new, Private Roadmap of its creator's Organisation; a null name gives "Untitled Roadmap". */
-	public static Roadmap create(Owner owner, String name) {
-		return new Roadmap(owner, name == null ? DEFAULT_NAME : name);
+	/** A new, Private Roadmap; a null name gives "Untitled Roadmap". */
+	public static Roadmap create(Organisation organisation, String name) {
+		return new Roadmap(organisation, name == null ? DEFAULT_NAME : name);
 	}
 
 	public void rename(String name) {

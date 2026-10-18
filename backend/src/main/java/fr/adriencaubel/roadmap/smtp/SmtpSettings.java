@@ -26,11 +26,7 @@ public class SmtpSettings {
 	static final int NAME_MAX_LENGTH = 100;
 	static final int ERROR_MAX_LENGTH = 500;
 
-	/** Who saved them first; still the primary key until 011 makes organisationId the key (SPEC-organisation.md). */
 	@Id
-	private Long ownerId;
-
-	@Column(nullable = false)
 	private Long organisationId;
 
 	@Column(nullable = false)
@@ -61,10 +57,9 @@ public class SmtpSettings {
 
 	private Instant testedAt;
 
-	public static SmtpSettings forOrganisation(Long organisationId, Long ownerId) {
+	public static SmtpSettings forOrganisation(Long organisationId) {
 		SmtpSettings settings = new SmtpSettings();
 		settings.organisationId = organisationId;
-		settings.ownerId = ownerId;
 		settings.state = SmtpState.UNTESTED;
 		return settings;
 	}

@@ -2,7 +2,7 @@ package fr.adriencaubel.roadmap.subscription;
 
 import fr.adriencaubel.roadmap.item.Item;
 import fr.adriencaubel.roadmap.item.ItemStatus;
-import fr.adriencaubel.roadmap.owner.Owner;
+import fr.adriencaubel.roadmap.organisation.Organisation;
 import fr.adriencaubel.roadmap.roadmap.Roadmap;
 import fr.adriencaubel.roadmap.smtp.SmtpState;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ class ShippedEmailsTest {
 
 	private static final Instant NOW = Instant.parse("2026-10-11T10:00:00Z");
 
-	private final Roadmap roadmap = Roadmap.create(new Owner("dev", "dev", null, null), "Q3");
+	private final Roadmap roadmap = Roadmap.create(new Organisation("Acme"), "Q3");
 	private final Subscription confirmed = confirmed("jane@example.com");
 	private final Subscription alsoConfirmed = confirmed("joe@example.com");
 	private final Subscription pending = Subscription.pending(roadmap, "pending@example.com", NOW);

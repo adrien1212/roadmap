@@ -1,7 +1,7 @@
 package fr.adriencaubel.roadmap.subscription;
 
 import fr.adriencaubel.roadmap.common.ValidationException;
-import fr.adriencaubel.roadmap.owner.Owner;
+import fr.adriencaubel.roadmap.organisation.Organisation;
 import fr.adriencaubel.roadmap.roadmap.Roadmap;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +17,7 @@ class SubscriptionTest {
 
 	private static final Instant NOW = Instant.parse("2026-10-11T10:00:00Z");
 
-	private final Roadmap roadmap = Roadmap.create(new Owner("dev", "dev", null, null), "Q3");
+	private final Roadmap roadmap = Roadmap.create(new Organisation("Acme"), "Q3");
 
 	private Subscription pending() {
 		return Subscription.pending(roadmap, "  Jane@Example.com ", NOW);
