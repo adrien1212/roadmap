@@ -19,6 +19,7 @@ import java.time.Instant;
 public class Organisation {
 
 	static final int NAME_MAX_LENGTH = 80;
+	static final int BRAND_MAX_LENGTH = 60;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +29,7 @@ public class Organisation {
 	@Column(nullable = false)
 	private String name;
 
-	/** The product name Readers see on Public pages; optional. */
+	/** The product name Readers see on Public pages; optional, never taken from a Google profile. */
 	private String brandName;
 
 	@Column(nullable = false)
@@ -49,5 +50,14 @@ public class Organisation {
 			throw new ValidationException("Organisation name must be at most " + NAME_MAX_LENGTH + " characters");
 		}
 		this.name = trimmed;
+	}
+
+	/** Trimmed, at most {@value BRAND_MAX_LENGTH} characters; blank or null clears the Brand. */
+	public void changeBrand(String name) {
+		String trimmed = name == null ? "" : name.strip();
+		if (trimmed.length() > BRAND_MAX_LENGTH) {
+			throw new ValidationException("Product name must be at most " + BRAND_MAX_LENGTH + " characters");
+		}
+		this.brandName = trimmed.isEmpty() ? null : trimmed;
 	}
 }

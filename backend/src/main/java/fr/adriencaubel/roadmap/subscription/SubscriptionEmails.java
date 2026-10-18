@@ -42,7 +42,7 @@ class SubscriptionEmails {
 	public void onConfirmationRequested(ConfirmationRequested event) {
 		subscriptions.findById(event.subscriptionId()).ifPresent(subscription -> {
 			Roadmap roadmap = subscription.getRoadmap();
-			String brand = roadmap.getOwner().getBrandName();
+			String brand = roadmap.getOrganisation().getBrandName();
 			String confirmUrl = publicUrl + "/r/" + roadmap.getPublicId() + "/confirm?token=" + subscription.getToken();
 			send(roadmap, EmailContent.confirmation(subscription.getEmail(), roadmap.getName(), brand, confirmUrl));
 		});
@@ -58,7 +58,7 @@ class SubscriptionEmails {
 			SmtpSettings settings = smtpSettings.findByOwnerId(roadmap.getOwner().getId()).orElse(null);
 			List<Subscription> recipients = ShippedEmails.recipients(item, settings == null ? null : settings.getState(),
 					subscriptions.findAllByRoadmapAndState(roadmap, SubscriptionState.CONFIRMED));
-			String brand = roadmap.getOwner().getBrandName();
+			String brand = roadmap.getOrganisation().getBrandName();
 			String pageUrl = publicUrl + "/r/" + roadmap.getPublicId();
 			EmailContent.ShippedItem shipped = new EmailContent.ShippedItem(item.getTitle(), item.getDescription(),
 					item.getCategory() == null ? null : item.getCategory().getName());
@@ -80,7 +80,7 @@ class SubscriptionEmails {
 			return false;
 		}
 		try {
-			mailer.send(settings, email, roadmap.getOwner().getBrandName());
+			mailer.send(settings, email, roadmap.getOrganisation().getBrandName());
 			return true;
 		} catch (RuntimeException e) {
 			log.warn("Email to a Reader dropped for Roadmap {}: {}", roadmap.getId(), e.getMessage());

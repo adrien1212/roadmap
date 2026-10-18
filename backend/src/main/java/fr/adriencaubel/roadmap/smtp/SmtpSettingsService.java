@@ -1,6 +1,7 @@
 package fr.adriencaubel.roadmap.smtp;
 
 import fr.adriencaubel.roadmap.common.ValidationException;
+import fr.adriencaubel.roadmap.organisation.CurrentOrganisation;
 import fr.adriencaubel.roadmap.owner.CurrentOwner;
 import fr.adriencaubel.roadmap.owner.Owner;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class SmtpSettingsService {
 	private final SecretBox secretBox;
 	private final Mailer mailer;
 	private final CurrentOwner currentOwner;
+	private final CurrentOrganisation currentOrganisation;
 
 	@Transactional(readOnly = true)
 	public Optional<SmtpSettings> get() {
@@ -56,7 +58,7 @@ public class SmtpSettingsService {
 			mailer.send(saved, new OutgoingEmail(to, "Test email: your SMTP settings work",
 					"Your SMTP settings work. Readers can now subscribe to your Published Roadmaps.",
 					"<p>Your SMTP settings work. Readers can now subscribe to your Published Roadmaps.</p>"),
-					owner.getBrandName());
+					currentOrganisation.get().getBrandName());
 			saved.markConnected(Instant.now());
 		} catch (Mailer.MailFailure | ValidationException e) {
 			saved.markNotWorking(e.getMessage());

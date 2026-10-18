@@ -1,7 +1,6 @@
 package fr.adriencaubel.roadmap.owner;
 
 import fr.adriencaubel.roadmap.common.ConflictException;
-import fr.adriencaubel.roadmap.common.ValidationException;
 import fr.adriencaubel.roadmap.organisation.Organisation;
 import fr.adriencaubel.roadmap.organisation.Role;
 import jakarta.persistence.Column;
@@ -25,8 +24,6 @@ import java.time.Instant;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Owner {
 
-	static final int BRAND_MAX_LENGTH = 60;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -47,9 +44,6 @@ public class Owner {
 	/** Whether the provider vouches for the email; an Invitation is accepted only with a verified one. */
 	private boolean emailVerified;
 
-	/** The product name Readers see on Public pages; optional, never taken from the Google profile. */
-	private String brandName;
-
 	/** At most one; null until the Owner creates or joins one, or after they leave. */
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Organisation organisation;
@@ -68,7 +62,7 @@ public class Owner {
 		this.createdAt = Instant.now();
 	}
 
-	/** The email and name the provider currently has for this person, taken at each sign-in. Never the Brand. */
+	/** The email and name the provider currently has for this person, taken at each sign-in. */
 	public void refreshProfile(String email, String name, boolean emailVerified) {
 		this.email = email;
 		this.name = name;
@@ -104,14 +98,5 @@ public class Owner {
 		this.organisation = null;
 		this.role = null;
 		this.joinedAt = null;
-	}
-
-	/** Trimmed, at most {@value BRAND_MAX_LENGTH} characters; blank or null clears the Brand. */
-	public void changeBrand(String name) {
-		String trimmed = name == null ? "" : name.strip();
-		if (trimmed.length() > BRAND_MAX_LENGTH) {
-			throw new ValidationException("Product name must be at most " + BRAND_MAX_LENGTH + " characters");
-		}
-		this.brandName = trimmed.isEmpty() ? null : trimmed;
 	}
 }

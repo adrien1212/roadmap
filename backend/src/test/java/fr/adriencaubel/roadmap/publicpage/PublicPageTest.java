@@ -4,6 +4,8 @@ import fr.adriencaubel.roadmap.category.Category;
 import fr.adriencaubel.roadmap.category.CategoryColour;
 import fr.adriencaubel.roadmap.item.Item;
 import fr.adriencaubel.roadmap.item.ItemStatus;
+import fr.adriencaubel.roadmap.organisation.Organisation;
+import fr.adriencaubel.roadmap.organisation.Role;
 import fr.adriencaubel.roadmap.owner.Owner;
 import fr.adriencaubel.roadmap.roadmap.Roadmap;
 import org.junit.jupiter.api.Test;
@@ -18,7 +20,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class PublicPageTest {
 
+	private final Organisation organisation = new Organisation("Acme product team");
 	private final Owner owner = new Owner("dev", "dev", "owner@example.com", "Owner");
+
+	{
+		owner.joinAs(organisation, Role.OWNER, Instant.now());
+	}
+
 	private final Roadmap roadmap = Roadmap.create(owner, "Q3");
 	private final Category security = new Category(owner, "Security", CategoryColour.SKY);
 	private final Category billing = new Category(owner, "Billing", CategoryColour.PINK);
@@ -97,24 +105,25 @@ class PublicPageTest {
 	}
 
 	@Test
-	void carriesTheOwnersBrand() {
-		owner.changeBrand("Acme");
+	void carriesTheOrganisationsBrand() {
+		organisation.changeBrand("Acme");
 
 		assertThat(PublicPage.of(roadmap, List.of()).brandName()).isEqualTo("Acme");
 	}
 
 	@Test
-	void hasNoBrandWhenTheOwnerSetNone() {
+	void hasNoBrandWhenTheOrganisationSetNone() {
 		assertThat(PublicPage.of(roadmap, List.of()).brandName()).isNull();
 	}
 
 	@Test
-	void neverCarriesTheOwnersGoogleProfile() {
-		owner.changeBrand("Acme");
+	void neverCarriesTheOwnersGoogleProfileNorTheOrganisationName() {
+		organisation.changeBrand("Acme");
 
 		String page = PublicPage.of(roadmap, List.of(item("SSO", security, false))).toString();
 
-		assertThat(page).doesNotContain("owner@example.com").doesNotContain("Owner,").doesNotContain("dev");
+		assertThat(page).doesNotContain("owner@example.com").doesNotContain("Owner,").doesNotContain("dev")
+				.doesNotContain("product team");
 	}
 
 	@Test

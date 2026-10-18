@@ -34,4 +34,45 @@ class OrganisationTest {
 	void hasNoBrandAtCreation() {
 		assertThat(new Organisation("Acme").getBrandName()).isNull();
 	}
+
+	@Test
+	void trimsTheBrand() {
+		Organisation organisation = new Organisation("Acme product team");
+
+		organisation.changeBrand("  Acme  ");
+
+		assertThat(organisation.getBrandName()).isEqualTo("Acme");
+	}
+
+	@Test
+	void clearsTheBrandWhenBlankOrNull() {
+		Organisation organisation = new Organisation("Acme product team");
+		organisation.changeBrand("Acme");
+		organisation.changeBrand("   ");
+		assertThat(organisation.getBrandName()).isNull();
+
+		organisation.changeBrand("Acme");
+		organisation.changeBrand(null);
+		assertThat(organisation.getBrandName()).isNull();
+	}
+
+	@Test
+	void limitsTheBrandTo60Characters() {
+		Organisation organisation = new Organisation("Acme product team");
+		organisation.changeBrand("a".repeat(60));
+		assertThat(organisation.getBrandName()).hasSize(60);
+
+		assertThatThrownBy(() -> organisation.changeBrand("b".repeat(61))).isInstanceOf(ValidationException.class);
+		assertThat(organisation.getBrandName()).isEqualTo("a".repeat(60));
+	}
+
+	@Test
+	void keepsItsBrandWhenRenamed() {
+		Organisation organisation = new Organisation("Acme product team");
+		organisation.changeBrand("Acme");
+
+		organisation.rename("Acme");
+
+		assertThat(organisation.getBrandName()).isEqualTo("Acme");
+	}
 }

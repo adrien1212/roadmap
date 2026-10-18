@@ -36,8 +36,8 @@ public record PublicPage(String name, Instant publishedAt, String brandName, boo
 				.stream()
 				.map(PublicCategory::of)
 				.toList();
-		// The Brand is the only Owner data a Reader receives.
-		return new PublicPage(roadmap.getName(), roadmap.getPublishedAt(), roadmap.getOwner().getBrandName(),
+		// The Brand is the only Organisation data a Reader receives: no Owner, no Organisation name.
+		return new PublicPage(roadmap.getName(), roadmap.getPublishedAt(), roadmap.getOrganisation().getBrandName(),
 				subscriptionsOpen, categories,
 				visible.stream().map(PublicItem::of).toList());
 	}

@@ -95,15 +95,15 @@ Organisation.
 see it as before.
 
 **Acceptance criteria:**
-- [ ] `Organisation.changeBrand` (rule and tests moved from `Owner`);
+- [x] `Organisation.changeBrand` (rule and tests moved from `Owner`);
       `BrandService` reads and writes the current Organisation.
-- [ ] `PublicPage`, `RssFeed`, `SubscriptionEmails` read
+- [x] `PublicPage`, `RssFeed`, `SubscriptionEmails` read
       `roadmap.getOrganisation().getBrandName()`.
-- [ ] The public payload is unchanged (exact-fields test unchanged).
+- [x] The public payload is unchanged (exact-fields test unchanged).
 
 **Verification:**
-- [ ] `./mvnw test -Dtest='OrganisationTest,PublicPageTest,RssFeedTest,ShippedEmailsTest'`
-- [ ] Manual: change the Brand in Settings; the Public page, its title and the
+- [x] `./mvnw test -Dtest='OrganisationTest,PublicPageTest,RssFeedTest,ShippedEmailsTest'`
+- [ ] Manual (with the Phase 1 checkpoint; needs a Google sign-in): change the Brand in Settings; the Public page, its title and the
       Feed show it.
 
 **Dependencies:** Task 2
