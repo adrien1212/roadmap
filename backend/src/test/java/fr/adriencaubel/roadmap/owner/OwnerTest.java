@@ -95,4 +95,24 @@ class OwnerTest {
 		assertThatThrownBy(owner::leave).isInstanceOf(ConflictException.class);
 		assertThat(owner.getOrganisation()).isSameAs(organisation);
 	}
+
+	@Test
+	void movesOutOfItsOrganisationToJoinAnother() {
+		owner.joinAs(new Organisation("Acme"), Role.EDITOR, NOW);
+
+		owner.moveOut(false);
+
+		assertThat(owner.getOrganisation()).isNull();
+		assertThat(owner.getRole()).isNull();
+	}
+
+	@Test
+	void theRoleOwnerMovesOutOnlyWhenNobodyElseIsInTheOrganisation() {
+		owner.joinAs(new Organisation("Acme"), Role.OWNER, NOW);
+
+		assertThatThrownBy(() -> owner.moveOut(false)).isInstanceOf(ConflictException.class);
+
+		owner.moveOut(true);
+		assertThat(owner.getOrganisation()).isNull();
+	}
 }

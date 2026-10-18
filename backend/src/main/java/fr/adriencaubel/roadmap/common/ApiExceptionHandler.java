@@ -21,6 +21,11 @@ public class ApiExceptionHandler {
 		return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
 	}
 
+	@ExceptionHandler(ForbiddenException.class)
+	ProblemDetail forbidden(ForbiddenException e) {
+		return ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, e.getMessage());
+	}
+
 	@ExceptionHandler(ConflictException.class)
 	ProblemDetail conflict(ConflictException e) {
 		return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, e.getMessage());

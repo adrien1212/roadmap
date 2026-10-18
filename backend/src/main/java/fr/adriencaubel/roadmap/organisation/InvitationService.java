@@ -1,6 +1,7 @@
 package fr.adriencaubel.roadmap.organisation;
 
 import fr.adriencaubel.roadmap.common.ConflictException;
+import fr.adriencaubel.roadmap.common.ForbiddenException;
 import fr.adriencaubel.roadmap.common.NotFoundException;
 import fr.adriencaubel.roadmap.owner.CurrentOwner;
 import fr.adriencaubel.roadmap.owner.Owner;
@@ -24,6 +25,7 @@ import java.time.Instant;
 public class InvitationService {
 
 	private final InvitationRepository invitations;
+	private final OrganisationRepository organisations;
 	private final OwnerRepository owners;
 	private final SmtpSettingsRepository smtpSettings;
 	private final Mailer mailer;
@@ -52,6 +54,57 @@ public class InvitationService {
 		invitations.save(invitation);
 		String url = publicUrl + "/join/" + secret;
 		return new Created(invitation, url, send(invitation, inviter, url));
+	}
+
+	/** For the join page, before sign-in. Unknown, used, revoked, replaced and expired are the same 404. */
+	@Transactional(readOnly = true)
+	public Invitation pending(String secret) {
+		return invitations.findBySecretHash(InvitationSecret.hash(secret))
+				.filter(invitation -> invitation.isPending(Instant.now()))
+				.orElseThrow(() -> new NotFoundException("This invitation is no longer valid"));
+	}
+
+	/**
+	 * Only for the Google account with the Invitation's verified email; nothing is used up otherwise.
+	 * Someone in an Organisation without Roadmaps moves (it is deleted when they were alone in it);
+	 * with Roadmaps, they are refused.
+	 */
+	public void accept(String secret) {
+		Invitation invitation = pending(secret);
+		Owner owner = currentOwner.get();
+		if (!invitation.isFor(owner)) {
+			throw new ForbiddenException("This invitation is for " + invitation.maskedEmail()
+					+ ". Sign in with that Google account.");
+		}
+		Organisation target = invitation.getOrganisation();
+		Organisation current = owner.getOrganisation();
+		if (current != null && current.getId().equals(target.getId())) {
+			throw new ConflictException("You are already in " + target.getName());
+		}
+		Instant now = Instant.now();
+		if (invitations.markUsed(invitation.getId(), now) == 0) {
+			throw new NotFoundException("This invitation is no longer valid");
+		}
+		if (current != null) {
+			moveOut(owner, current);
+		}
+		owner.joinAs(target, invitation.getRole(), now);
+		owners.save(owner);
+	}
+
+	private void moveOut(Owner owner, Organisation current) {
+		if (organisations.hasRoadmaps(current)) {
+			throw new ConflictException("You already belong to " + current.getName()
+					+ ". Leave it, or ask to be invited with another Google account.");
+		}
+		boolean alone = organisations.countPeople(current) == 1;
+		owner.moveOut(alone);
+		owners.saveAndFlush(owner);
+		if (alone) {
+			organisations.deleteCategories(current);
+			organisations.deleteSmtpSettings(current.getId());
+			organisations.deleteEmpty(current.getId());
+		}
 	}
 
 	public void revoke(Long id) {

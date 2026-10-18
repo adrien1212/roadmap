@@ -3,9 +3,11 @@ package fr.adriencaubel.roadmap.common;
 import fr.adriencaubel.roadmap.owner.OwnerProvisioningService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
@@ -20,11 +22,15 @@ import org.springframework.security.web.servlet.util.matcher.PathPatternRequestM
 public class OAuth2ClientSecurityConfig {
 
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http, OwnerProvisioningService ownerProvisioning) throws Exception {
+	public SecurityFilterChain filterChain(HttpSecurity http, OwnerProvisioningService ownerProvisioning,
+			ClientRegistrationRepository clients) throws Exception {
+		SignInReturn signInReturn = new SignInReturn(clients);
 		return http
 				.authorizeHttpRequests(authz -> authz
 						// Readers are never signed in: Public page API, Feed, subscribe / confirm / unsubscribe.
 						.requestMatchers("/api/public/**").permitAll()
+						// The join page shows an Invitation before its invited person signs in.
+						.requestMatchers(HttpMethod.GET, "/api/invitations/*").permitAll()
 						.requestMatchers("/error").permitAll()
 						.requestMatchers("/actuator/**").permitAll()
 						// Everything else is the Owner's.
@@ -34,10 +40,11 @@ public class OAuth2ClientSecurityConfig {
 						new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
 						PathPatternRequestMatcher.withDefaults().matcher("/api/**")))
 				// Google only (SPEC): no form login. Each sign-in creates or refreshes the Owner,
-				// then the Owner lands on their Roadmaps.
+				// then the Owner lands on their Roadmaps, or back on the join page they came from.
 				.oauth2Login(oauth2 -> oauth2
+						.authorizationEndpoint(authorization -> authorization.authorizationRequestResolver(signInReturn))
 						.userInfoEndpoint(userInfo -> userInfo.oidcUserService(ownerProvisioning))
-						.defaultSuccessUrl("/roadmaps", true))
+						.successHandler(signInReturn))
 				.logout(logout -> logout.logoutSuccessUrl("/"))
 				// CSRF for a browser app: the XSRF-TOKEN cookie is echoed in the X-XSRF-TOKEN header.
 				// Readers' endpoints are exempt: they hold no session, and mail clients post the

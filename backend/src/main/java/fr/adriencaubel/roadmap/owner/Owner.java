@@ -90,6 +90,20 @@ public class Owner {
 		this.role = role;
 	}
 
+	/**
+	 * To accept an Invitation elsewhere, from an Organisation without Roadmaps. The Role Owner moves
+	 * only when nobody else is in the Organisation, which is then deleted.
+	 */
+	public void moveOut(boolean nobodyElse) {
+		if (this.role == Role.OWNER && !nobodyElse) {
+			throw new ConflictException("You're the Owner of " + this.organisation.getName()
+					+ ", and other people are in it");
+		}
+		this.organisation = null;
+		this.role = null;
+		this.joinedAt = null;
+	}
+
 	/** Removed or leaving: what they created stays with the Organisation. The Role Owner cannot leave. */
 	public void leave() {
 		if (this.role == Role.OWNER) {

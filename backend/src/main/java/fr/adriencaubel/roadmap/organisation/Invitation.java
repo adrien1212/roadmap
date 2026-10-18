@@ -81,6 +81,17 @@ public class Invitation {
 		return usedAt == null && revokedAt == null && now.isBefore(expiresAt);
 	}
 
+	/** Only the Google account whose verified email is the Invitation's, ignoring case. */
+	public boolean isFor(Owner owner) {
+		return owner.isEmailVerified() && owner.getEmail() != null && email.equalsIgnoreCase(owner.getEmail());
+	}
+
+	/** "j***@acme.com": enough for the invited person to recognise it. */
+	public String maskedEmail() {
+		int at = email.indexOf('@');
+		return email.charAt(0) + "***" + email.substring(at);
+	}
+
 	/** Revoked by an Owner, or replaced by a newer Invitation for the same email. */
 	public void revoke(Instant now) {
 		if (usedAt == null && revokedAt == null) {

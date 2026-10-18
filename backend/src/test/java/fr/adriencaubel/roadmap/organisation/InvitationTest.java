@@ -78,4 +78,23 @@ class InvitationTest {
 		assertThat(secret).matches("[A-Za-z0-9_-]{43}").isNotEqualTo(other);
 		assertThat(InvitationSecret.hash(secret)).isNotEqualTo(InvitationSecret.hash(other));
 	}
+
+	@Test
+	void isForTheGoogleAccountWithTheSameVerifiedEmail() {
+		Invitation invitation = invitation();
+		Owner jane = new Owner("google", "2", "JANE@acme.com", "Jane");
+
+		assertThat(invitation.isFor(jane)).isFalse();
+
+		jane.refreshProfile("JANE@acme.com", "Jane", true);
+		assertThat(invitation.isFor(jane)).isTrue();
+
+		jane.refreshProfile("jane@other.com", "Jane", true);
+		assertThat(invitation.isFor(jane)).isFalse();
+	}
+
+	@Test
+	void masksItsEmail() {
+		assertThat(invitation().maskedEmail()).isEqualTo("j***@acme.com");
+	}
 }

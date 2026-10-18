@@ -267,19 +267,19 @@ Welcome page and creates one, or pastes an invitation link.
 **Description:** The invited person, and only them, accepts once.
 
 **Acceptance criteria:**
-- [ ] `GET /api/invitations/{secret}` (anonymous) → `{ inviterName,
+- [x] `GET /api/invitations/{secret}` (anonymous) → `{ inviterName,
       organisationName, role, maskedEmail, expiresAt }`; 404 for unknown,
       used, revoked, replaced, expired.
-- [ ] `POST /api/invitations/{secret}/accept` → 204: email mismatch or not
+- [x] `POST /api/invitations/{secret}/accept` → 204: email mismatch or not
       verified → 403, nothing used up; Organisation with Roadmaps → 409;
       Organisation without Roadmaps → moved (old one deleted when empty;
       Role Owner only when alone); single use under concurrency.
-- [ ] Sign-in with `continue=/join/{secret}` returns there; any other value
+- [x] Sign-in with `continue=/join/{secret}` returns there; any other value
       falls back to `/roadmaps`.
 
 **Verification:**
-- [ ] `./mvnw test -Dtest='InvitationTest,OwnerTest'`
-- [ ] Manual with two Google accounts: wrong account → 403; right one → joins
+- [x] `./mvnw test -Dtest='InvitationTest,OwnerTest'`
+- [ ] Manual (needs Google sign-ins) with two Google accounts: wrong account → 403; right one → joins
       with the Role; second use → 404; `continue=https://evil.example` →
       `/roadmaps`.
 

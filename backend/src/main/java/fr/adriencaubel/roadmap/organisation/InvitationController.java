@@ -1,8 +1,10 @@
 package fr.adriencaubel.roadmap.organisation;
 
+import fr.adriencaubel.roadmap.owner.Owner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +30,22 @@ public class InvitationController {
 				created.invitation().getExpiresAt(), created.emailed());
 	}
 
+	/** Anonymous: what the join page shows. No full email, so a leaked link says little. */
+	@GetMapping("/{secret}")
+	public PendingInvitationResponse get(@PathVariable String secret) {
+		Invitation invitation = service.pending(secret);
+		Owner inviter = invitation.getInvitedBy();
+		return new PendingInvitationResponse(inviter.getName() != null ? inviter.getName() : "Someone",
+				invitation.getOrganisation().getName(), invitation.getRole().key(), invitation.maskedEmail(),
+				invitation.getExpiresAt());
+	}
+
+	@PostMapping("/{secret}/accept")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void accept(@PathVariable String secret) {
+		service.accept(secret);
+	}
+
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void revoke(@PathVariable Long id) {
@@ -35,6 +53,10 @@ public class InvitationController {
 	}
 
 	public record InvitationRequest(String email, String role) {
+	}
+
+	public record PendingInvitationResponse(String inviterName, String organisationName, String role,
+			String maskedEmail, Instant expiresAt) {
 	}
 
 	public record CreatedInvitationResponse(Long id, String url, Instant expiresAt, boolean emailed) {
