@@ -346,16 +346,16 @@ Roles; remove and leave.
 **Description:** The Organisation and People sections of Settings.
 
 **Acceptance criteria:**
-- [ ] Organisation: name field, Save, "Settings saved" toast.
-- [ ] People: people (name, email, Role, joined), Role select and Remove (not
+- [x] Organisation: name field, Save, "Settings saved" toast.
+- [x] People: people (name, email, Role, joined), Role select and Remove (not
       on the Role Owner), Leave for oneself (not for the Role Owner) with a
       confirmation; pending Invitations (email, Role, invited by, expires)
       with Revoke; "Invite" opens the popup (temporary button removed).
-- [ ] After Leave: `/welcome`.
+- [x] After Leave: `/welcome`.
 
 **Verification:**
-- [ ] `npx tsc --noEmit`, `npm run build`
-- [ ] Manual: the Phase 4 flows with three accounts.
+- [x] `npx tsc --noEmit`, `npm run build`
+- [ ] Manual (needs Google sign-ins): the Phase 4 flows with three accounts.
 
 **Dependencies:** Tasks 10, 13
 **Files likely touched:** `frontend/src/routes/_app/settings.tsx`,
@@ -364,7 +364,7 @@ Roles; remove and leave.
 **Estimated scope:** M
 
 ### Checkpoint: Complete
-- [ ] `./mvnw test` green, `npm run build` clean
+- [x] `./mvnw test` green, `npm run build` clean
 - [ ] All Success Criteria of `SPEC-organisation.md` checked manually
 - [ ] No person, Organisation or Role in the public payload, the Feed or
       Reader emails

@@ -61,3 +61,40 @@ export const acceptInvitation = (secret: string) =>
 /** Google sign-in that comes back to the join page and accepts there. */
 export const signInToAccept = (secret: string) =>
   `/oauth2/authorization/google?continue=${encodeURIComponent(`/join/${secret}?accept=1`)}`
+
+/** Someone in the Organisation, as People shows them. */
+export interface Person {
+  id: number
+  name: string | null
+  email: string | null
+  role: Role
+  joinedAt: string
+}
+
+/** A pending Invitation, without its link (never stored). */
+export interface PendingInvitationRow {
+  id: number
+  email: string
+  role: Exclude<Role, 'owner'>
+  invitedBy: string
+  expiresAt: string
+}
+
+export interface OrganisationOverview {
+  name: string
+  people: Person[]
+  invitations: PendingInvitationRow[]
+}
+
+export const organisationQuery = queryOptions({
+  queryKey: ['organisation'],
+  queryFn: () => api.get<OrganisationOverview>('/api/organisation'),
+})
+
+export const renameOrganisation = (name: string) => api.put<Organisation>('/api/organisation', { name })
+
+export const changeRole = (personId: number, role: Exclude<Role, 'owner'>) =>
+  api.put<Person>(`/api/organisation/people/${personId}/role`, { role })
+
+/** Your own id: Leave. */
+export const removePerson = (personId: number) => api.delete(`/api/organisation/people/${personId}`)

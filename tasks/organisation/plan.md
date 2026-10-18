@@ -90,7 +90,7 @@ Tasks live in `tasks/organisation/todo.md`. All are _Assignee: Claude_.
 
 ### Phase 4: Settings
 - [x] Task 13: Organisation and People (API)
-- [ ] Task 14: Organisation and People sections
+- [x] Task 14: Organisation and People sections
 
 ### Checkpoint: Complete (all Success Criteria of SPEC-organisation.md)
 

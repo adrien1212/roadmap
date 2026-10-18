@@ -4,7 +4,7 @@ import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-q
 import { toast } from 'sonner'
 
 import { BrandMark } from '#/components/brand-mark'
-import { InviteDialog } from '#/components/invite-dialog'
+import { OrganisationSection, PeopleSection } from '#/components/people-section'
 import { FieldError } from '#/components/field-error'
 import { SmtpSettingsForm } from '#/components/smtp-settings-form'
 import { Button } from '#/components/ui/button'
@@ -12,7 +12,7 @@ import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { BRAND_MAX_LENGTH, brandQuery, pageTitle, previewDescription, saveBrand } from '#/lib/brand'
 import { formatInstant } from '#/lib/format'
-import { meQuery } from '#/lib/me'
+import { organisationQuery } from '#/lib/organisation'
 import { roadmapsQuery } from '#/lib/roadmaps'
 import { smtpSettingsQuery } from '#/lib/smtp'
 
@@ -22,6 +22,7 @@ export const Route = createFileRoute('/_app/settings')({
       queryClient.ensureQueryData(brandQuery),
       queryClient.ensureQueryData(roadmapsQuery),
       queryClient.ensureQueryData(smtpSettingsQuery),
+      queryClient.ensureQueryData(organisationQuery),
     ]),
   component: SettingsPage,
 })
@@ -33,8 +34,6 @@ function SettingsPage() {
   const { data: brand } = useSuspenseQuery(brandQuery)
   const { data: roadmaps } = useSuspenseQuery(roadmapsQuery)
   const { data: smtp } = useSuspenseQuery(smtpSettingsQuery)
-  const { data: me } = useSuspenseQuery(meQuery)
-  const [inviting, setInviting] = useState(false)
   const queryClient = useQueryClient()
   const [name, setName] = useState(brand.name ?? '')
   const [error, setError] = useState<string | null>(null)
@@ -58,17 +57,10 @@ function SettingsPage() {
 
   return (
     <main className="mx-auto max-w-[1000px] px-4 pb-30 sm:px-8">
-      <div className="mt-12 mb-6 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="font-display text-[28px] leading-tight font-semibold tracking-[-0.5px]">Settings</h1>
-          <p className="mt-1.5 text-body">Your product, as Readers see it on every Public page and in emails.</p>
-        </div>
-        {/* Temporary: moves into the People section (organisation Task 14). */}
-        <Button variant="secondary" onClick={() => setInviting(true)}>
-          Invite
-        </Button>
+      <div className="mt-12 mb-6">
+        <h1 className="font-display text-[28px] leading-tight font-semibold tracking-[-0.5px]">Settings</h1>
+        <p className="mt-1.5 text-body">Your product, as Readers see it on every Public page and in emails.</p>
       </div>
-      <InviteDialog open={inviting} onOpenChange={setInviting} organisationName={me.organisation?.name ?? ''} />
 
       <div className="grid grid-cols-1 items-start gap-8 min-[640px]:grid-cols-2">
         <form
@@ -128,6 +120,11 @@ function SettingsPage() {
         </section>
 
         <SmtpSettingsForm settings={smtp} brandName={brand.name} />
+      </div>
+
+      <div className="mt-12 grid grid-cols-1 items-start gap-8 min-[640px]:grid-cols-[1fr_2fr]">
+        <OrganisationSection />
+        <PeopleSection />
       </div>
     </main>
   )
