@@ -1,13 +1,16 @@
 import { queryOptions } from '@tanstack/react-query'
 
 import { api } from '#/lib/api'
+import type { Organisation, Role } from '#/lib/organisation'
 
-/** The signed-in Owner, from `GET /api/me`. */
+/** The signed-in Owner, from `GET /api/me`. No Organisation (and no Role) until the Welcome page. */
 export interface Me {
   id: number
   name: string | null
   email: string | null
   provider: string
+  role: Role | null
+  organisation: Organisation | null
 }
 
 export const meQuery = queryOptions({

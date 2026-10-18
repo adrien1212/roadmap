@@ -187,18 +187,18 @@ Owner.
 Welcome page and creates one, or pastes an invitation link.
 
 **Acceptance criteria:**
-- [ ] `/welcome` from `design/Onboarding.dc.html`, restyled to the
+- [x] `/welcome` from `design/Onboarding.dc.html`, restyled to the
       `design/ui-design.html` tokens, with the spec's copy (no "workspace",
       "team", "teammate").
-- [ ] `_app` redirects to `/welcome` when `organisation` is null; `/welcome`
+- [x] `_app` redirects to `/welcome` when `organisation` is null; `/welcome`
       redirects to `/roadmaps` when it isn't, and to `/` when signed out.
-- [ ] Create: name field, inline errors, lands on `/roadmaps`. Join: accepts a
+- [x] Create: name field, inline errors, lands on `/roadmaps`. Join: accepts a
       full link or a secret and opens `/join/{secret}`; anything else shows
       "This link isn't an invitation link."
 
 **Verification:**
-- [ ] `npx tsc --noEmit`, `npm run build`
-- [ ] Manual: fresh account → Welcome → create → Roadmaps; reload `/welcome`
+- [x] `npx tsc --noEmit`, `npm run build`
+- [ ] Manual (needs a Google sign-in): fresh account → Welcome → create → Roadmaps; reload `/welcome`
       → Roadmaps.
 
 **Dependencies:** Task 7
@@ -208,7 +208,7 @@ Welcome page and creates one, or pastes an invitation link.
 **Estimated scope:** M
 
 ### Checkpoint: a new Owner creates an Organisation
-- [ ] `./mvnw test` green, `npm run build` clean
+- [x] `./mvnw test` green, `npm run build` clean
 - [ ] A fresh account goes Welcome → create → Roadmaps; existing Owners never
       see Welcome
 

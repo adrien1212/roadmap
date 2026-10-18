@@ -76,7 +76,7 @@ Tasks live in `tasks/organisation/todo.md`. All are _Assignee: Claude_.
 
 ### Phase 2: Create an Organisation
 - [x] Task 7: Create an Organisation (API) and `/api/me`
-- [ ] Task 8: Welcome page and guard
+- [x] Task 8: Welcome page and guard
 
 ### Checkpoint: a new Owner creates an Organisation
 

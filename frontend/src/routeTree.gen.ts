@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/_app'
+import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as AppCategoriesRouteImport } from './routes/_app/categories'
 import { Route as AppSettingsRouteImport } from './routes/_app/settings'
 import { Route as RPublicIdRouteImport } from './routes/r.$publicId'
@@ -27,6 +28,11 @@ const IndexRoute = IndexRouteImport.update({
 } as any)
 const AppRoute = AppRouteImport.update({
   id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WelcomeRoute = WelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppCategoriesRoute = AppCategoriesRouteImport.update({
@@ -73,6 +79,7 @@ const AppRoadmapsRoadmapIdReadersRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/welcome': typeof WelcomeRoute
   '/categories': typeof AppCategoriesRoute
   '/settings': typeof AppSettingsRoute
   '/r/$publicId': typeof RPublicIdRoute
@@ -84,6 +91,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/welcome': typeof WelcomeRoute
   '/categories': typeof AppCategoriesRoute
   '/settings': typeof AppSettingsRoute
   '/r/$publicId': typeof RPublicIdRoute
@@ -97,6 +105,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
+  '/welcome': typeof WelcomeRoute
   '/_app/categories': typeof AppCategoriesRoute
   '/_app/settings': typeof AppSettingsRoute
   '/r/$publicId': typeof RPublicIdRoute
@@ -110,6 +119,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/welcome'
     | '/categories'
     | '/settings'
     | '/r/$publicId'
@@ -121,6 +131,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/welcome'
     | '/categories'
     | '/settings'
     | '/r/$publicId'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_app'
+    | '/welcome'
     | '/_app/categories'
     | '/_app/settings'
     | '/r/$publicId'
@@ -146,6 +158,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  WelcomeRoute: typeof WelcomeRoute
   RPublicIdRoute: typeof RPublicIdRoute
   RPublicIdConfirmRoute: typeof RPublicIdConfirmRoute
   RPublicIdUnsubscribeRoute: typeof RPublicIdUnsubscribeRoute
@@ -165,6 +178,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/welcome': {
+      id: '/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof WelcomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app/categories': {
@@ -247,6 +267,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  WelcomeRoute: WelcomeRoute,
   RPublicIdRoute: RPublicIdRoute,
   RPublicIdConfirmRoute: RPublicIdConfirmRoute,
   RPublicIdUnsubscribeRoute: RPublicIdUnsubscribeRoute,
