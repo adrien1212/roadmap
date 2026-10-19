@@ -4,6 +4,7 @@ import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-q
 import { toast } from 'sonner'
 
 import { BrandMark } from '#/components/brand-mark'
+import { CloseOrganisation } from '#/components/close-organisation'
 import { OrganisationSection, PeopleSection } from '#/components/people-section'
 import { FieldError } from '#/components/field-error'
 import { SmtpSettingsForm } from '#/components/smtp-settings-form'
@@ -12,6 +13,7 @@ import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { BRAND_MAX_LENGTH, brandQuery, pageTitle, previewDescription, saveBrand } from '#/lib/brand'
 import { formatInstant } from '#/lib/format'
+import { meQuery } from '#/lib/me'
 import { organisationQuery } from '#/lib/organisation'
 import { roadmapsQuery } from '#/lib/roadmaps'
 import { smtpSettingsQuery } from '#/lib/smtp'
@@ -34,6 +36,7 @@ function SettingsPage() {
   const { data: brand } = useSuspenseQuery(brandQuery)
   const { data: roadmaps } = useSuspenseQuery(roadmapsQuery)
   const { data: smtp } = useSuspenseQuery(smtpSettingsQuery)
+  const { data: me } = useSuspenseQuery(meQuery)
   const queryClient = useQueryClient()
   const [name, setName] = useState(brand.name ?? '')
   const [error, setError] = useState<string | null>(null)
@@ -126,6 +129,8 @@ function SettingsPage() {
         <OrganisationSection />
         <PeopleSection />
       </div>
+
+      {me.role === 'owner' && me.organisation && <CloseOrganisation organisationName={me.organisation.name} />}
     </main>
   )
 }

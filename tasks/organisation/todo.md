@@ -404,15 +404,15 @@ Invitations revoked, everyone leaves, nothing deleted.
 confirmation.
 
 **Acceptance criteria:**
-- [ ] A "Close organisation" panel at the bottom of Settings, for the Role
+- [x] A "Close organisation" panel at the bottom of Settings, for the Role
       Owner only, saying what happens and that nothing is deleted.
-- [ ] Confirmation popup: type the Organisation name; the button stays
+- [x] Confirmation popup: type the Organisation name; the button stays
       disabled until it matches; API errors inline.
-- [ ] After closing: `/welcome`.
+- [x] After closing: `/welcome`.
 
 **Verification:**
-- [ ] `npx tsc --noEmit`, `npm run build`
-- [ ] Manual: as Role Owner, close; as Admin or Editor, the panel is absent.
+- [x] `npx tsc --noEmit`, `npm run build`
+- [ ] Manual (needs Google sign-ins): as Role Owner, close; as Admin or Editor, the panel is absent.
 
 **Dependencies:** Task 15
 **Files likely touched:** `frontend/src/components/close-organisation.tsx`,
@@ -420,6 +420,6 @@ confirmation.
 **Estimated scope:** S
 
 ### Checkpoint: closing
-- [ ] `./mvnw test` green, `npm run build` clean
+- [x] `./mvnw test` green, `npm run build` clean
 - [ ] Closing makes every Public page of the Organisation 404 and sends its
       people to Welcome; no row deleted

@@ -98,3 +98,6 @@ export const changeRole = (personId: number, role: Exclude<Role, 'owner'>) =>
 
 /** Your own id: Leave. */
 export const removePerson = (personId: number) => api.delete(`/api/organisation/people/${personId}`)
+
+/** Role Owner only; `name` must be the Organisation's exact name. Nothing is deleted. */
+export const closeOrganisation = (name: string) => api.post<void>('/api/organisation/close', { name })
