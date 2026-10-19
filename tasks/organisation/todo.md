@@ -368,3 +368,58 @@ Roles; remove and leave.
 - [ ] All Success Criteria of `SPEC-organisation.md` checked manually
 - [ ] No person, Organisation or Role in the public payload, the Feed or
       Reader emails
+
+## Phase 5: Close the Organisation (added 2026-10-19)
+
+### Task 15: Close the Organisation (backend)
+
+**Description:** The Role Owner closes the Organisation: Roadmaps Private,
+Invitations revoked, everyone leaves, nothing deleted.
+
+**Acceptance criteria:**
+- [ ] `013-organisation-closed.sql`: `organisation.closed_at`, `closed_by_id`
+      (FK owner), both nullable.
+- [ ] `Organisation.close(by, typedName, now)`: not the Role Owner of this
+      Organisation → `ForbiddenException`; name differs → `ValidationException`;
+      already closed → `ConflictException`.
+- [ ] `POST /api/organisation/close` `{ name }` → 204: every Roadmap
+      unpublished, pending Invitations revoked, every person without an
+      Organisation; nothing deleted.
+
+**Verification:**
+- [ ] Unit tests first, then green: `./mvnw test -Dtest=OrganisationTest`
+- [ ] `./mvnw test`
+- [ ] Manual: close; the Public pages and Feeds return 404; rows still in the
+      database; everyone lands on Welcome.
+
+**Dependencies:** Task 13
+**Files likely touched:** `013-organisation-closed.sql`, `db.changelog-master.yaml`,
+`Organisation.java`, `OrganisationService.java`, `OrganisationController.java`,
+`OrganisationRepository.java`, `OrganisationTest.java`
+**Estimated scope:** M
+
+### Task 16: Close organisation in Settings
+
+**Description:** The Role Owner's "Close organisation" with a typed-name
+confirmation.
+
+**Acceptance criteria:**
+- [ ] A "Close organisation" panel at the bottom of Settings, for the Role
+      Owner only, saying what happens and that nothing is deleted.
+- [ ] Confirmation popup: type the Organisation name; the button stays
+      disabled until it matches; API errors inline.
+- [ ] After closing: `/welcome`.
+
+**Verification:**
+- [ ] `npx tsc --noEmit`, `npm run build`
+- [ ] Manual: as Role Owner, close; as Admin or Editor, the panel is absent.
+
+**Dependencies:** Task 15
+**Files likely touched:** `frontend/src/components/close-organisation.tsx`,
+`frontend/src/lib/organisation.ts`, `frontend/src/routes/_app/settings.tsx`
+**Estimated scope:** S
+
+### Checkpoint: closing
+- [ ] `./mvnw test` green, `npm run build` clean
+- [ ] Closing makes every Public page of the Organisation 404 and sends its
+      people to Welcome; no row deleted

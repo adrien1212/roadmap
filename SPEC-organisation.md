@@ -125,7 +125,25 @@ Layout from `design/Onboarding.dc.html`, restyled to the tokens of
   oneself (not for the Owner), with a confirmation.
 - A removed (or leaving) person no longer has an Organisation and goes to the
   Welcome page next time. What they created stays with the Organisation.
-- Deleting an Organisation is out of scope for now.
+- Deleting an Organisation is out of scope for now; closing one is not (below).
+
+### Closing the Organisation (added 2026-10-19)
+
+- **Close organisation**, at the bottom of Settings, shown to the Role Owner
+  only. This is an Owner rule, enforced now: anyone else gets 403.
+- A confirmation popup asks to type the Organisation name; a different name →
+  400.
+- Closing, in one transaction:
+  - every Roadmap of the Organisation becomes Private (`publishedAt` null):
+    its Public page and Feed return 404, so no Reader email is sent;
+  - its pending Invitations are revoked;
+  - everyone in it, the Role Owner included, leaves it and goes to the
+    Welcome page at their next page load;
+  - the Organisation is marked closed (`closedAt`, `closedBy`).
+- **Nothing is deleted**: Roadmaps, Items, Categories, Brand, SMTP settings and
+  Subscriptions are kept, so the Organisation can be restored later (not in
+  this module).
+- `POST /api/organisation/close` `{ name }` → 204.
 
 ### Invite popup
 
@@ -344,4 +362,6 @@ Manual, against the running app, with three Google accounts:
 8. The person keeps the name Owner in code; the Role is written "Role Owner"
    / `OWNER`.
 9. Deleting an Organisation is left for later.
+10. (2026-10-19) The Role Owner can close the Organisation: its Roadmaps become
+    Private, everyone leaves it, nothing is deleted.
 

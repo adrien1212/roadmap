@@ -15,8 +15,9 @@ Owner who authors, and the anonymous Readers who only read.
 
 ### Out of scope (MVP)
 - Several Organisations per Owner, per-Roadmap access, enforcing Roles,
-  transferring ownership, deleting an Organisation. (Organisations, Roles
-  and Invitations are in scope since `SPEC-organisation.md`.)
+  transferring ownership, deleting an Organisation. (Organisations, Roles,
+  Invitations and closing an Organisation are in scope since
+  `SPEC-organisation.md`.)
 - Billing / paying Customers.
 - Custom domains, embeds, Reader feedback. (Email subscriptions are in scope
   since `SPEC-reader-updates.md`.)
@@ -36,7 +37,8 @@ _Avoid_: user, member, author, account
 **Organisation**:
 The publisher's people who maintain the same Roadmaps. Owns the Roadmaps, the
 Categories, the Brand and the SMTP settings. Has a name, set in Settings, seen
-only by its people. Never shown to Readers.
+only by its people. Never shown to Readers. Its Role Owner can close it: its
+Roadmaps become Private and everyone leaves it; nothing is deleted.
 _Avoid_: workspace, team, account, company, tenant, group
 
 **Role**:
