@@ -1,7 +1,12 @@
 package fr.adriencaubel.roadmap.organisation;
 
+import fr.adriencaubel.roadmap.common.ConflictException;
+import fr.adriencaubel.roadmap.common.ForbiddenException;
 import fr.adriencaubel.roadmap.common.ValidationException;
+import fr.adriencaubel.roadmap.owner.Owner;
 import org.junit.jupiter.api.Test;
+
+import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -74,5 +79,54 @@ class OrganisationTest {
 		organisation.rename("Acme");
 
 		assertThat(organisation.getBrandName()).isEqualTo("Acme");
+	}
+
+	private static final Instant NOW = Instant.parse("2026-10-19T10:00:00Z");
+
+	private static Owner in(Organisation organisation, Role role) {
+		Owner owner = new Owner("google", role.key(), role.key() + "@acme.com", role.key());
+		owner.joinAs(organisation, role, NOW);
+		return owner;
+	}
+
+	@Test
+	void isClosedByItsRoleOwnerTypingItsName() {
+		Organisation organisation = new Organisation("Acme product team");
+		Owner owner = in(organisation, Role.OWNER);
+
+		organisation.close(owner, " Acme product team ", NOW);
+
+		assertThat(organisation.getClosedAt()).isEqualTo(NOW);
+		assertThat(organisation.getClosedBy()).isSameAs(owner);
+	}
+
+	@Test
+	void isClosedByNobodyElse() {
+		Organisation organisation = new Organisation("Acme product team");
+
+		assertThatThrownBy(() -> organisation.close(in(organisation, Role.ADMIN), "Acme product team", NOW))
+				.isInstanceOf(ForbiddenException.class);
+		assertThatThrownBy(() -> organisation.close(in(new Organisation("Other"), Role.OWNER), "Acme product team", NOW))
+				.isInstanceOf(ForbiddenException.class);
+		assertThat(organisation.getClosedAt()).isNull();
+	}
+
+	@Test
+	void needsItsExactNameToClose() {
+		Organisation organisation = new Organisation("Acme product team");
+
+		assertThatThrownBy(() -> organisation.close(in(organisation, Role.OWNER), "acme product team", NOW))
+				.isInstanceOf(ValidationException.class);
+		assertThat(organisation.getClosedAt()).isNull();
+	}
+
+	@Test
+	void closesOnce() {
+		Organisation organisation = new Organisation("Acme product team");
+		Owner owner = in(organisation, Role.OWNER);
+		organisation.close(owner, "Acme product team", NOW);
+
+		assertThatThrownBy(() -> organisation.close(owner, "Acme product team", NOW))
+				.isInstanceOf(ConflictException.class);
 	}
 }

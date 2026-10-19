@@ -55,6 +55,13 @@ public class OrganisationController {
 		service.remove(id);
 	}
 
+	/** Role Owner only; the body repeats the Organisation name as confirmation. */
+	@PostMapping("/close")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void close(@RequestBody OrganisationRequest request) {
+		service.close(request.name());
+	}
+
 	public record OrganisationRequest(String name) {
 	}
 

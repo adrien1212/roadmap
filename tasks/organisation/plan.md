@@ -95,7 +95,7 @@ Tasks live in `tasks/organisation/todo.md`. All are _Assignee: Claude_.
 ### Checkpoint: Complete (all Success Criteria of SPEC-organisation.md)
 
 ### Phase 5: Close the Organisation (added 2026-10-19)
-- [ ] Task 15: Close the Organisation (backend)
+- [x] Task 15: Close the Organisation (backend)
 - [ ] Task 16: Close organisation in Settings
 
 ### Checkpoint: closing

@@ -65,6 +65,17 @@ public class OrganisationService {
 		owners.save(person);
 	}
 
+	/** Role Owner only. Roadmaps Private, Invitations revoked, everyone out; nothing deleted. */
+	public void close(String typedName) {
+		Organisation organisation = currentOrganisation.get();
+		Instant now = Instant.now();
+		organisation.close(currentOwner.get(), typedName, now);
+		organisations.save(organisation);
+		organisations.unpublishRoadmaps(organisation);
+		organisations.revokeInvitations(organisation, now);
+		organisations.removeEveryone(organisation);
+	}
+
 	private Owner person(Long id) {
 		return owners.findByIdAndOrganisation(id, currentOrganisation.get())
 				.orElseThrow(() -> new NotFoundException("Person not found"));

@@ -377,19 +377,19 @@ Roles; remove and leave.
 Invitations revoked, everyone leaves, nothing deleted.
 
 **Acceptance criteria:**
-- [ ] `013-organisation-closed.sql`: `organisation.closed_at`, `closed_by_id`
+- [x] `013-organisation-closed.sql`: `organisation.closed_at`, `closed_by_id`
       (FK owner), both nullable.
-- [ ] `Organisation.close(by, typedName, now)`: not the Role Owner of this
+- [x] `Organisation.close(by, typedName, now)`: not the Role Owner of this
       Organisation → `ForbiddenException`; name differs → `ValidationException`;
       already closed → `ConflictException`.
-- [ ] `POST /api/organisation/close` `{ name }` → 204: every Roadmap
+- [x] `POST /api/organisation/close` `{ name }` → 204: every Roadmap
       unpublished, pending Invitations revoked, every person without an
       Organisation; nothing deleted.
 
 **Verification:**
-- [ ] Unit tests first, then green: `./mvnw test -Dtest=OrganisationTest`
-- [ ] `./mvnw test`
-- [ ] Manual: close; the Public pages and Feeds return 404; rows still in the
+- [x] Unit tests first, then green: `./mvnw test -Dtest=OrganisationTest`
+- [x] `./mvnw test`
+- [ ] Manual (needs a Google sign-in): close; the Public pages and Feeds return 404; rows still in the
       database; everyone lands on Welcome.
 
 **Dependencies:** Task 13
