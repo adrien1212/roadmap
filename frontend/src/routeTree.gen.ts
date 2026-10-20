@@ -19,6 +19,7 @@ import { Route as RPublicIdRouteImport } from './routes/r.$publicId'
 import { Route as AppRoadmapsIndexRouteImport } from './routes/_app/roadmaps.index'
 import { Route as AppRoadmapsRoadmapIdRouteImport } from './routes/_app/roadmaps.$roadmapId'
 import { Route as RPublicIdConfirmRouteImport } from './routes/r.$publicId_.confirm'
+import { Route as RPublicIdEmbedRouteImport } from './routes/r.$publicId_.embed'
 import { Route as RPublicIdUnsubscribeRouteImport } from './routes/r.$publicId_.unsubscribe'
 import { Route as AppRoadmapsRoadmapIdReadersRouteImport } from './routes/_app/roadmaps.$roadmapId_.readers'
 
@@ -71,6 +72,11 @@ const RPublicIdConfirmRoute = RPublicIdConfirmRouteImport.update({
   path: '/r/$publicId/confirm',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RPublicIdEmbedRoute = RPublicIdEmbedRouteImport.update({
+  id: '/r/$publicId_/embed',
+  path: '/r/$publicId/embed',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RPublicIdUnsubscribeRoute = RPublicIdUnsubscribeRouteImport.update({
   id: '/r/$publicId_/unsubscribe',
   path: '/r/$publicId/unsubscribe',
@@ -92,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/r/$publicId': typeof RPublicIdRoute
   '/roadmaps/$roadmapId': typeof AppRoadmapsRoadmapIdRoute
   '/r/$publicId/confirm': typeof RPublicIdConfirmRoute
+  '/r/$publicId/embed': typeof RPublicIdEmbedRoute
   '/r/$publicId/unsubscribe': typeof RPublicIdUnsubscribeRoute
   '/roadmaps/': typeof AppRoadmapsIndexRoute
   '/roadmaps/$roadmapId/readers': typeof AppRoadmapsRoadmapIdReadersRoute
@@ -105,6 +112,7 @@ export interface FileRoutesByTo {
   '/r/$publicId': typeof RPublicIdRoute
   '/roadmaps/$roadmapId': typeof AppRoadmapsRoadmapIdRoute
   '/r/$publicId/confirm': typeof RPublicIdConfirmRoute
+  '/r/$publicId/embed': typeof RPublicIdEmbedRoute
   '/r/$publicId/unsubscribe': typeof RPublicIdUnsubscribeRoute
   '/roadmaps': typeof AppRoadmapsIndexRoute
   '/roadmaps/$roadmapId/readers': typeof AppRoadmapsRoadmapIdReadersRoute
@@ -120,6 +128,7 @@ export interface FileRoutesById {
   '/r/$publicId': typeof RPublicIdRoute
   '/_app/roadmaps/$roadmapId': typeof AppRoadmapsRoadmapIdRoute
   '/r/$publicId_/confirm': typeof RPublicIdConfirmRoute
+  '/r/$publicId_/embed': typeof RPublicIdEmbedRoute
   '/r/$publicId_/unsubscribe': typeof RPublicIdUnsubscribeRoute
   '/_app/roadmaps/': typeof AppRoadmapsIndexRoute
   '/_app/roadmaps/$roadmapId_/readers': typeof AppRoadmapsRoadmapIdReadersRoute
@@ -135,6 +144,7 @@ export interface FileRouteTypes {
     | '/r/$publicId'
     | '/roadmaps/$roadmapId'
     | '/r/$publicId/confirm'
+    | '/r/$publicId/embed'
     | '/r/$publicId/unsubscribe'
     | '/roadmaps/'
     | '/roadmaps/$roadmapId/readers'
@@ -148,6 +158,7 @@ export interface FileRouteTypes {
     | '/r/$publicId'
     | '/roadmaps/$roadmapId'
     | '/r/$publicId/confirm'
+    | '/r/$publicId/embed'
     | '/r/$publicId/unsubscribe'
     | '/roadmaps'
     | '/roadmaps/$roadmapId/readers'
@@ -162,6 +173,7 @@ export interface FileRouteTypes {
     | '/r/$publicId'
     | '/_app/roadmaps/$roadmapId'
     | '/r/$publicId_/confirm'
+    | '/r/$publicId_/embed'
     | '/r/$publicId_/unsubscribe'
     | '/_app/roadmaps/'
     | '/_app/roadmaps/$roadmapId_/readers'
@@ -174,6 +186,7 @@ export interface RootRouteChildren {
   JoinSecretRoute: typeof JoinSecretRoute
   RPublicIdRoute: typeof RPublicIdRoute
   RPublicIdConfirmRoute: typeof RPublicIdConfirmRoute
+  RPublicIdEmbedRoute: typeof RPublicIdEmbedRoute
   RPublicIdUnsubscribeRoute: typeof RPublicIdUnsubscribeRoute
 }
 
@@ -249,6 +262,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RPublicIdConfirmRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/r/$publicId_/embed': {
+      id: '/r/$publicId_/embed'
+      path: '/r/$publicId/embed'
+      fullPath: '/r/$publicId/embed'
+      preLoaderRoute: typeof RPublicIdEmbedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/r/$publicId_/unsubscribe': {
       id: '/r/$publicId_/unsubscribe'
       path: '/r/$publicId/unsubscribe'
@@ -291,6 +311,7 @@ const rootRouteChildren: RootRouteChildren = {
   JoinSecretRoute: JoinSecretRoute,
   RPublicIdRoute: RPublicIdRoute,
   RPublicIdConfirmRoute: RPublicIdConfirmRoute,
+  RPublicIdEmbedRoute: RPublicIdEmbedRoute,
   RPublicIdUnsubscribeRoute: RPublicIdUnsubscribeRoute,
 }
 export const routeTree = rootRouteImport

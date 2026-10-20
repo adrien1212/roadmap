@@ -19,8 +19,8 @@ Owner who authors, and the anonymous Readers who only read.
   Invitations and closing an Organisation are in scope since
   `SPEC-organisation.md`.)
 - Billing / paying Customers.
-- Custom domains, embeds, Reader feedback. (Email subscriptions are in scope
-  since `SPEC-reader-updates.md`.)
+- Custom domains, Reader feedback. (Email subscriptions are in scope
+  since `SPEC-reader-updates.md`; the embed since `SPEC-embed.md`.)
 
 ## Language
 
@@ -271,6 +271,10 @@ exist)
 - Filters by Category (only Categories in use) and by Status; no swimlanes.
 - Internal Items are never sent to the browser (filtered by the backend, not
   the frontend).
+- Embed: `/r/{publicId}/embed` shows only the Items (timeline and list views,
+  year navigation) for an `<iframe>` on the Owner's site, and links to the
+  Public page. Same payload and same 404 as the Public page. The Publish dialog
+  offers "Copy embed code". Details in `SPEC-embed.md`.
 
 ## Tech Stack
 

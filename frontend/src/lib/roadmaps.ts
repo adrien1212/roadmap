@@ -40,3 +40,6 @@ export const unpublishRoadmap = (id: number) => api.post<Roadmap>(`/api/roadmaps
 
 /** Path of the Public page; prefix with the origin for a shareable URL. */
 export const publicPath = (roadmap: Pick<Roadmap, 'publicId'>) => `/r/${roadmap.publicId}`
+
+/** The embed of the Public page: only the Items, for an iframe on the Owner's own site. */
+export const embedPath = (roadmap: Pick<Roadmap, 'publicId'>) => `${publicPath(roadmap)}/embed`
