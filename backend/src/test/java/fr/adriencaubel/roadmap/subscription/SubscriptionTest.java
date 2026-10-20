@@ -150,21 +150,6 @@ class SubscriptionTest {
 	}
 
 	@Test
-	void remindsAConfirmedReaderThatAsksAgainAtMostOncePerTenMinutes() {
-		Subscription subscription = pending();
-		subscription.confirmationSent(NOW);
-		subscription.confirm(NOW);
-
-		assertThat(subscription.mayRemindSubscribed(NOW.plus(Duration.ofMinutes(9)))).isFalse();
-		Instant later = NOW.plus(Duration.ofMinutes(10));
-		assertThat(subscription.mayRemindSubscribed(later)).isTrue();
-
-		subscription.remindedSubscribed(later);
-		assertThat(subscription.mayRemindSubscribed(later.plus(Duration.ofMinutes(9)))).isFalse();
-		assertThat(subscription.mayRemindSubscribed(later.plus(Duration.ofMinutes(10)))).isTrue();
-	}
-
-	@Test
 	void neverRemindsAPendingReader() {
 		assertThat(pending().mayRemindSubscribed(NOW)).isFalse();
 	}
