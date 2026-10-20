@@ -1,6 +1,7 @@
 package fr.adriencaubel.roadmap.subscription;
 
 import fr.adriencaubel.roadmap.common.EmailAddress;
+import fr.adriencaubel.roadmap.item.Item;
 import fr.adriencaubel.roadmap.roadmap.Roadmap;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +22,8 @@ import java.time.Instant;
 import java.util.Base64;
 
 /**
- * A Reader's email address on one Published Roadmap: pending until confirmed from the email.
+ * A Reader's email address on one Published Roadmap (a Roadmap Subscription), or on one Item of it
+ * (an Item Subscription, when `item` is set): pending until confirmed from the email.
  * Unsubscribing deletes it (the address is not kept). The token is the Reader's only key to it.
  */
 @Entity
@@ -39,6 +41,10 @@ public class Subscription {
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private Roadmap roadmap;
+
+	/** Null for a Roadmap Subscription; for an Item Subscription, the one Item it covers (of `roadmap`). */
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Item item;
 
 	@Column(nullable = false)
 	private String email;
@@ -66,6 +72,17 @@ public class Subscription {
 		subscription.token = newToken();
 		subscription.createdAt = now;
 		return subscription;
+	}
+
+	/** "Notify me when this ships": emailed only when this Item becomes Shipped. */
+	public static Subscription pendingForItem(Item item, String email, Instant now) {
+		Subscription subscription = pending(item.getRoadmap(), email, now);
+		subscription.item = item;
+		return subscription;
+	}
+
+	public boolean isForItem() {
+		return item != null;
 	}
 
 	public void confirm(Instant now) {

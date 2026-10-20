@@ -61,13 +61,14 @@ public class ItemController {
 	public record OrderRequest(List<Long> itemIds) {
 	}
 
-	public record ItemResponse(Long id, String title, String description, LocalDate startDate, LocalDate endDate,
-			String status, Long categoryId, boolean internal, int position, Instant shippedAt) {
+	public record ItemResponse(Long id, String title, String description, LocalDate startDate, String startPrecision,
+			LocalDate endDate, String endPrecision, String status, Long categoryId, boolean internal, int position,
+			Instant shippedAt) {
 
 		static ItemResponse of(Item item) {
 			Category category = item.getCategory();
 			return new ItemResponse(item.getId(), item.getTitle(), item.getDescription(), item.getStartDate(),
-					item.getEndDate(), item.getStatus().key(), category == null ? null : category.getId(),
+					item.getStartPrecision().key(), item.getEndDate(), item.getEndPrecision().key(), item.getStatus().key(), category == null ? null : category.getId(),
 					item.isInternal(), item.getPosition(), item.getShippedAt());
 		}
 	}

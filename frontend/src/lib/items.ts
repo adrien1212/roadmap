@@ -2,6 +2,7 @@ import { queryOptions, type QueryClient } from '@tanstack/react-query'
 
 import { api } from '#/lib/api'
 import type { Category } from '#/lib/categories'
+import type { Precision } from '#/lib/dates'
 
 export type ItemStatus = 'planned' | 'in_progress' | 'shipped'
 
@@ -17,9 +18,11 @@ export interface Item {
   id: number
   title: string
   description: string | null
-  /** ISO days; each optional and independent. */
+  /** ISO days, the first day of their period (see the Precisions); each optional and independent. */
   startDate: string | null
+  startPrecision: Precision
   endDate: string | null
+  endPrecision: Precision
   status: ItemStatus
   categoryId: number | null
   internal: boolean
@@ -35,7 +38,9 @@ export const emptyDraft: ItemDraft = {
   title: '',
   description: null,
   startDate: null,
+  startPrecision: 'day',
   endDate: null,
+  endPrecision: 'day',
   status: 'planned',
   categoryId: null,
   internal: false,

@@ -121,7 +121,7 @@ export function ItemList({ items, categories, lanes, onEdit, onDelete, onMove }:
                           item.startDate || item.endDate ? 'text-body' : 'text-muted-foreground',
                         )}
                       >
-                        {formatDates(item.startDate, item.endDate)}
+                        {formatDates(item)}
                       </span>
                       <Button variant="ghost" size="icon-sm" onClick={() => onDelete(item)} aria-label={`Delete ${item.title}`}>
                         <Trash2 aria-hidden />

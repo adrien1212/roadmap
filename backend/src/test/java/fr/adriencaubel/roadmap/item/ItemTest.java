@@ -85,7 +85,7 @@ class ItemTest {
 		assertThat(item.getStartDate()).isNull();
 		assertThat(item.getEndDate()).isEqualTo(LocalDate.of(2026, 5, 1));
 
-		item.schedule(null, null);
+		item.schedule((PlannedDate) null, null);
 		assertThat(item.getStartDate()).isNull();
 		assertThat(item.getEndDate()).isNull();
 	}
@@ -109,6 +109,46 @@ class ItemTest {
 		assertThatThrownBy(() -> item.schedule(LocalDate.of(2026, 3, 2), LocalDate.of(2026, 3, 1)))
 				.isInstanceOf(ValidationException.class);
 		assertThat(item.getStartDate()).isEqualTo(LocalDate.of(2026, 3, 1));
+	}
+
+	@Test
+	void comparesPeriodsWhenDatesAreNotDays() {
+		Item item = Item.append(roadmap, "SSO", null);
+		PlannedDate q3 = PlannedDate.of(LocalDate.of(2026, 7, 1), DatePrecision.QUARTER);
+
+		item.schedule(q3, PlannedDate.of(LocalDate.of(2026, 7, 1), DatePrecision.MONTH));
+		assertThat(item.getEndPrecision()).isEqualTo(DatePrecision.MONTH);
+
+		item.schedule(PlannedDate.of(LocalDate.of(2026, 3, 14), DatePrecision.DAY),
+				PlannedDate.of(LocalDate.of(2026, 3, 1), DatePrecision.MONTH));
+		assertThat(item.getStartDate()).isEqualTo(LocalDate.of(2026, 3, 14));
+
+		assertThatThrownBy(() -> item.schedule(q3, PlannedDate.of(LocalDate.of(2026, 6, 1), DatePrecision.MONTH)))
+				.isInstanceOf(ValidationException.class);
+	}
+
+	@Test
+	void storesTheFirstDayOfThePeriodAndItsPrecision() {
+		Item item = Item.append(roadmap, "SSO", null);
+
+		item.schedule(PlannedDate.of(LocalDate.of(2026, 3, 14), DatePrecision.WEEK),
+				PlannedDate.of(LocalDate.of(2026, 8, 20), DatePrecision.QUARTER));
+
+		assertThat(item.getStartDate()).isEqualTo(LocalDate.of(2026, 3, 9));
+		assertThat(item.getStartPrecision()).isEqualTo(DatePrecision.WEEK);
+		assertThat(item.getEndDate()).isEqualTo(LocalDate.of(2026, 7, 1));
+		assertThat(item.getEndPrecision()).isEqualTo(DatePrecision.QUARTER);
+	}
+
+	@Test
+	void forgetsThePrecisionOfARemovedDate() {
+		Item item = Item.append(roadmap, "SSO", null);
+		item.schedule(PlannedDate.of(LocalDate.of(2026, 3, 14), DatePrecision.MONTH), null);
+
+		item.schedule((PlannedDate) null, null);
+
+		assertThat(item.getStartPrecision()).isEqualTo(DatePrecision.DAY);
+		assertThat(item.getEndPrecision()).isEqualTo(DatePrecision.DAY);
 	}
 
 	@Test

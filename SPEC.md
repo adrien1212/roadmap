@@ -62,9 +62,16 @@ _Avoid_: board, plan, project, timeline
 **Item**:
 One thing on a Roadmap — the unit a Reader sees as a single row. Has a title
 (required), a plain-text description, an optional start date and an optional
-end date (day precision, each independent), a Status,
+end date (each independent, each with its own Precision), a Status,
 at most one Category, an Internal flag, and a manual position.
 _Avoid_: feature, card, arrow, initiative, epic, ticket
+
+**Precision**:
+How exact one date of an Item is: Day, Week, Month or Quarter. A Week, Month
+or Quarter date stands for the whole period: as a start, its first day; as an
+end, its last day. A Week runs Monday to Sunday. Never says anything about
+Status. (`SPEC-fuzzy-dates.md`)
+_Avoid_: granularity, resolution, accuracy, estimate, fuzzy (in the UI)
 
 **Category**:
 An optional single label on an Item (name + colour), shown as a colour chip and
@@ -109,15 +116,28 @@ write anything else.
 _Avoid_: customer, viewer, visitor, end user, subscriber, stakeholder
 
 **Subscription**:
-A Reader's email address on one Published Roadmap. Pending until the Reader
-confirms it from the email they receive, then confirmed. Ends when the Reader
-unsubscribes or the Owner removes it; the address is then deleted.
-(`SPEC-reader-updates.md`)
-_Avoid_: follow, membership, mailing list, newsletter
+A Reader's email address on one Published Roadmap (Roadmap Subscription) or
+on one Item of it (Item Subscription). Pending until the Reader confirms it
+from the email they receive, then confirmed. Ends when the Reader unsubscribes
+or the Owner removes it; the address is then deleted.
+(`SPEC-reader-updates.md`, `SPEC-item-updates.md`)
+_Avoid_: follow, watch, membership, mailing list, newsletter
+
+**Item page**:
+The anonymous page at `/r/{publicId}/items/{itemId}` that shows one
+non-Internal Item of a Published Roadmap. Part of the Public page: same rules,
+same 404. (`SPEC-item-updates.md`)
+_Avoid_: item detail, permalink (in the UI), card, ticket page
+
+**Waiting Readers**:
+The confirmed Item Subscriptions of an Item, as a count shown to the Owner.
+Never shown to Readers.
+_Avoid_: votes, followers, watchers, demand, interest
 
 **Subscribed Reader**:
 A Reader with a confirmed Subscription. Only subscribed Readers are emailed,
-once per Item that becomes Shipped.
+once per Item that becomes Shipped and per Subscription that covers it (a
+Reader with a Roadmap and an Item Subscription gets two emails).
 _Avoid_: subscriber, follower, contact, lead, audience
 
 **SMTP settings**:
@@ -193,8 +213,10 @@ exist)
   sent to the backend once that window ends (client-side delay).
 - Title required, ≤ 140 characters. Description is plain text (line breaks
   kept). Start and end dates are each
-  optional and independent (none, start only, end only, or both); when both
-  are set, end ≥ start.
+  optional and independent (none, start only, end only, or both), each with
+  its own Precision (Day, Week, Month or Quarter); when both are set, the end
+  period does not finish before the start period begins. Details in
+  `SPEC-fuzzy-dates.md`.
 - New Items default to Status Planned, no Category, not Internal, and are
   appended at the end of the manual order.
 - Owner reorders Items by drag and drop, or with the arrow keys on the drag
@@ -217,8 +239,10 @@ exist)
   Invitations, invite, change Role, remove, leave). Details in
   `SPEC-organisation.md`.
 - Per Roadmap, `/roadmaps/{id}/readers` lists confirmed and pending Readers
-  with their dates and the confirmed / pending counts; the Owner
-  can remove a Reader. Details in `SPEC-reader-updates.md`.
+  with their dates, what they follow (the Roadmap or one Item) and the
+  confirmed / pending counts; the Owner can remove a Reader. The Item dialog
+  shows the Item's Waiting Readers. Details in `SPEC-reader-updates.md` and
+  `SPEC-item-updates.md`.
 
 ### Publishing
 - Publish sets `publishedAt = now`; Unpublish sets it to null.
@@ -244,7 +268,8 @@ exist)
   `publishedAt`, the Owner's Brand name (`brandName`, or null), whether Readers
   can subscribe by email (`subscriptionsOpen`), the Categories used by its non-Internal Items (id, name,
   colour), and its non-Internal Items in manual order (id, title,
-  description, start date, end date, status, category id, Shipped date).
+  description, start date and its Precision, end date and its Precision,
+  status, category id, Shipped date).
   Nothing else — no Owner data other than its Brand, no `internal` flag, no
   Internal Items.
 - Recently shipped section between the header and the filters (up to 3 Items
@@ -259,10 +284,16 @@ exist)
   get one email per Item that becomes Shipped, with one-click unsubscribe.
   Confirm and unsubscribe pages at `/r/{publicId}/confirm` and
   `/r/{publicId}/unsubscribe`. Details in `SPEC-reader-updates.md`.
+- Item page `/r/{publicId}/items/{itemId}`, linked from each Item ("Copy
+  link") and from the editor's Item dialog, with its own link preview and a
+  "Notify me when this ships" box (an Item Subscription). Details in
+  `SPEC-item-updates.md`.
 - Timeline view spans one calendar year, by months, opening on the current
   year; the Reader can navigate to previous and next years. Items with both
-  dates are drawn as bars (clipped to the year shown); Items with a single
-  date as a point; Items with no date are not on the timeline.
+  dates are drawn as bars from the start period to the end period (clipped to
+  the year shown); Items with a single Day date as a point, with a single
+  Week, Month or Quarter date as a band over that period; Week, Month and
+  Quarter ends are drawn faded; Items with no date are not on the timeline.
 - The timeline shows a "Today" line in the current year; clicking an Item
   row expands its description. A note below says how many Items have no
   dates or fall outside the year shown, with a link to the List view.
@@ -361,7 +392,7 @@ backend/src/test/java/...   → JUnit tests
 - Never: expose Owner identity or Internal Items on the Public page; infer
   Status from dates; introduce a draft/staging state; email pending Readers,
   or about Internal Items or Private Roadmaps; return the SMTP password from
-  the API; show Subscriptions to Readers.
+  the API; show Subscriptions or Waiting Readers to Readers.
 
 ## Success Criteria
 

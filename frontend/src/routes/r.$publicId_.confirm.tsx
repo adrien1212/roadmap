@@ -39,8 +39,11 @@ function ConfirmPage() {
   }, [confirm])
 
   const title = confirm.isSuccess ? "You're subscribed" : confirm.isError ? 'This link has expired' : 'Confirming…'
+  const itemTitle = confirm.data?.itemTitle
   const body = confirm.isSuccess
-    ? `You'll get an email when an Item of ${page.name} ships. Every email has a link to unsubscribe.`
+    ? itemTitle
+      ? `You'll get an email when ${itemTitle} ships. Every email has a link to unsubscribe.`
+      : `You'll get an email when an Item of ${page.name} ships. Every email has a link to unsubscribe.`
     : confirm.isError
       ? 'Subscribe again from the Roadmap to get a new link.'
       : ''

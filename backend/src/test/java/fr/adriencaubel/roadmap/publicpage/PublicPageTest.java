@@ -72,6 +72,8 @@ class PublicPageTest {
 		assertThat(publicItem.description()).isEqualTo("Line 1\nLine 2");
 		assertThat(publicItem.startDate()).isEqualTo(LocalDate.of(2026, 3, 1));
 		assertThat(publicItem.endDate()).isEqualTo(LocalDate.of(2026, 5, 31));
+		assertThat(publicItem.startPrecision()).isEqualTo("day");
+		assertThat(publicItem.endPrecision()).isEqualTo("day");
 		assertThat(publicItem.status()).isEqualTo("in_progress");
 		assertThat(publicItem.categoryId()).isNull();
 	}
@@ -129,7 +131,8 @@ class PublicPageTest {
 				.containsExactly("name", "publishedAt", "brandName", "subscriptionsOpen", "categories", "items");
 		assertThat(fields(PublicPage.PublicCategory.class)).containsExactly("id", "name", "colour");
 		assertThat(fields(PublicPage.PublicItem.class))
-				.containsExactly("id", "title", "description", "startDate", "endDate", "status", "categoryId", "shippedAt");
+				.containsExactly("id", "title", "description", "startDate", "startPrecision", "endDate", "endPrecision",
+						"status", "categoryId", "shippedAt");
 	}
 
 	private static List<String> fields(Class<? extends Record> type) {

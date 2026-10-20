@@ -38,3 +38,9 @@ databaseChangeLog:
   - include:
       file: changes/013-organisation-closed.sql
       relativeToChangelogFile: true
+  - include:
+      file: changes/014-item-date-precision.sql
+      relativeToChangelogFile: true
+  - include:
+      file: changes/015-item-subscription.sql
+      relativeToChangelogFile: true

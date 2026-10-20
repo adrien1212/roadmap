@@ -22,6 +22,7 @@ import { Route as RPublicIdConfirmRouteImport } from './routes/r.$publicId_.conf
 import { Route as RPublicIdEmbedRouteImport } from './routes/r.$publicId_.embed'
 import { Route as RPublicIdUnsubscribeRouteImport } from './routes/r.$publicId_.unsubscribe'
 import { Route as AppRoadmapsRoadmapIdReadersRouteImport } from './routes/_app/roadmaps.$roadmapId_.readers'
+import { Route as RPublicIdItemsItemIdRouteImport } from './routes/r.$publicId_.items.$itemId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -88,6 +89,11 @@ const AppRoadmapsRoadmapIdReadersRoute =
     path: '/roadmaps/$roadmapId/readers',
     getParentRoute: () => AppRoute,
   } as any)
+const RPublicIdItemsItemIdRoute = RPublicIdItemsItemIdRouteImport.update({
+  id: '/r/$publicId_/items/$itemId',
+  path: '/r/$publicId/items/$itemId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/r/$publicId/unsubscribe': typeof RPublicIdUnsubscribeRoute
   '/roadmaps/': typeof AppRoadmapsIndexRoute
   '/roadmaps/$roadmapId/readers': typeof AppRoadmapsRoadmapIdReadersRoute
+  '/r/$publicId/items/$itemId': typeof RPublicIdItemsItemIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -116,6 +123,7 @@ export interface FileRoutesByTo {
   '/r/$publicId/unsubscribe': typeof RPublicIdUnsubscribeRoute
   '/roadmaps': typeof AppRoadmapsIndexRoute
   '/roadmaps/$roadmapId/readers': typeof AppRoadmapsRoadmapIdReadersRoute
+  '/r/$publicId/items/$itemId': typeof RPublicIdItemsItemIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -132,6 +140,7 @@ export interface FileRoutesById {
   '/r/$publicId_/unsubscribe': typeof RPublicIdUnsubscribeRoute
   '/_app/roadmaps/': typeof AppRoadmapsIndexRoute
   '/_app/roadmaps/$roadmapId_/readers': typeof AppRoadmapsRoadmapIdReadersRoute
+  '/r/$publicId_/items/$itemId': typeof RPublicIdItemsItemIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -148,6 +157,7 @@ export interface FileRouteTypes {
     | '/r/$publicId/unsubscribe'
     | '/roadmaps/'
     | '/roadmaps/$roadmapId/readers'
+    | '/r/$publicId/items/$itemId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -162,6 +172,7 @@ export interface FileRouteTypes {
     | '/r/$publicId/unsubscribe'
     | '/roadmaps'
     | '/roadmaps/$roadmapId/readers'
+    | '/r/$publicId/items/$itemId'
   id:
     | '__root__'
     | '/'
@@ -177,6 +188,7 @@ export interface FileRouteTypes {
     | '/r/$publicId_/unsubscribe'
     | '/_app/roadmaps/'
     | '/_app/roadmaps/$roadmapId_/readers'
+    | '/r/$publicId_/items/$itemId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -188,6 +200,7 @@ export interface RootRouteChildren {
   RPublicIdConfirmRoute: typeof RPublicIdConfirmRoute
   RPublicIdEmbedRoute: typeof RPublicIdEmbedRoute
   RPublicIdUnsubscribeRoute: typeof RPublicIdUnsubscribeRoute
+  RPublicIdItemsItemIdRoute: typeof RPublicIdItemsItemIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -283,6 +296,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRoadmapsRoadmapIdReadersRouteImport
       parentRoute: typeof AppRoute
     }
+    '/r/$publicId_/items/$itemId': {
+      id: '/r/$publicId_/items/$itemId'
+      path: '/r/$publicId/items/$itemId'
+      fullPath: '/r/$publicId/items/$itemId'
+      preLoaderRoute: typeof RPublicIdItemsItemIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -313,16 +333,18 @@ const rootRouteChildren: RootRouteChildren = {
   RPublicIdConfirmRoute: RPublicIdConfirmRoute,
   RPublicIdEmbedRoute: RPublicIdEmbedRoute,
   RPublicIdUnsubscribeRoute: RPublicIdUnsubscribeRoute,
+  RPublicIdItemsItemIdRoute: RPublicIdItemsItemIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 
 import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
+import type { startInstance } from './start.ts'
 declare module '@tanstack/react-start' {
   interface Register {
     ssr: true
     router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
   }
 }

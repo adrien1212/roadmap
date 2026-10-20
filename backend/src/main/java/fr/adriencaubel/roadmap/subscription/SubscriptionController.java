@@ -23,8 +23,8 @@ public class SubscriptionController {
 	@GetMapping
 	public ReadersResponse list(@PathVariable Long roadmapId) {
 		SubscriptionService.ReadersOverview overview = service.overview(roadmapId);
-		return new ReadersResponse(new Counts(overview.confirmed(), overview.pending()),
-				overview.subscriptions().stream().map(SubscriptionResponse::of).toList());
+		return new ReadersResponse(new Counts(overview.confirmed(), overview.pending(), overview.confirmedOnItems()),
+				overview.readers().stream().map(SubscriptionResponse::of).toList());
 	}
 
 	@DeleteMapping("/{subscriptionId}")
@@ -36,14 +36,17 @@ public class SubscriptionController {
 	public record ReadersResponse(Counts counts, List<SubscriptionResponse> subscriptions) {
 	}
 
-	public record Counts(long confirmed, long pending) {
+	/** confirmedOnItems: how many of the confirmed ones wait for one Item rather than follow the Roadmap. */
+	public record Counts(long confirmed, long pending, long confirmedOnItems) {
 	}
 
-	/** No token: it is the Reader's key, not the Owner's. */
-	public record SubscriptionResponse(Long id, String email, String state, Instant createdAt, Instant confirmedAt) {
+	/** No token: it is the Reader's key, not the Owner's. itemId / itemTitle are null for a Roadmap Subscription. */
+	public record SubscriptionResponse(Long id, String email, String state, Instant createdAt, Instant confirmedAt,
+			Long itemId, String itemTitle) {
 
-		static SubscriptionResponse of(Subscription s) {
-			return new SubscriptionResponse(s.getId(), s.getEmail(), s.getState().key(), s.getCreatedAt(), s.getConfirmedAt());
+		static SubscriptionResponse of(SubscriptionService.Reader r) {
+			return new SubscriptionResponse(r.id(), r.email(), r.state().key(), r.createdAt(), r.confirmedAt(), r.itemId(),
+					r.itemTitle());
 		}
 	}
 }

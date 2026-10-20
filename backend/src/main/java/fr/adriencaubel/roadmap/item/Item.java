@@ -44,9 +44,19 @@ public class Item {
 	@Column(columnDefinition = "TEXT")
 	private String description;
 
+	/** The first day of its period (see startPrecision). */
 	private LocalDate startDate;
 
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private DatePrecision startPrecision = DatePrecision.DAY;
+
+	/** The first day of its period too: the period's last day is computed (PlannedDate.last), never stored. */
 	private LocalDate endDate;
+
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private DatePrecision endPrecision = DatePrecision.DAY;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
@@ -90,13 +100,23 @@ public class Item {
 		this.description = description;
 	}
 
-	/** Either date may be null; when both are set, end must not be before start. */
+	/** Two Day dates; either may be null. */
 	public void schedule(LocalDate startDate, LocalDate endDate) {
-		if (startDate != null && endDate != null && endDate.isBefore(startDate)) {
+		schedule(PlannedDate.of(startDate, DatePrecision.DAY), PlannedDate.of(endDate, DatePrecision.DAY));
+	}
+
+	/**
+	 * Either date may be null (no date; its Precision is then Day). When both are set, the end period must not
+	 * finish before the start period begins: start Q3 / end July is fine, start Q3 / end June is not.
+	 */
+	public void schedule(PlannedDate start, PlannedDate end) {
+		if (start != null && end != null && end.last().isBefore(start.first())) {
 			throw new ValidationException("End date must be on or after the start date");
 		}
-		this.startDate = startDate;
-		this.endDate = endDate;
+		this.startDate = start == null ? null : start.first();
+		this.startPrecision = start == null ? DatePrecision.DAY : start.precision();
+		this.endDate = end == null ? null : end.first();
+		this.endPrecision = end == null ? DatePrecision.DAY : end.precision();
 	}
 
 	/** Becoming Shipped records `now` as the Shipped date; staying Shipped keeps it; leaving Shipped clears it. */

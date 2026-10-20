@@ -33,3 +33,8 @@ export function previewDescription(brandName: string | null): string {
     ? `What ${brandName} has shipped, is working on and plans.`
     : 'What has shipped, is in progress and is planned.'
 }
+
+/** The Item page's title and og:title: "Item · Roadmap · Brand", or without the Brand. */
+export function itemPageTitle(itemTitle: string, roadmapName: string, brandName: string | null): string {
+  return `${itemTitle} · ${pageTitle(roadmapName, brandName)}`
+}

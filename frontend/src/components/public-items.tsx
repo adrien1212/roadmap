@@ -1,21 +1,27 @@
-import { ChevronRight } from 'lucide-react'
+import { useState } from 'react'
+import { Check, ChevronRight, Link2 } from 'lucide-react'
 
 import { CategoryChip, CategoryDot, StatusChip } from '#/components/chips'
 import { Button } from '#/components/ui/button'
 import { StatusKey, YearTimeline } from '#/components/year-timeline'
 import type { Category } from '#/lib/categories'
 import { formatDates } from '#/lib/format'
-import type { PublicItem } from '#/lib/public-page'
+import { itemPath, type PublicItem } from '#/lib/public-page'
 import { place } from '#/lib/timeline'
 import { cn } from '#/lib/utils'
 
 /** List view of the Public page and its embed: Items in manual order, with their descriptions. */
 export function PublicItemList({
+  publicId,
   items,
   categoryOf,
+  newTab = false,
 }: {
+  publicId: string
   items: PublicItem[]
   categoryOf: (item: PublicItem) => Category | null
+  /** In the embed, Item pages open outside the host site. */
+  newTab?: boolean
 }) {
   return (
     <ul>
@@ -27,7 +33,11 @@ export function PublicItemList({
             className="grid grid-cols-1 gap-2.5 border-b border-hairline-soft py-5 sm:grid-cols-[minmax(0,1fr)_220px] sm:gap-6"
           >
             <div>
-              <h3 className="mb-1.5 text-base font-semibold">{item.title}</h3>
+              <h3 className="mb-1.5 text-base font-semibold">
+                <a href={itemPath(publicId, item.id)} {...linkTarget(newTab)} className="hover:underline">
+                  {item.title}
+                </a>
+              </h3>
               {item.description && (
                 <p className="max-w-[68ch] text-sm whitespace-pre-line text-body">{item.description}</p>
               )}
@@ -43,8 +53,9 @@ export function PublicItemList({
                   item.startDate || item.endDate ? 'text-body' : 'text-muted-foreground',
                 )}
               >
-                {formatDates(item.startDate, item.endDate)}
+                {formatDates(item)}
               </span>
+              <CopyItemLink publicId={publicId} itemId={item.id} />
             </div>
           </li>
         )
@@ -55,19 +66,24 @@ export function PublicItemList({
 
 /** Timeline view of the Public page and its embed: one year, rows expand to their description. */
 export function PublicTimeline({
+  publicId,
   items,
   year,
   openId,
   onToggle,
   categoryOf,
   onSeeList,
+  newTab = false,
 }: {
+  publicId: string
   items: PublicItem[]
   year: number
   openId: number | null
   onToggle: (id: number) => void
   categoryOf: (item: PublicItem) => Category | null
   onSeeList: () => void
+  /** In the embed, Item pages open outside the host site. */
+  newTab?: boolean
 }) {
   const onYear = items.filter((item) => {
     const kind = place(item, year).kind
@@ -97,10 +113,19 @@ export function PublicTimeline({
                 <StatusChip status={item.status} />
                 {category && <CategoryChip name={category.name} colour={category.colour} />}
                 <span className="text-[13px] font-medium text-muted-foreground tabular-nums">
-                  {formatDates(item.startDate, item.endDate)}
+                  {formatDates(item)}
                 </span>
               </div>
               {item.description || <span className="text-muted-foreground">No description.</span>}
+              <div className="mt-2 flex flex-wrap items-center gap-1">
+                <Button variant="ghost" size="sm" asChild>
+                  <a href={itemPath(publicId, item.id)} {...linkTarget(newTab)}>
+                    Open
+                    <ChevronRight aria-hidden />
+                  </a>
+                </Button>
+                <CopyItemLink publicId={publicId} itemId={item.id} />
+              </div>
             </>
           )
         }}
@@ -124,5 +149,30 @@ export function PublicTimeline({
         </div>
       )}
     </>
+  )
+}
+
+const linkTarget = (newTab: boolean) => (newTab ? { target: '_blank', rel: 'noopener' } : {})
+
+/** Copies the absolute URL of the Item page, the link to send about one Item. */
+export function CopyItemLink({ publicId, itemId }: { publicId: string; itemId: number }) {
+  // Public pages have no toaster, so the button itself says how the copy went.
+  const [outcome, setOutcome] = useState<'copied' | 'failed' | null>(null)
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(window.location.origin + itemPath(publicId, itemId))
+      setOutcome('copied')
+    } catch {
+      setOutcome('failed')
+    }
+    setTimeout(() => setOutcome(null), 1600)
+  }
+
+  return (
+    <Button variant="ghost" size="sm" onClick={copy}>
+      {outcome === 'copied' ? <Check aria-hidden /> : <Link2 aria-hidden />}
+      {outcome === 'copied' ? 'Copied' : outcome === 'failed' ? 'Copy failed' : 'Copy link'}
+    </Button>
   )
 }

@@ -1,5 +1,7 @@
 /** Display helpers shared by the editor and the Public page. Dates are ISO days ("2026-03-01"). */
 
+import { formatDate, type Dated } from '#/lib/dates'
+
 const MONTH_DAY = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
 const MONTH_DAY_YEAR = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
 
@@ -13,14 +15,17 @@ export function formatDay(iso: string, withYear = true): string {
   return (withYear ? MONTH_DAY_YEAR : MONTH_DAY).format(parseDay(iso))
 }
 
-/** "Mar 1 – May 31, 2026", "From Mar 1, 2026", "By May 31, 2026" or "No dates". */
-export function formatDates(startDate: string | null, endDate: string | null): string {
+/**
+ * An Item's dates with their Precision: "Mar 1 – May 31, 2026", "Mar – Q3 2026", "Q4 2026 – Q1 2027",
+ * "From Q3 2026", "By Week of Mar 9, 2026" or "No dates". The year is said once when both share it.
+ */
+export function formatDates({ startDate, startPrecision, endDate, endPrecision }: Dated): string {
   if (startDate && endDate) {
     const sameYear = startDate.slice(0, 4) === endDate.slice(0, 4)
-    return `${formatDay(startDate, !sameYear)} – ${formatDay(endDate)}`
+    return `${formatDate(startDate, startPrecision, !sameYear)} – ${formatDate(endDate, endPrecision)}`
   }
-  if (startDate) return `From ${formatDay(startDate)}`
-  if (endDate) return `By ${formatDay(endDate)}`
+  if (startDate) return `From ${formatDate(startDate, startPrecision)}`
+  if (endDate) return `By ${formatDate(endDate, endPrecision)}`
   return 'No dates'
 }
 

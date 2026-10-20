@@ -24,10 +24,18 @@ public class PublicSubscriptionController {
 		return new Message("Check your inbox. Confirm your email to start getting updates.");
 	}
 
+	/** "Notify me when this ships": the same answer as subscribe, whatever the address. */
+	@PostMapping("/api/public/roadmaps/{publicId}/items/{itemId}/subscriptions")
+	@ResponseStatus(HttpStatus.ACCEPTED)
+	public Message subscribeToItem(@PathVariable String publicId, @PathVariable Long itemId, @RequestBody EmailBody body) {
+		service.subscribeToItem(publicId, itemId, body.email());
+		return new Message("Check your inbox. Confirm your email to hear when this Item ships.");
+	}
+
+	/** itemTitle names the Item of an Item Subscription on the confirm page; null otherwise. */
 	@PostMapping("/api/public/subscriptions/confirm")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void confirm(@RequestBody TokenBody body) {
-		service.confirm(body.token());
+	public Covered confirm(@RequestBody TokenBody body) {
+		return new Covered(service.confirm(body.token()));
 	}
 
 	/**
@@ -35,9 +43,8 @@ public class PublicSubscriptionController {
 	 * (RFC 8058, which posts to the List-Unsubscribe URL) can use the same address.
 	 */
 	@PostMapping("/api/public/subscriptions/unsubscribe")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void unsubscribe(@RequestParam String token) {
-		service.unsubscribe(token);
+	public Covered unsubscribe(@RequestParam String token) {
+		return new Covered(service.unsubscribe(token));
 	}
 
 	public record EmailBody(String email) {
@@ -47,5 +54,9 @@ public class PublicSubscriptionController {
 	}
 
 	public record Message(String detail) {
+	}
+
+	/** What a Subscription covered: an Item's title, or null for the whole Roadmap. */
+	public record Covered(String itemTitle) {
 	}
 }

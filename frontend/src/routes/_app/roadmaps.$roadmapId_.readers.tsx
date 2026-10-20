@@ -49,9 +49,14 @@ function ReadersPage() {
     onError: (e) => toast(e.message),
   })
 
+  const onItems = readers.counts.confirmedOnItems
   const counts = [
-    { label: 'Subscribed', value: readers.counts.confirmed },
-    { label: 'Waiting to confirm', value: readers.counts.pending },
+    {
+      label: 'Subscribed',
+      value: readers.counts.confirmed,
+      split: onItems > 0 ? `${readers.counts.confirmed - onItems} on the Roadmap, ${onItems} on Items` : null,
+    },
+    { label: 'Waiting to confirm', value: readers.counts.pending, split: null },
   ]
 
   return (
@@ -67,15 +72,17 @@ function ReadersPage() {
       <div className="mt-2.5 mb-6">
         <h1 className="font-display text-[28px] leading-tight font-semibold tracking-[-0.5px]">Subscribed Readers</h1>
         <p className="mt-1.5 text-body">
-          Readers who get an email when an Item of this Roadmap becomes Shipped.
+          Readers who get an email when an Item of this Roadmap becomes Shipped, or only when the one Item they
+          asked about does.
         </p>
       </div>
 
       <dl className="mb-8 grid grid-cols-2 gap-3">
-        {counts.map(({ label, value }) => (
+        {counts.map(({ label, value, split }) => (
           <div key={label} className="rounded-lg bg-surface-card p-4">
             <dt className="text-[13px] font-medium text-muted-foreground">{label}</dt>
             <dd className="mt-1 font-display text-[28px] font-semibold tabular-nums">{value}</dd>
+            {split && <dd className="text-[13px] text-muted-foreground tabular-nums">{split}</dd>}
           </div>
         ))}
       </dl>
@@ -87,7 +94,12 @@ function ReadersPage() {
               key={reader.id}
               className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-4 border-b border-hairline-soft px-1 py-3"
             >
-              <span className="truncate font-medium">{reader.email}</span>
+              <span className="flex min-w-0 flex-col">
+                <span className="truncate font-medium">{reader.email}</span>
+                <span className="truncate text-[13px] text-muted-foreground">
+                  For {reader.itemTitle ? <span className="text-body">{reader.itemTitle}</span> : 'the whole Roadmap'}
+                </span>
+              </span>
               <span className="flex items-center gap-3">
                 {reader.state === 'confirmed' ? (
                   <NeutralChip className="bg-[#ecfdf5] text-success-text">Subscribed</NeutralChip>
@@ -117,7 +129,7 @@ function ReadersPage() {
         open={removing !== null}
         onOpenChange={(open) => !open && setRemoving(null)}
         title={`Remove ${removing?.email}?`}
-        body={`${removing?.email} won't get emails about this Roadmap anymore.`}
+        body={`${removing?.email} won't get emails about ${removing?.itemTitle ?? 'this Roadmap'} anymore.`}
         cta="Remove Reader"
         onConfirm={() => removing && remove.mutate(removing)}
       />

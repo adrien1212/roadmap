@@ -91,4 +91,37 @@ class EmailContentTest {
 
 		assertThat(email.text() + email.html()).doesNotContain("@example.com\n").doesNotContain("joe@");
 	}
+
+	@Test
+	void asksTheReaderToConfirmForOneItem() {
+		OutgoingEmail email = EmailContent.itemConfirmation("jane@example.com", "SSO & SCIM", "Product roadmap 2026", "Acme",
+				CONFIRM, UNSUBSCRIBE);
+
+		assertThat(email.subject()).isEqualTo("Confirm your email to hear when SSO & SCIM ships");
+		assertThat(email.text()).contains(CONFIRM).contains(UNSUBSCRIBE).contains("Acme");
+		assertThat(email.html()).contains("href=\"" + CONFIRM + "\"").contains("SSO &amp; SCIM").contains("href=\"" + UNSUBSCRIBE + "\"");
+	}
+
+	@Test
+	void tellsAReaderWaitingForTheItemWhyTheyGetIt() {
+		OutgoingEmail email = EmailContent.shippedForItem("jane@example.com", new EmailContent.ShippedItem("SSO", null, null),
+				"Product roadmap 2026", "Acme", PAGE, UNSUBSCRIBE, ONE_CLICK);
+
+		assertThat(email.subject()).isEqualTo("Shipped: SSO");
+		assertThat(email.text()).contains("you asked to hear when SSO ships").contains("Get every update from Product roadmap 2026")
+				.contains(UNSUBSCRIBE).doesNotContain("you subscribed to");
+		assertThat(email.html()).contains("you asked to hear when SSO ships").contains("href=\"" + UNSUBSCRIBE + "\"");
+		assertThat(email.headers()).containsEntry("List-Unsubscribe", "<" + ONE_CLICK + ">")
+				.containsEntry("List-Unsubscribe-Post", "List-Unsubscribe=One-Click");
+	}
+
+	@Test
+	void escapesTheItemTitleInTheItemEmails() {
+		OutgoingEmail confirmation = EmailContent.itemConfirmation("jane@example.com", "<b>x</b>", "Q3", null, CONFIRM, UNSUBSCRIBE);
+		OutgoingEmail shipped = EmailContent.shippedForItem("jane@example.com", new EmailContent.ShippedItem("<b>x</b>", null, null),
+				"Q3", null, PAGE, UNSUBSCRIBE, ONE_CLICK);
+
+		assertThat(confirmation.html()).doesNotContain("<b>x");
+		assertThat(shipped.html()).doesNotContain("<b>x");
+	}
 }

@@ -43,12 +43,19 @@ class SubscriptionEmails {
 		subscriptions.findById(event.subscriptionId()).ifPresent(subscription -> {
 			Roadmap roadmap = subscription.getRoadmap();
 			String brand = roadmap.getOrganisation().getBrandName();
-			String confirmUrl = publicUrl + "/r/" + roadmap.getPublicId() + "/confirm?token=" + subscription.getToken();
-			send(roadmap, EmailContent.confirmation(subscription.getEmail(), roadmap.getName(), brand, confirmUrl));
+			String pageUrl = publicUrl + "/r/" + roadmap.getPublicId();
+			String confirmUrl = pageUrl + "/confirm?token=" + subscription.getToken();
+			send(roadmap, subscription.isForItem()
+					? EmailContent.itemConfirmation(subscription.getEmail(), subscription.getItem().getTitle(), roadmap.getName(),
+							brand, confirmUrl, pageUrl + "/unsubscribe?token=" + subscription.getToken())
+					: EmailContent.confirmation(subscription.getEmail(), roadmap.getName(), brand, confirmUrl));
 		});
 	}
 
-	/** One email per subscribed Reader; on the first failure the rest are dropped and the Owner is warned. */
+	/**
+	 * One email per confirmed Subscription, of the Roadmap or of this Item (an address on both gets two);
+	 * on the first failure the rest are dropped and the Owner is warned.
+	 */
 	@Async
 	@TransactionalEventListener
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -57,15 +64,20 @@ class SubscriptionEmails {
 			Roadmap roadmap = item.getRoadmap();
 			SmtpSettings settings = smtpSettings.findByOrganisationId(roadmap.getOrganisation().getId()).orElse(null);
 			List<Subscription> recipients = ShippedEmails.recipients(item, settings == null ? null : settings.getState(),
-					subscriptions.findAllByRoadmapAndState(roadmap, SubscriptionState.CONFIRMED));
+					subscriptions.findAllByRoadmapAndItemIsNullAndState(roadmap, SubscriptionState.CONFIRMED),
+					subscriptions.findAllByItemAndState(item, SubscriptionState.CONFIRMED));
 			String brand = roadmap.getOrganisation().getBrandName();
 			String pageUrl = publicUrl + "/r/" + roadmap.getPublicId();
 			EmailContent.ShippedItem shipped = new EmailContent.ShippedItem(item.getTitle(), item.getDescription(),
 					item.getCategory() == null ? null : item.getCategory().getName());
 			for (Subscription subscription : recipients) {
-				OutgoingEmail email = EmailContent.shipped(subscription.getEmail(), shipped, roadmap.getName(), brand, pageUrl,
-						pageUrl + "/unsubscribe?token=" + subscription.getToken(),
-						publicUrl + "/api/public/subscriptions/unsubscribe?token=" + subscription.getToken());
+				String unsubscribeUrl = pageUrl + "/unsubscribe?token=" + subscription.getToken();
+				String oneClickUrl = publicUrl + "/api/public/subscriptions/unsubscribe?token=" + subscription.getToken();
+				OutgoingEmail email = subscription.isForItem()
+						? EmailContent.shippedForItem(subscription.getEmail(), shipped, roadmap.getName(), brand, pageUrl,
+								unsubscribeUrl, oneClickUrl)
+						: EmailContent.shipped(subscription.getEmail(), shipped, roadmap.getName(), brand, pageUrl,
+								unsubscribeUrl, oneClickUrl);
 				if (!send(roadmap, email)) {
 					return;
 				}

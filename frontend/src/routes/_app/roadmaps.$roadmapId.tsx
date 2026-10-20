@@ -23,7 +23,7 @@ import { daysAgo, plural } from '#/lib/format'
 import { itemsQuery, type Item } from '#/lib/items'
 import { publicPath, roadmapQuery } from '#/lib/roadmaps'
 import { smtpSettingsQuery } from '#/lib/smtp'
-import { readersQuery } from '#/lib/subscriptions'
+import { readersQuery, waitingReaders } from '#/lib/subscriptions'
 
 export const Route = createFileRoute('/_app/roadmaps/$roadmapId')({
   params: {
@@ -74,8 +74,11 @@ function EditorPage() {
   // Email state, for the Item dialog hint and the warning; not needed to render the editor.
   const { data: smtp } = useQuery(smtpSettingsQuery)
   const { data: readers } = useQuery({ ...readersQuery(roadmapId), enabled: roadmap.publishedAt !== null })
+  // Roadmap Subscriptions get every Shipped email; Item Subscriptions only their Item's (an address on both gets two).
   const subscribed = readers?.counts.confirmed ?? 0
-  const emailsOnShip = roadmap.publishedAt && smtp?.state === 'connected' ? subscribed : 0
+  const onRoadmap = subscribed - (readers?.counts.confirmedOnItems ?? 0)
+  const waiting = editing?.item ? waitingReaders(readers, editing.item.id) : 0
+  const emailsOnShip = roadmap.publishedAt && smtp?.state === 'connected' ? onRoadmap + waiting : 0
 
   // Items waiting out their Undo window are already gone from the Owner's view.
   const items = allItems.filter((item) => !hidden.has(item.id))
@@ -209,6 +212,8 @@ function EditorPage() {
         onOpenChange={(open) => !open && setEditing(null)}
         onDelete={setConfirmingDelete}
         emailsOnShip={emailsOnShip}
+        waitingReaders={waiting}
+        publicId={roadmap.publishedAt ? roadmap.publicId : null}
       />
 
       <PublishDialog roadmap={roadmap} internalCount={internalCount} open={publishing} onOpenChange={setPublishing} />

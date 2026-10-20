@@ -1,6 +1,7 @@
 package fr.adriencaubel.roadmap.subscription;
 
 import fr.adriencaubel.roadmap.common.ValidationException;
+import fr.adriencaubel.roadmap.item.Item;
 import fr.adriencaubel.roadmap.organisation.Organisation;
 import fr.adriencaubel.roadmap.roadmap.Roadmap;
 import org.junit.jupiter.api.Test;
@@ -115,5 +116,36 @@ class SubscriptionTest {
 		assertThat(subscription.getCreatedAt()).isEqualTo(later);
 		assertThat(subscription.isExpired(later)).isFalse();
 		assertThat(subscription.mayResendConfirmation(later)).isTrue();
+	}
+
+	@Test
+	void coversTheWholeRoadmapByDefault() {
+		Subscription subscription = pending();
+
+		assertThat(subscription.isForItem()).isFalse();
+		assertThat(subscription.getItem()).isNull();
+		assertThat(subscription.getRoadmap()).isSameAs(roadmap);
+	}
+
+	@Test
+	void coversOneItemOfItsRoadmap() {
+		Item item = Item.append(roadmap, "SSO", null);
+
+		Subscription subscription = Subscription.pendingForItem(item, " Jane@Example.com", NOW);
+
+		assertThat(subscription.isForItem()).isTrue();
+		assertThat(subscription.getItem()).isSameAs(item);
+		assertThat(subscription.getRoadmap()).isSameAs(roadmap);
+		assertThat(subscription.getEmail()).isEqualTo("jane@example.com");
+		assertThat(subscription.getState()).isEqualTo(SubscriptionState.PENDING);
+	}
+
+	@Test
+	void expiresAndResendsLikeARoadmapSubscription() {
+		Subscription subscription = Subscription.pendingForItem(Item.append(roadmap, "SSO", null), "jane@example.com", NOW);
+		subscription.confirmationSent(NOW);
+
+		assertThat(subscription.mayResendConfirmation(NOW.plus(Duration.ofMinutes(9)))).isFalse();
+		assertThat(subscription.isExpired(NOW.plus(Duration.ofDays(8)))).isTrue();
 	}
 }

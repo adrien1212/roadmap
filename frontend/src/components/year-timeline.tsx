@@ -2,16 +2,15 @@ import { useEffect, useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 import { Button } from '#/components/ui/button'
-import { formatDates, formatDay } from '#/lib/format'
+import type { Dated } from '#/lib/dates'
+import { formatDates } from '#/lib/format'
 import { STATUS_LABEL, type ItemStatus } from '#/lib/items'
 import { MONTHS, place, todayPosition, type Placement } from '#/lib/timeline'
 import { cn } from '#/lib/utils'
 
-export interface TimelineItem {
+export interface TimelineItem extends Dated {
   id: number
   title: string
-  startDate: string | null
-  endDate: string | null
   status: ItemStatus
 }
 
@@ -24,8 +23,9 @@ export interface TimelineGroup<T extends TimelineItem> {
 
 /**
  * One calendar year by months, shared by the editor and the Public page. Items with both
- * dates are bars (clipped to the year, with cut markers), one date a point; Items outside
- * the year show a marker with their date at the edge. Callers leave undated Items out.
+ * dates are bars (clipped to the year, with cut markers), one Day date a point, one Week,
+ * Month or Quarter date a band; the ends of such periods are faded. Items outside the year
+ * show a marker with their date at the edge. Callers leave undated Items out.
  */
 export function YearTimeline<T extends TimelineItem>({
   year,
@@ -158,7 +158,7 @@ const STRIPES: Record<ItemStatus, string> = {
 }
 
 function Mark({ item, placement, striped }: { item: TimelineItem; placement: Placement; striped: boolean }) {
-  const label = `${item.title}: ${STATUS_LABEL[item.status]}, ${formatDates(item.startDate, item.endDate)}`
+  const label = `${item.title}: ${STATUS_LABEL[item.status]}, ${formatDates(item)}`
   const off = 'absolute top-2 flex items-center gap-0.5 text-xs text-muted-foreground min-[640px]:top-3.5'
 
   switch (placement.kind) {
@@ -172,12 +172,16 @@ function Mark({ item, placement, striped }: { item: TimelineItem; placement: Pla
               'absolute top-1.5 h-5 min-w-2 rounded-full min-[640px]:top-3',
               MARK_STYLE[item.status],
               striped && STRIPES[item.status],
-              placement.cutLeft && 'rounded-l-none',
-              placement.cutRight && 'rounded-r-none',
+              (placement.cutLeft || placement.fuzzyLeft) && 'rounded-l-none',
+              (placement.cutRight || placement.fuzzyRight) && 'rounded-r-none',
               item.status === 'planned' && placement.cutLeft && 'border-l-transparent [border-left-style:solid]',
               item.status === 'planned' && placement.cutRight && 'border-r-transparent [border-right-style:solid]',
             )}
-            style={{ left: `${placement.left}%`, width: `${placement.right - placement.left}%` }}
+            style={{
+              left: `${placement.left}%`,
+              width: `${placement.right - placement.left}%`,
+              maskImage: fadeMask(placement.fuzzyLeft, placement.fuzzyRight),
+            }}
           />
           {placement.cutLeft && (
             <span className={cn(off, 'left-0.5')}>
@@ -207,17 +211,25 @@ function Mark({ item, placement, striped }: { item: TimelineItem; placement: Pla
       return placement.side === 'before' ? (
         <span className={cn(off, 'left-1')} aria-label={label}>
           <ChevronLeft className="size-4" aria-hidden />
-          {formatDay(placement.date)}
+          {placement.label}
         </span>
       ) : (
         <span className={cn(off, 'right-1')} aria-label={label}>
-          {formatDay(placement.date)}
+          {placement.label}
           <ChevronRight className="size-4" aria-hidden />
         </span>
       )
     case 'none':
       return null
   }
+}
+
+/** A Week, Month or Quarter end fades out over its last stretch: the plan is that period, not that day. */
+function fadeMask(left: boolean, right: boolean): string | undefined {
+  if (!left && !right) return undefined
+  const from = left ? 'transparent 0, #000 min(16px, 30%)' : '#000 0'
+  const to = right ? '#000 calc(100% - min(16px, 30%)), transparent 100%' : '#000 100%'
+  return `linear-gradient(to right, ${from}, ${to})`
 }
 
 /** The legend of mark styles shown under a timeline. */
@@ -239,6 +251,13 @@ export function StatusKey() {
       <span className="inline-flex items-center gap-1.5">
         <i className="inline-block size-2.5 rounded-full bg-foreground" />
         Single date
+      </span>
+      <span className="inline-flex items-center gap-1.5">
+        <i
+          className="inline-block h-2 w-[18px] bg-foreground"
+          style={{ maskImage: 'linear-gradient(to right, transparent, #000 40%, #000 60%, transparent)' }}
+        />
+        Week, month or quarter
       </span>
     </div>
   )

@@ -32,7 +32,8 @@ Items and Owner data stay off the Public page, as before.
 | `changelog` | "Recently shipped" on the Public page, plus an RSS feed: proof the Roadmap gets delivered | — |
 | `branding` | Product name and logo on the Public page and in emails; page title and link preview image for social and search | — |
 | `reader-updates` | A Reader subscribes by email to a Roadmap and is emailed when Items ship; one-click unsubscribe | `changelog`, `branding` |
-| `fuzzy-dates` | Plan by month or quarter, or Now / Next / Later, instead of exact days | — |
+| `fuzzy-dates` | Plan by week, month or quarter instead of exact days (`SPEC-fuzzy-dates.md`) | — |
+| `item-updates` | An Item page to link to, and "Notify me when this ships" for one Item (`SPEC-item-updates.md`) | `reader-updates` |
 | `reader-feedback` | A Reader votes "I want this" on an Item, optionally with their email; the Owner sees demand per Item | `reader-updates` |
 | `analytics` | Public page views, most-opened Items and how many Readers are subscribed, without identifying Readers | `reader-updates` |
 | `embed` | The Public page inside the Owner's own site or app | `branding` |
@@ -55,8 +56,11 @@ Dependencies point one way; there are no cycles.
 **Now (added 2026-10-18)** — `organisation`, before `embed`: the next modules
 are aimed at software publishers, who are a team.
 
+**Now (added 2026-10-20)** — `embed` (built), `fuzzy-dates`, `item-updates`:
+publish with confidence, and let sales and support link to one Item.
+
 **Next — "Owners see it works"**
-`reader-feedback`, `analytics`, `fuzzy-dates`, `embed`, `roles`
+`reader-feedback`, `analytics`, `roles`
 
 **Later**
 `import`, `custom-domain`, `billing`

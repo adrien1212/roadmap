@@ -7,7 +7,9 @@ public record ItemRequest(
 		String title,
 		String description,
 		LocalDate startDate,
+		String startPrecision,
 		LocalDate endDate,
+		String endPrecision,
 		String status,
 		Long categoryId,
 		Boolean internal) {

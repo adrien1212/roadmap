@@ -1,5 +1,6 @@
 package fr.adriencaubel.roadmap.subscription;
 
+import fr.adriencaubel.roadmap.item.Item;
 import fr.adriencaubel.roadmap.roadmap.Roadmap;
 import org.springframework.data.repository.Repository;
 
@@ -10,7 +11,10 @@ import java.util.Optional;
 /** Owner reads go through a Roadmap already scoped by Owner; Reader reads go through a token. */
 public interface SubscriptionRepository extends Repository<Subscription, Long> {
 
-	Optional<Subscription> findByRoadmapAndEmail(Roadmap roadmap, String email);
+	/** The Roadmap Subscription of an address (not its Item Subscriptions). */
+	Optional<Subscription> findByRoadmapAndItemIsNullAndEmail(Roadmap roadmap, String email);
+
+	Optional<Subscription> findByItemAndEmail(Item item, String email);
 
 	Optional<Subscription> findById(Long id);
 
@@ -20,7 +24,10 @@ public interface SubscriptionRepository extends Repository<Subscription, Long> {
 
 	List<Subscription> findAllByRoadmapOrderByCreatedAtDesc(Roadmap roadmap);
 
-	List<Subscription> findAllByRoadmapAndState(Roadmap roadmap, SubscriptionState state);
+	/** Roadmap Subscriptions only: Readers waiting for one Item never get the others' emails. */
+	List<Subscription> findAllByRoadmapAndItemIsNullAndState(Roadmap roadmap, SubscriptionState state);
+
+	List<Subscription> findAllByItemAndState(Item item, SubscriptionState state);
 
 	List<Subscription> findAllByStateAndCreatedAtBefore(SubscriptionState state, Instant before);
 

@@ -142,9 +142,10 @@ function PublicPageView() {
           </Button>
         </div>
       ) : view === 'list' ? (
-        <PublicItemList items={items} categoryOf={categoryOf} />
+        <PublicItemList publicId={publicId} items={items} categoryOf={categoryOf} />
       ) : (
         <PublicTimeline
+          publicId={publicId}
           items={items}
           year={year}
           openId={openId}

@@ -78,9 +78,11 @@ function EmbedView() {
       {page.items.length === 0 ? (
         <p className="py-10 text-center text-sm text-muted-foreground">Nothing on this Roadmap yet.</p>
       ) : view === 'list' ? (
-        <PublicItemList items={page.items} categoryOf={categoryOf} />
+        <PublicItemList publicId={publicId} newTab items={page.items} categoryOf={categoryOf} />
       ) : (
         <PublicTimeline
+          publicId={publicId}
+          newTab
           items={page.items}
           year={year}
           openId={openId}

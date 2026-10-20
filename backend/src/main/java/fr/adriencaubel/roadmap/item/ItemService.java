@@ -41,7 +41,7 @@ public class ItemService {
 		Roadmap roadmap = roadmaps.get(roadmapId);
 		Item item = Item.append(roadmap, request.title(), items.findLastPosition(roadmap));
 		item.describe(request.description());
-		item.schedule(request.startDate(), request.endDate());
+		item.schedule(start(request), end(request));
 		if (request.status() != null) {
 			item.changeStatus(ItemStatus.fromKey(request.status()), Instant.now());
 		}
@@ -60,7 +60,7 @@ public class ItemService {
 		ItemStatus before = item.getStatus();
 		item.retitle(request.title());
 		item.describe(request.description());
-		item.schedule(request.startDate(), request.endDate());
+		item.schedule(start(request), end(request));
 		item.changeStatus(ItemStatus.fromKey(request.status()), Instant.now());
 		item.categorize(category(request.categoryId()));
 		item.markInternal(Boolean.TRUE.equals(request.internal()));
@@ -81,6 +81,14 @@ public class ItemService {
 
 	public void delete(Long roadmapId, Long itemId) {
 		items.delete(get(roadmapId, itemId));
+	}
+
+	private static PlannedDate start(ItemRequest request) {
+		return PlannedDate.of(request.startDate(), DatePrecision.fromKey(request.startPrecision()));
+	}
+
+	private static PlannedDate end(ItemRequest request) {
+		return PlannedDate.of(request.endDate(), DatePrecision.fromKey(request.endPrecision()));
 	}
 
 	/** Only the current Organisation's Categories; an unknown or foreign id is the same 400. */

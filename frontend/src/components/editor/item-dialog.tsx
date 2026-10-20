@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Mail, Trash2 } from 'lucide-react'
+import { BellRing, Mail, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { FieldError } from '#/components/field-error'
+import { CopyItemLink } from '#/components/public-items'
+import { PlannedDateField } from '#/components/editor/planned-date-field'
 import { Button } from '#/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '#/components/ui/dialog'
 import { Label } from '#/components/ui/label'
@@ -21,6 +23,7 @@ import {
   type Item,
   type ItemDraft,
 } from '#/lib/items'
+import { endsBeforeStart } from '#/lib/dates'
 import { formatInstant } from '#/lib/format'
 import { cn } from '#/lib/utils'
 
@@ -38,6 +41,8 @@ export function ItemDialog({
   onOpenChange,
   onDelete,
   emailsOnShip,
+  waitingReaders,
+  publicId,
 }: {
   roadmapId: number
   item: Item | null
@@ -47,6 +52,10 @@ export function ItemDialog({
   onDelete: (item: Item) => void
   /** How many subscribed Readers an Item becoming Shipped would email right now (0 when it wouldn't). */
   emailsOnShip: number
+  /** Readers with a confirmed Item Subscription to this Item. */
+  waitingReaders: number
+  /** The Roadmap's publicId when it is Published (Item pages resolve), null when Private. */
+  publicId: string | null
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -62,6 +71,8 @@ export function ItemDialog({
             onClose={() => onOpenChange(false)}
             onDelete={onDelete}
             emailsOnShip={emailsOnShip}
+            waitingReaders={waitingReaders}
+            publicId={publicId}
           />
         )}
       </DialogContent>
@@ -76,6 +87,8 @@ function ItemForm({
   onClose,
   onDelete,
   emailsOnShip,
+  waitingReaders,
+  publicId,
 }: {
   roadmapId: number
   item: Item | null
@@ -83,6 +96,8 @@ function ItemForm({
   onClose: () => void
   onDelete: (item: Item) => void
   emailsOnShip: number
+  waitingReaders: number
+  publicId: string | null
 }) {
   const queryClient = useQueryClient()
   const [draft, setDraft] = useState<ItemDraft>(item ? toDraft(item) : emptyDraft)
@@ -107,7 +122,7 @@ function ItemForm({
       document.getElementById('f-title')?.focus()
       return
     }
-    if (draft.startDate && draft.endDate && draft.endDate < draft.startDate) {
+    if (endsBeforeStart(draft)) {
       setProblem({ field: 'end', message: 'The end date is before the start date. Move one of them.' })
       document.getElementById('f-end')?.focus()
       return
@@ -184,6 +199,14 @@ function ItemForm({
           ) : (
             <p className={hint}>Set by hand. It never changes when a date passes.</p>
           )}
+          {waitingReaders > 0 && (
+            <p className="m-0 flex items-center gap-1.5 text-[13px] text-body">
+              <BellRing className="size-4 shrink-0" aria-hidden />
+              {waitingReaders === 1
+                ? '1 Reader is waiting for this Item.'
+                : `${waitingReaders} Readers are waiting for this Item.`}
+            </p>
+          )}
           {item?.shippedAt && draft.status === 'shipped' && (
             <p className="m-0 text-[13px] font-medium text-success-text">Shipped {formatInstant(item.shippedAt)}</p>
           )}
@@ -191,27 +214,22 @@ function ItemForm({
 
         <div>
           <div className="grid grid-cols-2 gap-3">
-            {(['startDate', 'endDate'] as const).map((key) => {
-              const id = key === 'startDate' ? 'f-start' : 'f-end'
-              const invalid = key === 'endDate' && problem?.field === 'end'
-              return (
-                <div key={key} className="flex min-w-0 flex-col gap-1.5">
-                  <Label htmlFor={id} className={label}>
-                    {key === 'startDate' ? 'Start date' : 'End date'}{' '}
-                    <span className="font-normal text-muted-foreground">(optional)</span>
-                  </Label>
-                  <Input
-                    id={id}
-                    type="date"
-                    value={draft[key] ?? ''}
-                    onChange={(e) => set(key, e.target.value || null)}
-                    aria-invalid={invalid || undefined}
-                    aria-describedby={invalid ? 'e-end' : undefined}
-                    className="pr-2 tabular-nums"
-                  />
-                </div>
-              )
-            })}
+            <PlannedDateField
+              id="f-start"
+              label="Start date"
+              value={draft.startDate}
+              precision={draft.startPrecision}
+              onChange={(startDate, startPrecision) => setDraft((d) => ({ ...d, startDate, startPrecision }))}
+            />
+            <PlannedDateField
+              id="f-end"
+              label="End date"
+              value={draft.endDate}
+              precision={draft.endPrecision}
+              onChange={(endDate, endPrecision) => setDraft((d) => ({ ...d, endDate, endPrecision }))}
+              invalid={problem?.field === 'end'}
+              describedBy={problem?.field === 'end' ? 'e-end' : undefined}
+            />
           </div>
           <div className="mt-2">
             {problem?.field === 'end' ? (
@@ -260,6 +278,8 @@ function ItemForm({
             <Trash2 aria-hidden />
           </Button>
         )}
+        {/* The saved Item, not the draft: an Internal Item's page is a 404 until it is saved as not Internal. */}
+        {item && !item.internal && publicId && <CopyItemLink publicId={publicId} itemId={item.id} />}
         <span className="flex-1" />
         <Button variant="secondary" onClick={onClose}>
           Cancel
@@ -272,6 +292,7 @@ function ItemForm({
   )
 }
 
-function toDraft({ title, description, startDate, endDate, status, categoryId, internal }: Item): ItemDraft {
-  return { title, description, startDate, endDate, status, categoryId, internal }
+function toDraft(item: Item): ItemDraft {
+  const { title, description, startDate, startPrecision, endDate, endPrecision, status, categoryId, internal } = item
+  return { title, description, startDate, startPrecision, endDate, endPrecision, status, categoryId, internal }
 }

@@ -42,8 +42,9 @@ function UnsubscribePage() {
   }, [leave])
 
   const title = leave.isSuccess ? "You're unsubscribed" : leave.isError ? 'This link has expired' : 'Unsubscribing…'
+  const itemTitle = leave.data?.itemTitle
   const body = leave.isSuccess
-    ? `You won't get emails about ${page.name} anymore.`
+    ? `You won't get emails about ${itemTitle ?? page.name} anymore.`
     : leave.isError
       ? "You're probably already unsubscribed."
       : ''

@@ -94,10 +94,35 @@ export function ReaderUpdates({
 }
 
 function SubscribeForm({ publicId, brandName }: { publicId: string; brandName: string | null }) {
+  return (
+    <EmailForm
+      heading="Get an email when something ships"
+      cta="Subscribe"
+      hint={`One email per shipped Item. ${brandName ?? 'The owner of this Roadmap'} receives your email address. Unsubscribe in one click.`}
+      done="Check your inbox. Confirm your email to start getting updates."
+      send={(email) => subscribe(publicId, email)}
+    />
+  )
+}
+
+/** An email field and a button that asks for a Subscription; the answer never says whether the address was known. */
+export function EmailForm({
+  heading,
+  cta,
+  hint,
+  done,
+  send: sendEmail,
+}: {
+  heading: string
+  cta: string
+  hint: string
+  done: string
+  send: (email: string) => Promise<unknown>
+}) {
   const [email, setEmail] = useState('')
   const [error, setError] = useState<string | null>(null)
   const send = useMutation({
-    mutationFn: () => subscribe(publicId, email),
+    mutationFn: () => sendEmail(email),
     onSuccess: () => setError(null),
     onError: (e) => setError(e.message),
   })
@@ -106,11 +131,11 @@ function SubscribeForm({ publicId, brandName }: { publicId: string; brandName: s
     <>
       <h2 id="reader-updates" className="flex items-center gap-2 text-base font-semibold">
         <Mail className="size-4" aria-hidden />
-        Get an email when something ships
+        {heading}
       </h2>
       {send.isSuccess ? (
         <p role="status" className="m-0 text-sm text-body">
-          Check your inbox. Confirm your email to start getting updates.
+          {done}
         </p>
       ) : (
         <>
@@ -136,13 +161,12 @@ function SubscribeForm({ publicId, brandName }: { publicId: string; brandName: s
               aria-describedby={error ? 'sub-err' : 'sub-hint'}
             />
             <Button type="submit" disabled={send.isPending}>
-              Subscribe
+              {cta}
             </Button>
           </form>
           {error && <FieldError id="sub-err">{error}</FieldError>}
           <p id="sub-hint" className="m-0 text-[13px] text-muted-foreground">
-            One email per shipped Item. {brandName ?? 'The owner of this Roadmap'} receives your email address.
-            Unsubscribe in one click.
+            {hint}
           </p>
         </>
       )}
