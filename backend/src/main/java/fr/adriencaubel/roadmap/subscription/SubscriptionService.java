@@ -81,31 +81,42 @@ public class SubscriptionService {
 			subscription.confirmationSent(now);
 			events.publishEvent(new ConfirmationRequested(subscription.getId()));
 		}
+		// Already confirmed: the page still says "Check your inbox"; only the inbox learns it is subscribed.
+		if (subscription.mayRemindSubscribed(now)) {
+			subscription.remindedSubscribed(now);
+			events.publishEvent(new AlreadySubscribed(subscription.getId()));
+		}
 	}
 
-	/** An unknown token and an expired one look the same to the Reader. Returns the Item's title, if any. */
-	public String confirm(String token) {
+	/** An unknown token and an expired one look the same to the Reader. Returns the Item it covers, if any. */
+	public Covered confirm(String token) {
 		Instant now = Instant.now();
 		Subscription subscription = subscriptions.findByToken(token == null ? "" : token)
 				.filter(s -> !s.isExpired(now))
 				.orElseThrow(() -> new NotFoundException("This link has expired"));
 		subscription.confirm(now);
-		return visibleItemTitle(subscription);
+		return Covered.of(subscription);
 	}
 
-	/** Ends the Subscription: the address is deleted. Returns the Item's title, if any. */
-	public String unsubscribe(String token) {
+	/** Ends the Subscription: the address is deleted. Returns the Item it covered, if any. */
+	public Covered unsubscribe(String token) {
 		Subscription subscription = subscriptions.findByToken(token == null ? "" : token)
 				.orElseThrow(() -> new NotFoundException("This link has expired"));
-		String itemTitle = visibleItemTitle(subscription);
+		Covered covered = Covered.of(subscription);
 		subscriptions.delete(subscription);
-		return itemTitle;
+		return covered;
 	}
 
-	/** For the Reader's pages: null for a Roadmap Subscription, and for an Item that is now Internal. */
-	private static String visibleItemTitle(Subscription subscription) {
-		Item item = subscription.getItem();
-		return item == null || item.isInternal() ? null : item.getTitle();
+	/**
+	 * What a Subscription covers, for the Reader holding its token: the Item, or nulls for the whole Roadmap and
+	 * for an Item that is now Internal (never named to Readers).
+	 */
+	public record Covered(Long itemId, String itemTitle) {
+
+		static Covered of(Subscription subscription) {
+			Item item = subscription.getItem();
+			return item == null || item.isInternal() ? new Covered(null, null) : new Covered(item.getId(), item.getTitle());
+		}
 	}
 
 	/**

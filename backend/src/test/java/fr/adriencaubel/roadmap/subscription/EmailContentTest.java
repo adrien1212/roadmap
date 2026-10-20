@@ -124,4 +124,25 @@ class EmailContentTest {
 		assertThat(confirmation.html()).doesNotContain("<b>x");
 		assertThat(shipped.html()).doesNotContain("<b>x");
 	}
+
+	@Test
+	void tellsOnlyTheInboxThatTheAddressIsAlreadySubscribed() {
+		OutgoingEmail email = EmailContent.alreadySubscribed("jane@example.com", null, "Product roadmap 2026", "Acme", PAGE,
+				UNSUBSCRIBE, ONE_CLICK);
+
+		assertThat(email.to()).isEqualTo("jane@example.com");
+		assertThat(email.subject()).isEqualTo("You're already subscribed to Product roadmap 2026");
+		assertThat(email.text()).contains(PAGE).contains(UNSUBSCRIBE);
+		assertThat(email.html()).contains("href=\"" + UNSUBSCRIBE + "\"");
+		assertThat(email.headers()).containsEntry("List-Unsubscribe", "<" + ONE_CLICK + ">");
+	}
+
+	@Test
+	void namesTheItemWhenTheAddressAlreadyWaitsForIt() {
+		OutgoingEmail email = EmailContent.alreadySubscribed("jane@example.com", "SSO & SCIM", "Product roadmap 2026", "Acme",
+				PAGE, UNSUBSCRIBE, ONE_CLICK);
+
+		assertThat(email.subject()).isEqualTo("You're already getting an email when SSO & SCIM ships");
+		assertThat(email.html()).contains("SSO &amp; SCIM").doesNotContain("SSO & SCIM ships</");
+	}
 }

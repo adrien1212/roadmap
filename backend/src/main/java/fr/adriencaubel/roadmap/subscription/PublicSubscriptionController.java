@@ -32,10 +32,10 @@ public class PublicSubscriptionController {
 		return new Message("Check your inbox. Confirm your email to hear when this Item ships.");
 	}
 
-	/** itemTitle names the Item of an Item Subscription on the confirm page; null otherwise. */
+	/** Names the Item of an Item Subscription on the confirm page (and lets the browser remember it); nulls otherwise. */
 	@PostMapping("/api/public/subscriptions/confirm")
-	public Covered confirm(@RequestBody TokenBody body) {
-		return new Covered(service.confirm(body.token()));
+	public SubscriptionService.Covered confirm(@RequestBody TokenBody body) {
+		return service.confirm(body.token());
 	}
 
 	/**
@@ -43,8 +43,8 @@ public class PublicSubscriptionController {
 	 * (RFC 8058, which posts to the List-Unsubscribe URL) can use the same address.
 	 */
 	@PostMapping("/api/public/subscriptions/unsubscribe")
-	public Covered unsubscribe(@RequestParam String token) {
-		return new Covered(service.unsubscribe(token));
+	public SubscriptionService.Covered unsubscribe(@RequestParam String token) {
+		return service.unsubscribe(token);
 	}
 
 	public record EmailBody(String email) {
@@ -54,9 +54,5 @@ public class PublicSubscriptionController {
 	}
 
 	public record Message(String detail) {
-	}
-
-	/** What a Subscription covered: an Item's title, or null for the whole Roadmap. */
-	public record Covered(String itemTitle) {
 	}
 }

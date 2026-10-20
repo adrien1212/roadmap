@@ -6,6 +6,7 @@ import { BrandMark } from '#/components/brand-mark'
 import { NotFound } from '#/components/not-found'
 import { Button } from '#/components/ui/button'
 import { ApiError } from '#/lib/api'
+import { forgetFollowing } from '#/lib/following'
 import { publicPageQuery, unsubscribe } from '#/lib/public-page'
 
 /**
@@ -32,7 +33,10 @@ function UnsubscribePage() {
   const { publicId } = Route.useParams()
   const { token } = Route.useSearch()
   const { data: page } = useSuspenseQuery(publicPageQuery(publicId))
-  const leave = useMutation({ mutationFn: () => unsubscribe(token ?? '') })
+  const leave = useMutation({
+    mutationFn: () => unsubscribe(token ?? ''),
+    onSuccess: (covered) => forgetFollowing(publicId, covered.itemId),
+  })
   const started = useRef(false)
 
   useEffect(() => {

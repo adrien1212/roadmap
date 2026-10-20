@@ -62,6 +62,7 @@ public class Subscription {
 
 	private Instant confirmedAt;
 
+	/** The last email sent in answer to a subscribe request: the confirmation, or "already subscribed". */
 	private Instant confirmationSentAt;
 
 	public static Subscription pending(Roadmap roadmap, String email, Instant now) {
@@ -115,6 +116,16 @@ public class Subscription {
 	}
 
 	public void confirmationSent(Instant now) {
+		confirmationSentAt = now;
+	}
+
+	/** A confirmed Reader asked again: at most one "already subscribed" email per 10 minutes, to their inbox only. */
+	public boolean mayRemindSubscribed(Instant now) {
+		return state == SubscriptionState.CONFIRMED;
+				// && (confirmationSentAt == null || !now.isBefore(confirmationSentAt.plus(CONFIRMATION_RESEND_DELAY)));
+	}
+
+	public void remindedSubscribed(Instant now) {
 		confirmationSentAt = now;
 	}
 

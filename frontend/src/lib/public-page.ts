@@ -50,8 +50,9 @@ export const subscribeToItem = (publicId: string, itemId: number, email: string)
     { email },
   )
 
-/** What a Subscription covers: the title of its Item, or null for the whole Roadmap. */
+/** What a Subscription covers: its Item, or nulls for the whole Roadmap. */
 export interface Covered {
+  itemId: number | null
   itemTitle: string | null
 }
 

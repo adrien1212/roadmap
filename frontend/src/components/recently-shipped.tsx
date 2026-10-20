@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import { Mail, Rss } from 'lucide-react'
+import { Check, Mail, Rss } from 'lucide-react'
 
 import { CategoryChip, StatusChip } from '#/components/chips'
 import { FieldError } from '#/components/field-error'
@@ -8,6 +8,7 @@ import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import type { Category } from '#/lib/categories'
 import { formatInstant } from '#/lib/format'
+import { useFollowing } from '#/lib/following'
 import { feedPath, subscribe, type PublicItem } from '#/lib/public-page'
 
 const RECENTLY_SHIPPED = 3
@@ -94,8 +95,10 @@ export function ReaderUpdates({
 }
 
 function SubscribeForm({ publicId, brandName }: { publicId: string; brandName: string | null }) {
+  const following = useFollowing(publicId, null)
   return (
     <EmailForm
+      following={following ? "You're subscribed to this Roadmap (on this browser)." : null}
       heading="Get an email when something ships"
       cta="Subscribe"
       hint={`One email per shipped Item. ${brandName ?? 'The owner of this Roadmap'} receives your email address. Unsubscribe in one click.`}
@@ -112,14 +115,18 @@ export function EmailForm({
   hint,
   done,
   send: sendEmail,
+  following = null,
 }: {
   heading: string
   cta: string
   hint: string
   done: string
   send: (email: string) => Promise<unknown>
+  /** Said instead of the form when this browser confirmed this Subscription; never decided from the address. */
+  following?: string | null
 }) {
   const [email, setEmail] = useState('')
+  const [another, setAnother] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const send = useMutation({
     mutationFn: () => sendEmail(email),
@@ -136,6 +143,14 @@ export function EmailForm({
       {send.isSuccess ? (
         <p role="status" className="m-0 text-sm text-body">
           {done}
+        </p>
+      ) : following && !another ? (
+        <p className="m-0 flex flex-wrap items-center gap-x-2 text-sm text-body">
+          <Check className="size-4 shrink-0 text-success-text" aria-hidden />
+          {following}
+          <Button variant="link" size="sm" className="h-auto px-0" onClick={() => setAnother(true)}>
+            Use another email
+          </Button>
         </p>
       ) : (
         <>

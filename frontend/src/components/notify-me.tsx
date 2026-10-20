@@ -1,4 +1,5 @@
 import { EmailForm } from '#/components/recently-shipped'
+import { useFollowing } from '#/lib/following'
 import { publicPath } from '#/lib/roadmaps'
 import { subscribeToItem } from '#/lib/public-page'
 
@@ -17,6 +18,7 @@ export function NotifyMe({
   roadmapName: string
   brandName: string | null
 }) {
+  const following = useFollowing(publicId, itemId)
   return (
     <aside aria-labelledby="reader-updates" className="flex flex-col gap-3 rounded-lg bg-surface-soft p-5">
       <EmailForm
@@ -25,6 +27,7 @@ export function NotifyMe({
         hint={`An email when this Item ships, from ${brandName ?? 'the owner of this Roadmap'}. They receive your email address. Unsubscribe in one click.`}
         done="Check your inbox. Confirm your email to hear when this Item ships."
         send={(email) => subscribeToItem(publicId, itemId, email)}
+        following={following ? "You're getting an email when this Item ships (on this browser)." : null}
       />
       <a
         href={publicPath({ publicId })}

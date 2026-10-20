@@ -52,6 +52,23 @@ class SubscriptionEmails {
 		});
 	}
 
+	@Async
+	@TransactionalEventListener
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public void onAlreadySubscribed(AlreadySubscribed event) {
+		subscriptions.findById(event.subscriptionId()).ifPresent(subscription -> {
+			Roadmap roadmap = subscription.getRoadmap();
+			String pageUrl = publicUrl + "/r/" + roadmap.getPublicId();
+			// An Item now Internal is never named to a Reader: the email then speaks of the Roadmap.
+			String itemTitle = subscription.isForItem() && !subscription.getItem().isInternal()
+					? subscription.getItem().getTitle() : null;
+			send(roadmap, EmailContent.alreadySubscribed(subscription.getEmail(), itemTitle, roadmap.getName(),
+					roadmap.getOrganisation().getBrandName(), pageUrl,
+					pageUrl + "/unsubscribe?token=" + subscription.getToken(),
+					publicUrl + "/api/public/subscriptions/unsubscribe?token=" + subscription.getToken()));
+		});
+	}
+
 	/**
 	 * One email per confirmed Subscription, of the Roadmap or of this Item (an address on both gets two);
 	 * on the first failure the rest are dropped and the Owner is warned.

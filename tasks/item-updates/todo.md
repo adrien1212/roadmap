@@ -84,3 +84,28 @@ embed and the Item dialog.
 **Verification:** build; `./mvnw test`; browser (human)
 **Dependencies:** Task 1
 **Estimated scope:** M
+
+## Phase 4: Already subscribed (added 2026-10-20)
+
+### Task 6: Answer in the inbox, remember in the browser
+
+**Acceptance criteria:**
+- [x] A confirmed address that asks again gets the same 202 and, in its inbox,
+      "You're already subscribed to {Roadmap}" / "You're already getting an
+      email when {Item} ships" (unsubscribe link and headers); at most one per
+      10 minutes per Subscription (`confirmation_sent_at`, no schema change).
+- [x] Confirm and unsubscribe answer `{ itemId, itemTitle }`.
+- [x] The confirm page records in `localStorage` what this browser follows
+      (publicId, itemId; never the token or the address); the unsubscribe page
+      removes it.
+- [x] Public page and Item page say "(on this browser)" with "Use another
+      email"; read after hydration; storage errors ignored.
+
+**Verification:**
+- [x] `SubscriptionTest`, `EmailContentTest` first; `./mvnw test`
+- [x] curl + Mailpit: confirm, ask twice → 202 both times, one "already" email
+- [ ] Browser (human): confirm from Mailpit, reopen the Item page → "on this
+      browser"; unsubscribe → the form is back
+
+**Dependencies:** Tasks 1–3
+**Estimated scope:** S

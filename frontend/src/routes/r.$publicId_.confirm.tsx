@@ -6,6 +6,7 @@ import { BrandMark } from '#/components/brand-mark'
 import { NotFound } from '#/components/not-found'
 import { Button } from '#/components/ui/button'
 import { ApiError } from '#/lib/api'
+import { rememberFollowing } from '#/lib/following'
 import { confirmSubscription, publicPageQuery } from '#/lib/public-page'
 
 /** Opened from the confirmation email. Confirms in the browser, so a link preview that only fetches the page does not. */
@@ -29,7 +30,11 @@ function ConfirmPage() {
   const { publicId } = Route.useParams()
   const { token } = Route.useSearch()
   const { data: page } = useSuspenseQuery(publicPageQuery(publicId))
-  const confirm = useMutation({ mutationFn: () => confirmSubscription(token ?? '') })
+  const confirm = useMutation({
+    mutationFn: () => confirmSubscription(token ?? ''),
+    // This browser now knows what it follows, so its pages can say so (and only its pages).
+    onSuccess: (covered) => rememberFollowing(publicId, covered.itemId),
+  })
   const started = useRef(false)
 
   useEffect(() => {

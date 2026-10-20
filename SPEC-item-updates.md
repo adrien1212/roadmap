@@ -118,11 +118,43 @@ UI copy for a Reader: "Notify me when this ships", never "follow" or "watch".
   emails about {Item title} anymore." Unsubscribing deletes the address.
 - So the confirm and unsubscribe pages can name the Item, `POST
   /api/public/subscriptions/confirm` and `…/unsubscribe` answer 200 with
-  `{ "itemTitle" }` (null for a Roadmap Subscription, or when the Item is now
-  Internal) instead of 204.
+  `{ "itemId", "itemTitle" }` (both null for a Roadmap Subscription, or when
+  the Item is now Internal) instead of 204.
 - Unsubscribing from an Item Subscription leaves the same address's Roadmap
   Subscription (if any) untouched, and the other way round: each has its own
   token.
+
+### Already subscribed (added 2026-10-20)
+Applies to both kinds of Subscription. A Reader must never learn from the page
+whether an address is subscribed: anyone can type anyone's address, and an
+Item Subscription says what that person is waiting for.
+- **The page never changes with the address.** Subscribe and Notify me keep
+  the same answer (202 "Check your inbox"), the same wording and the same
+  timing (emails are sent after the commit, in the background), whether the
+  address is new, pending or confirmed.
+- **The inbox answers instead.** When a confirmed address asks again, the
+  backend emails that address: "You're already getting an email when {Item}
+  ships" (Item Subscription) or "You're already subscribed to {Roadmap}"
+  (Roadmap Subscription), with "See the Roadmap" and the one-click unsubscribe
+  link. At most one such email per 10 minutes per Subscription, like
+  confirmation emails (the same `confirmation_sent_at` records the last email
+  sent in answer to a subscribe request; no schema change). Before this, a
+  confirmed address that asked again got nothing.
+- **The browser remembers what it confirmed.** When the confirm page
+  succeeds, it records in that browser's `localStorage` that this browser
+  follows the Roadmap or the Item (`publicId`, and the `itemId` for an Item
+  Subscription). Never the token or the address. The unsubscribe page, when it
+  succeeds, removes the entry.
+  - Item page: when this browser follows the Item, the Notify me box shows
+    "You're getting an email when this Item ships (on this browser)." with
+    "Use another email", which shows the form again.
+  - Public page: when this browser follows the Roadmap, the subscribe box
+    shows "You're subscribed to this Roadmap (on this browser)." with "Use
+    another email".
+  - It is a convenience, never authoritative: it is read after hydration
+    (never on the server), says "on this browser", and goes stale if the
+    Reader unsubscribes from another device or the Owner removes them. If
+    storage is unavailable, the page behaves as before.
 
 ### Subscribed Readers (Owner, editor)
 - `/roadmaps/{id}/readers` lists both kinds. A new "For" column says "Roadmap"
@@ -239,6 +271,9 @@ Frontend: no automated tests (as in `SPEC.md`).
    public URL format). Item ids are sequential, but an id only resolves under
    its own Roadmap's `publicId`, and the payload already exposes them.
 
+5. "Already subscribed" is answered in the inbox and remembered in the
+   Reader's own browser, never by looking up the typed address (2026-10-20).
+
 ## Progress
 
 - **Built (2026-10-20):** everything above. Verified by unit tests, and with
@@ -247,3 +282,5 @@ Frontend: no automated tests (as in `SPEC.md`).
   Roadmap and an Item, confirm / unsubscribe naming the Item.
 - **To verify by hand** (needs a signed-in session): shipping an Item emails
   both kinds; the Readers screen and the Item dialog's Waiting Readers.
+- **Already subscribed (2026-10-20):** built; verified by unit tests and with
+  curl and Mailpit (see the module's todo).

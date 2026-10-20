@@ -51,6 +51,36 @@ final class EmailContent {
 		return new OutgoingEmail(to, subject, text, html);
 	}
 
+	/**
+	 * Sent to a confirmed address that asked again (itemTitle null for a Roadmap Subscription). The page answered
+	 * "Check your inbox" as for anyone, so only the owner of the inbox learns that it is subscribed.
+	 */
+	static OutgoingEmail alreadySubscribed(String to, String itemTitle, String roadmapName, String brandName, String pageUrl,
+			String unsubscribeUrl, String oneClickUnsubscribeUrl) {
+		String who = brandName != null ? brandName : roadmapName;
+		String subject = oneLine(itemTitle != null
+				? "You're already getting an email when " + itemTitle + " ships"
+				: "You're already subscribed to " + roadmapName);
+		String what = itemTitle != null ? "when " + itemTitle + " ships" : "each time an Item of " + roadmapName + " ships";
+		String text = """
+				You asked again to get an email from %s %s. You're already subscribed: nothing to do.
+
+				See the Roadmap: %s
+
+				If you didn't ask for this, someone typed your address. You can ignore this email.
+				Unsubscribe in one click: %s
+				""".formatted(who, what, pageUrl, unsubscribeUrl);
+		String html = """
+				<p>You asked again to get an email from %s %s. You're already subscribed: nothing to do.</p>
+				<p><a href="%s">See the Roadmap</a></p>
+				<p style="color:#6b7280">If you didn't ask for this, someone typed your address. You can ignore this email.
+				<a href="%s" style="color:#6b7280">Unsubscribe</a> in one click.</p>
+				""".formatted(escape(who), escape(what), escape(pageUrl), escape(unsubscribeUrl));
+		return new OutgoingEmail(to, subject, text, html, Map.of(
+				"List-Unsubscribe", "<" + oneClickUnsubscribeUrl + ">",
+				"List-Unsubscribe-Post", "List-Unsubscribe=One-Click"));
+	}
+
 	/** The Item fields a Reader sees; plain text from the Owner. */
 	record ShippedItem(String title, String description, String categoryName) {
 	}
